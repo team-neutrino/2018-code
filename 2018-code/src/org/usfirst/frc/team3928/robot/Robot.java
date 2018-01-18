@@ -7,6 +7,8 @@
 
 package org.usfirst.frc.team3928.robot;
 
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
@@ -23,14 +25,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot 
 {
-	private Talon motor1;
-	private Talon motor2;
-	private Talon motor3;
+	private Talon IntakeSideMotor;
+	private Talon IntakeFrontMotor;
+	private Talon IntakeUpDownMotor;
 	
 	private Joystick joystick1;
 	private Joystick joystick2;
-	
 	private XboxController controller;
+	
+	private Elevator CubeElevator;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -39,14 +42,15 @@ public class Robot extends IterativeRobot
 	@Override
 	public void robotInit() 
 	{
-		motor1 = new Talon(0);
-		motor2 = new Talon(1);
-		motor3 = new Talon(2);
+		IntakeSideMotor = new Talon(0);
+		IntakeFrontMotor = new Talon(1);
+		IntakeUpDownMotor = new Talon(2);
 		
 		controller = new XboxController(0);
-		
 		joystick1 = new Joystick(1);
 		joystick2 = new Joystick(2);
+		
+		CubeElevator = new Elevator();
 	}
 
 	/**
@@ -81,15 +85,9 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic() 
 	{
-		double joyval1 = joystick1.getY();
-		double joyval2 = joystick2.getY();
-		
-		motor1.set(joyval1);
-		motor2.set(joyval2);
-		
-		double controllerval = controller.getX();
-		
-		motor3.set(controllerval);
+		IntakeSideMotor.set(joystick1.getY());
+		IntakeFrontMotor.set(joystick2.getY());
+		IntakeUpDownMotor.set(controller.getX());
 	}
 
 	/**
@@ -98,5 +96,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void testPeriodic() 
 	{
+		
 	}
+	
 }
