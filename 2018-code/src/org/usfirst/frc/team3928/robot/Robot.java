@@ -29,8 +29,8 @@ public class Robot extends IterativeRobot
 	private Talon IntakeFrontMotor;
 	private Talon IntakeUpDownMotor;
 	
-	private Joystick joystick1;
-	private Joystick joystick2;
+	private Joystick LeftJoystick;
+	private Joystick RightJoystick;
 	private XboxController controller;
 	
 	private Elevator CubeElevator;
@@ -47,8 +47,8 @@ public class Robot extends IterativeRobot
 		IntakeUpDownMotor = new Talon(2);
 		
 		controller = new XboxController(0);
-		joystick1 = new Joystick(1);
-		joystick2 = new Joystick(2);
+		LeftJoystick = new Joystick(1);
+		RightJoystick = new Joystick(2);
 		
 		CubeElevator = new Elevator();
 	}
@@ -85,9 +85,23 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic() 
 	{
-		IntakeSideMotor.set(joystick1.getY());
-		IntakeFrontMotor.set(joystick2.getY());
-		IntakeUpDownMotor.set(controller.getX());
+//		IntakeSideMotor.set(LeftJoystick.getY());
+//		IntakeFrontMotor.set(RightJoystick.getY());
+//		IntakeUpDownMotor.set(controller.getX());
+		
+		double setDistance = LeftJoystick.getY() * 10 + 20;
+		System.out.println("Encoder distance: " + CubeElevator.getEncoderDistance() + 
+						   " Motor power: " + CubeElevator.PID(setDistance, 0.15) + 
+						   " set Distance is: " + setDistance);
+		
+		try 
+		{
+			Thread.sleep(1);
+		} 
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
