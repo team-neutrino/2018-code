@@ -36,11 +36,10 @@ public class Robot extends IterativeRobot
 	private Joystick RightJoystick;
 	private XboxController controller;
 	
-	//private Elevator CubeElevator;
+	private Elevator ElevatorInst;
+	private Drive DriveInst;
 	
-	private Drive NewDrive;
-	
-	private TalonSRX TestTalon;
+	private int NumTimesThroughLoop;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -57,10 +56,10 @@ public class Robot extends IterativeRobot
 		LeftJoystick = new Joystick(1);
 		RightJoystick = new Joystick(2);
 		
-		//CubeElevator = new Elevator();
+		ElevatorInst = new Elevator();
+		DriveInst = new Drive();
 		
-		NewDrive = new Drive();
-		
+		NumTimesThroughLoop = 0;
 	}
 
 	/**
@@ -77,7 +76,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		NewDrive.DriveDistance(20);
+		DriveInst.DriveDistance(20);
 	}
 
 	/**
@@ -99,9 +98,15 @@ public class Robot extends IterativeRobot
 //		IntakeSideMotor.set(LeftJoystick.getY());
 //		IntakeFrontMotor.set(RightJoystick.getY());
 //		IntakeUpDownMotor.set(controller.getX());
-		TestTalon.set(ControlMode.PercentOutput, 0.5);
 		
 		double setDistance = LeftJoystick.getY() * 10 + 20;
+		
+		if (NumTimesThroughLoop % 250 == 0)
+		{
+//			System.out.println();
+		}
+		
+		NumTimesThroughLoop++;
 		
 		try 
 		{

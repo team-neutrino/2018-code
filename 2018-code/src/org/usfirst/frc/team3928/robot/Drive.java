@@ -61,6 +61,7 @@ public class Drive
 		RightEncoder = new Encoder(2, 3);
 		LeftEncoder = new Encoder(0, 1);
 		
+		//Wedk why 16?
 		RightEncoder.setDistancePerPulse(16.0 * Math.PI / 360);
 		LeftEncoder.setDistancePerPulse(16.0 * Math.PI / 360);
 		
@@ -75,7 +76,7 @@ public class Drive
 	 * @param motorPower
 	 * 		A double value between -1 and 1 to set the motor to. 
 	 */
-	public void setRight(double motorPower)
+	public void SetRight(double motorPower)
 	{
 		// make one negative
 		RightMotor1.set(ControlMode.PercentOutput, motorPower);
@@ -89,7 +90,7 @@ public class Drive
 	 * @param motorPower
 	 * 		A double value between -1 and 1 to set the motor to.
 	 */
-	public void setLeft(double motorPower)
+	public void SetLeft(double motorPower)
 	{
 		LeftMotor1.set(ControlMode.PercentOutput, -motorPower);
 		LeftMotor2.set(ControlMode.PercentOutput, -motorPower);
@@ -100,15 +101,19 @@ public class Drive
 		RightEncoder.reset();
 		LeftEncoder.reset();
 		
+		int numTimesThroughLoop = 0;  
+		
 		while(Math.abs(targetDistance) > Math.abs(RightEncoder.getDistance()) && 
 			  Math.abs(targetDistance) > Math.abs(LeftEncoder.getDistance()))
 		{
-			double rightMotorPower = PID.PID(targetDistance, RightEncoder.getDistance(), 0.05, 0.2, 5);
+			double rightMotorPower = PID.PIDControl(targetDistance, RightEncoder.getDistance(), 0.05, 0.2, 5, (numTimesThroughLoop % 250 == 0));
 			//double leftMotorPower = PID.PID(targetDistance, LeftEncoder.getDistance(), 0.05, 0.2, 5);
 		
-			setRight(rightMotorPower);
+			SetRight(rightMotorPower);
 			//setLeft(leftMotorPower);
 			//System.out.println("Encoder right dstance: " + RightEncoder.getDistance());
+			
+			numTimesThroughLoop++; 
 		}
 	}
 	
