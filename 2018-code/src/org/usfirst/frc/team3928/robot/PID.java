@@ -41,7 +41,7 @@ public class PID
 	 * 		mechanism should be set to. 
 	 */
 	public static double PIDControl(double target, double sensorPosition, double pVal,
-							 double minimumMotorPower, double allowedError, boolean isPrinting)
+							       double minimumMotorPower, double allowedError, boolean isPrinting)
 	{
 		double difference = sensorPosition - target;
 		double motorPower = difference * pVal;

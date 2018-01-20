@@ -7,17 +7,19 @@
 
 package org.usfirst.frc.team3928.robot;
 
+import org.usfirst.frc.team3928.robot.CubeManipulator.IntakeState;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,19 +29,42 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends IterativeRobot 
-{
-	private Talon IntakeSideMotor;
-	private Talon IntakeFrontMotor;
-	private Talon IntakeUpDownMotor;
-	
+{	
+	/**
+	 * The left joystick on the drivers station. 
+	 */
 	private Joystick LeftJoystick;
-	private Joystick RightJoystick;
-	private XboxController controller;
 	
+	/**
+	 * The right joystick on the drivers station. 
+	 */
+	private Joystick RightJoystick;
+	
+	/**
+	 * The x-box controller on the drivers station. 
+	 */
+	private XboxController Controller;
+	
+	/**
+	 * The object for the elevator. 
+	 */
 	private Elevator ElevatorInst;
+	
+	/**
+	 * The object for the drive. 
+	 */
 	private Drive DriveInst;
 	
-	private int NumTimesThroughLoop;
+	/**
+	 * the object for the cube manipulator;
+	 */
+	private CubeManipulator CubeManipulatorInst;
+	
+	/**
+	 * The number of times that the teleopPeriodic loop 
+	 * has run. 
+	 */
+	public static int NumTimesThroughLoop;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -48,16 +73,13 @@ public class Robot extends IterativeRobot
 	@Override
 	public void robotInit() 
 	{
-		IntakeSideMotor = new Talon(0);
-		IntakeFrontMotor = new Talon(1);
-		IntakeUpDownMotor = new Talon(2);
-		
-		controller = new XboxController(0);
-		LeftJoystick = new Joystick(1);
-		RightJoystick = new Joystick(2);
+		Controller = new XboxController(0); // make constant
+		LeftJoystick = new Joystick(1); // make constant
+		RightJoystick = new Joystick(2); // make constant
 		
 		ElevatorInst = new Elevator();
 		DriveInst = new Drive();
+		CubeManipulatorInst = new CubeManipulator();
 		
 		NumTimesThroughLoop = 0;
 	}
@@ -76,7 +98,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		DriveInst.DriveDistance(20);
+		DriveInst.DriveDistance(100);
 	}
 
 	/**
@@ -94,14 +116,21 @@ public class Robot extends IterativeRobot
 	 */
 	@Override
 	public void teleopPeriodic() 
-	{
-//		IntakeSideMotor.set(LeftJoystick.getY());
-//		IntakeFrontMotor.set(RightJoystick.getY());
-//		IntakeUpDownMotor.set(controller.getX());
+	{	
+		if (LeftJoystick.getRawButton(1))
+		{
+			CubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+		}
+		else if (LeftJoystick.getRawButton(2))
+		{
+			CubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+		}
+		else
+		{
+			CubeManipulatorInst.MoveCube(IntakeState.OFF);
+		}
 		
-		double setDistance = LeftJoystick.getY() * 10 + 20;
-		
-		if (NumTimesThroughLoop % 250 == 0)
+		if (NumTimesThroughLoop % 10 == 0) // make constant
 		{
 //			System.out.println();
 		}

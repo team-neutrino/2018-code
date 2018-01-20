@@ -53,17 +53,19 @@ public class Drive
 	 */
 	public Drive()
 	{
-		RightMotor1 = new TalonSRX(1);
-		RightMotor2 = new TalonSRX(2);
-		LeftMotor1 = new TalonSRX(3);
-		LeftMotor2 = new TalonSRX(4);
+		RightMotor1 = new TalonSRX(1); // make constant
+		RightMotor2 = new TalonSRX(2); // make constant
+		LeftMotor1 = new TalonSRX(3); // make constant
+		LeftMotor2 = new TalonSRX(4); // make constant
 		
-		RightEncoder = new Encoder(2, 3);
-		LeftEncoder = new Encoder(0, 1);
+		RightEncoder = new Encoder(7, 8); // make constant
+		LeftEncoder = new Encoder(0, 1); // make constant
 		
-		//Wedk why 16?
-		RightEncoder.setDistancePerPulse(16.0 * Math.PI / 360);
-		LeftEncoder.setDistancePerPulse(16.0 * Math.PI / 360);
+		int WheelRadius = 2; // make constant
+		int CountsPerRotation = 360; // make constant
+		
+		RightEncoder.setDistancePerPulse(2 * WheelRadius * Math.PI / CountsPerRotation);
+		LeftEncoder.setDistancePerPulse(2 * WheelRadius * Math.PI / CountsPerRotation);
 		
 		RightEncoder.reset();
 		LeftEncoder.reset();
@@ -106,15 +108,22 @@ public class Drive
 		while(Math.abs(targetDistance) > Math.abs(RightEncoder.getDistance()) && 
 			  Math.abs(targetDistance) > Math.abs(LeftEncoder.getDistance()))
 		{
-			double rightMotorPower = PID.PIDControl(targetDistance, RightEncoder.getDistance(), 0.05, 0.2, 5, (numTimesThroughLoop % 250 == 0));
-			//double leftMotorPower = PID.PID(targetDistance, LeftEncoder.getDistance(), 0.05, 0.2, 5);
-		
-			SetRight(rightMotorPower);
-			//setLeft(leftMotorPower);
-			//System.out.println("Encoder right dstance: " + RightEncoder.getDistance());
+			double rightMotorPower = PID.PIDControl(targetDistance, RightEncoder.getDistance(), 0.05, 0.2, 5, (numTimesThroughLoop % 2000 == -1));
+			double leftMotorPower = PID.PIDControl(targetDistance, LeftEncoder.getDistance(), 0.05, 0.2, 5, (numTimesThroughLoop % 2000 == -1));
+
+//			SetRight(rightMotorPower);
+//			SetLeft(leftMotorPower);
 			
 			numTimesThroughLoop++; 
+			
+			try 
+			{
+				Thread.sleep(1);
+			} 
+			catch (InterruptedException e) 
+			{
+				e.printStackTrace();
+			}
 		}
-	}
-	
+	}	
 }
