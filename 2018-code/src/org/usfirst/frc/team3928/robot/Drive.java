@@ -53,16 +53,16 @@ public class Drive
 	 */
 	public Drive()
 	{
-		RightMotor1 = new TalonSRX(0);
-		RightMotor2 = new TalonSRX(1);
-		LeftMotor1 = new TalonSRX(2);
-		LeftMotor2 = new TalonSRX(3);
+		RightMotor1 = new TalonSRX(1);
+		RightMotor2 = new TalonSRX(2);
+		LeftMotor1 = new TalonSRX(3);
+		LeftMotor2 = new TalonSRX(4);
 		
-		RightEncoder = new Encoder(0, 1);
-		LeftEncoder = new Encoder(2, 3);
+		RightEncoder = new Encoder(2, 3);
+		LeftEncoder = new Encoder(0, 1);
 		
-		RightEncoder.setDistancePerPulse(4.0 * Math.PI / 360);
-		LeftEncoder.setDistancePerPulse(4.0 * Math.PI / 360);
+		RightEncoder.setDistancePerPulse(16.0 * Math.PI / 360);
+		LeftEncoder.setDistancePerPulse(16.0 * Math.PI / 360);
 		
 		RightEncoder.reset();
 		LeftEncoder.reset();
@@ -91,19 +91,25 @@ public class Drive
 	 */
 	public void setLeft(double motorPower)
 	{
-		LeftMotor1.set(ControlMode.PercentOutput, motorPower);
-		LeftMotor2.set(ControlMode.PercentOutput, motorPower);
+		LeftMotor1.set(ControlMode.PercentOutput, -motorPower);
+		LeftMotor2.set(ControlMode.PercentOutput, -motorPower);
 	}
 	
-	public void driveStraight(double motorPower)
+	public void DriveDistance(double targetDistance)
 	{
-		if (RightEncoder.getDistance() < LeftEncoder.getDistance())
+		RightEncoder.reset();
+		LeftEncoder.reset();
+		
+		while(Math.abs(targetDistance) > Math.abs(RightEncoder.getDistance()) && 
+			  Math.abs(targetDistance) > Math.abs(LeftEncoder.getDistance()))
 		{
-			//change for mirrored
-			RightMotor1.set(ControlMode.PercentOutput, motorPower + 0.01);
-			RightMotor2.set(ControlMode.PercentOutput, motorPower + 0.01);
-			LeftMotor1.set(ControlMode.PercentOutput, motorPower + 0.01);
-			LeftMotor2.set(ControlMode.PercentOutput, motorPower + 0.01);
+			double rightMotorPower = PID.PID(targetDistance, RightEncoder.getDistance(), 0.05, 0.2, 5);
+			//double leftMotorPower = PID.PID(targetDistance, LeftEncoder.getDistance(), 0.05, 0.2, 5);
+		
+			setRight(rightMotorPower);
+			//setLeft(leftMotorPower);
+			//System.out.println("Encoder right dstance: " + RightEncoder.getDistance());
 		}
 	}
+	
 }

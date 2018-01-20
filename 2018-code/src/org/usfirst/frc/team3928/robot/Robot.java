@@ -7,6 +7,9 @@
 
 package org.usfirst.frc.team3928.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -33,7 +36,11 @@ public class Robot extends IterativeRobot
 	private Joystick RightJoystick;
 	private XboxController controller;
 	
-	private Elevator CubeElevator;
+	//private Elevator CubeElevator;
+	
+	private Drive NewDrive;
+	
+	private TalonSRX TestTalon;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -50,7 +57,10 @@ public class Robot extends IterativeRobot
 		LeftJoystick = new Joystick(1);
 		RightJoystick = new Joystick(2);
 		
-		CubeElevator = new Elevator();
+		//CubeElevator = new Elevator();
+		
+		NewDrive = new Drive();
+		
 	}
 
 	/**
@@ -67,7 +77,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-
+		NewDrive.DriveDistance(20);
 	}
 
 	/**
@@ -76,7 +86,8 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousPeriodic() 
 	{
-
+		
+		
 	}
 
 	/**
@@ -88,11 +99,9 @@ public class Robot extends IterativeRobot
 //		IntakeSideMotor.set(LeftJoystick.getY());
 //		IntakeFrontMotor.set(RightJoystick.getY());
 //		IntakeUpDownMotor.set(controller.getX());
+		TestTalon.set(ControlMode.PercentOutput, 0.5);
 		
 		double setDistance = LeftJoystick.getY() * 10 + 20;
-		System.out.println("Encoder distance: " + CubeElevator.getEncoderDistance() + 
-						   " Motor power: " + CubeElevator.PID(setDistance, 0.15) + 
-						   " set Distance is: " + setDistance);
 		
 		try 
 		{
