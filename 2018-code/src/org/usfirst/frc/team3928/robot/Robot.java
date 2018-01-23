@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -82,6 +84,7 @@ public class Robot extends IterativeRobot
 		CubeManipulatorInst = new CubeManipulator();
 		
 		NumTimesThroughLoop = 0;
+		
 	}
 
 	/**
@@ -98,7 +101,8 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		DriveInst.DriveDistance(100);
+		DriveInst.TurnDegrees(90);
+		
 	}
 
 	/**
@@ -145,6 +149,8 @@ public class Robot extends IterativeRobot
 		{
 			e.printStackTrace();
 		}
+		
+		
 	}
 
 	/**

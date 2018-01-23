@@ -2,8 +2,10 @@ package org.usfirst.frc.team3928.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SerialPort;
 
 /**
  * This class is for the information associated with the 
@@ -49,6 +51,11 @@ public class Drive
 	private Encoder LeftEncoder;
 	
 	/**
+	 * The gyroscope and accelerometer board. 
+	 */
+	private AHRS Navx;
+	
+	/**
 	 * Constructor for the Drive class. 
 	 */
 	public Drive()
@@ -69,6 +76,9 @@ public class Drive
 		
 		RightEncoder.reset();
 		LeftEncoder.reset();
+	
+		Navx = new AHRS(SerialPort.Port.kUSB);
+		Navx.setAngleAdjustment(5.5);
 	}
 	
 	/**
@@ -98,6 +108,12 @@ public class Drive
 		LeftMotor2.set(ControlMode.PercentOutput, -motorPower);
 	}
 	
+	/**
+	 * Method that will drive a given distance. 
+	 * 
+	 * @param targetDistance
+	 * 		The distance to drive. 
+	 */
 	public void DriveDistance(double targetDistance)
 	{
 		RightEncoder.reset();
@@ -126,4 +142,38 @@ public class Drive
 			}
 		}
 	}	
+	
+	/**
+	 * Method that will turn a given number of degrees.
+	 * 
+	 * @param degree
+	 * 		The amount to turn. 
+	 */
+	public void TurnDegrees(double degree)
+	{
+		Navx.zeroYaw();
+		
+		int numTimesThroughLoop = 0;
+		
+		while(Math.abs(degree) > Math.abs(Navx.getYaw()))
+		{
+			double motorPower = PID.PIDControl(degree, Navx.getYaw(), 0.005, 0.15, 2, (numTimesThroughLoop % 20 == 0));
+			
+		
+			SetRight(-motorPower);
+			SetLeft(motorPower);
+			
+			try 
+			{
+				Thread.sleep(1);
+			} 
+			catch (InterruptedException e) 
+			{
+				e.printStackTrace();
+			}
+			
+			numTimesThroughLoop ++;
+		}
+		
+	}
 }

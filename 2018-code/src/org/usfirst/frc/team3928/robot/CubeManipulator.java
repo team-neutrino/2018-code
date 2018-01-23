@@ -96,7 +96,7 @@ public class CubeManipulator
 		
 		if (Robot.NumTimesThroughLoop % 10 == 0) // make constant
 		{
-			System.out.println("Current: " + IntakeMotor1.getOutputCurrent());
+			//System.out.println("Current: " + IntakeMotor1.getOutputCurrent());
 		}
 		
 		IntakeMotor1.set(ControlMode.PercentOutput, motorPower);
