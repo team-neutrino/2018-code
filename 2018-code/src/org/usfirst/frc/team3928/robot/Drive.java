@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort;
 
@@ -122,7 +123,8 @@ public class Drive
 		int numTimesThroughLoop = 0;  
 		
 		while(Math.abs(targetDistance) > Math.abs(RightEncoder.getDistance()) && 
-			  Math.abs(targetDistance) > Math.abs(LeftEncoder.getDistance()))
+			  Math.abs(targetDistance) > Math.abs(LeftEncoder.getDistance()) &&
+			  (DriverStation.getInstance().isAutonomous() && !DriverStation.getInstance().isDisabled()))
 		{
 			double rightMotorPower = PID.PIDControl(targetDistance, RightEncoder.getDistance(), 0.05, 0.2, 5, (numTimesThroughLoop % 2000 == -1));
 			double leftMotorPower = PID.PIDControl(targetDistance, LeftEncoder.getDistance(), 0.05, 0.2, 5, (numTimesThroughLoop % 2000 == -1));
@@ -155,7 +157,8 @@ public class Drive
 		
 		int numTimesThroughLoop = 0;
 		
-		while(Math.abs(degree) > Math.abs(Navx.getYaw()))
+		while(Math.abs(degree) > Math.abs(Navx.getYaw()) && (DriverStation.getInstance().isAutonomous() && 
+			  !DriverStation.getInstance().isDisabled()))
 		{
 			double motorPower = PID.PIDControl(degree, Navx.getYaw(), 0.005, 0.15, 2, (numTimesThroughLoop % 20 == 0));
 			
