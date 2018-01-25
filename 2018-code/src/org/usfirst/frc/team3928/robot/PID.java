@@ -68,6 +68,14 @@ public class PID
 			}
 		}
 		
+		
+		if (Math.abs(difference) < allowedError)
+		{
+			motorPower = 0;
+			System.out.println("motor power set 0");
+		}
+		
+		
 		if (isPrinting)
 		{
 			System.out.println("Target Value: " + target + " Motor Power is: " + motorPower + 

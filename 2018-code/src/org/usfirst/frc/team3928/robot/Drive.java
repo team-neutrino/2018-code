@@ -156,24 +156,50 @@ public class Drive
 		Navx.zeroYaw();
 		
 		int numTimesThroughLoop = 0;
+		int acceptableErrorDegrees = 5;
+		boolean stillWithinError = false;
+		double motorPower = 1;
 		
-		while(Math.abs(degree) > Math.abs(Navx.getYaw()) && (DriverStation.getInstance().isAutonomous() && 
+		while(stillWithinError == false && (DriverStation.getInstance().isAutonomous() && 
 			  !DriverStation.getInstance().isDisabled()))
 		{
-			double motorPower = PID.PIDControl(degree, Navx.getYaw(), 0.005, 0.15, 2, (numTimesThroughLoop % 20 == 0));
 			
-		
-			SetRight(-motorPower);
-			SetLeft(motorPower);
-			
-			try 
+			if(Math.abs(degree - Navx.getYaw()) > acceptableErrorDegrees && motorPower != 0)
 			{
-				Thread.sleep(1);
-			} 
-			catch (InterruptedException e) 
-			{
-				e.printStackTrace();
+				motorPower = PID.PIDControl(degree, Navx.getYaw(), 0.005, 0.28, acceptableErrorDegrees, (numTimesThroughLoop % 200 == 0));
+				SetRight(-motorPower);
+				SetLeft(motorPower);
+				System.out.println("motor power: " + motorPower);
 			}
+			else
+			{
+				System.out.println("executing the else");
+				try
+				{
+					Thread.sleep(500);
+				}
+				catch (InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				System.out.println("Yaw: " + Navx.getYaw());
+				
+				if(Math.abs(degree - Navx.getYaw()) < acceptableErrorDegrees)
+				{
+					stillWithinError = true;
+					System.out.println("still within error is true");
+				}
+				else
+				{
+					stillWithinError = false;
+					System.out.println("still within error is false");
+					//SetRight(-0.1);
+					//SetLeft(0.1);
+				}
+			}
+			
 			
 			numTimesThroughLoop ++;
 		}
