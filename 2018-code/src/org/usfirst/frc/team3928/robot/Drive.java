@@ -6,7 +6,12 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * This class is for the information associated with the 
@@ -15,7 +20,7 @@ import edu.wpi.first.wpilibj.SerialPort;
  * @author NicoleEssner
  *
  */
-public class Drive 
+public class Drive implements PIDSource, PIDOutput 
 {
 	/**
 	 * The first speed controller on the right side of drive 
@@ -56,6 +61,8 @@ public class Drive
 	 */
 	private AHRS Navx;
 	
+	private PIDController PIDControllerInst;
+	
 	/**
 	 * Constructor for the Drive class. 
 	 */
@@ -80,6 +87,12 @@ public class Drive
 	
 		Navx = new AHRS(SerialPort.Port.kUSB);
 		Navx.setAngleAdjustment(5.5);
+		
+		PIDControllerInst =  new PIDController(0.018, 0.002153, 0.04, 0.0, this, this);
+		PIDControllerInst.setAbsoluteTolerance(2);
+		PIDControllerInst.setContinuous();
+		PIDControllerInst.setInputRange(-180, 180);
+		PIDControllerInst.setOutputRange(-1, 1);
 	}
 	
 	/**
@@ -154,55 +167,50 @@ public class Drive
 	public void TurnDegrees(double degree)
 	{
 		Navx.zeroYaw();
+		PIDControllerInst.reset();
+		PIDControllerInst.setSetpoint(degree);
 		
-		int numTimesThroughLoop = 0;
-		int acceptableErrorDegrees = 5;
-		boolean stillWithinError = false;
-		double motorPower = 1;
+		System.out.println("ABout to enable PIDControler");
+		PIDControllerInst.enable();
 		
-		while(stillWithinError == false && (DriverStation.getInstance().isAutonomous() && 
-			  !DriverStation.getInstance().isDisabled()))
+		while (!DriverStation.getInstance().isDisabled())
+			//(!PIDControllerInst.onTarget() && (DriverStation.getInstance().isAutonomous() && !DriverStation.getInstance().isDisabled()))
 		{
-			
-			if(Math.abs(degree - Navx.getYaw()) > acceptableErrorDegrees && motorPower != 0)
-			{
-				motorPower = PID.PIDControl(degree, Navx.getYaw(), 0.005, 0.28, acceptableErrorDegrees, (numTimesThroughLoop % 200 == 0));
-				SetRight(-motorPower);
-				SetLeft(motorPower);
-				System.out.println("motor power: " + motorPower);
-			}
-			else
-			{
-				System.out.println("executing the else");
-				try
-				{
-					Thread.sleep(500);
-				}
-				catch (InterruptedException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				System.out.println("Yaw: " + Navx.getYaw());
-				
-				if(Math.abs(degree - Navx.getYaw()) < acceptableErrorDegrees)
-				{
-					stillWithinError = true;
-					System.out.println("still within error is true");
-				}
-				else
-				{
-					stillWithinError = false;
-					System.out.println("still within error is false");
-					//SetRight(-0.1);
-					//SetLeft(0.1);
-				}
-			}
-			
-			
-			numTimesThroughLoop ++;
+			Timer.delay(.0001);
+			System.out.println(System.currentTimeMillis() + ", " + Navx.getYaw());
 		}
 		
+		PIDControllerInst.disable();
+	}
+
+	@Override
+	public void pidWrite(double output)
+	{		
+		//System.out.println("From pidWrite method: " + output);
+		
+		SetRight(output);
+		SetLeft(-output);
+	}
+
+	@Override
+	public void setPIDSourceType(PIDSourceType pidSource) 
+	{
+		System.out.println("This is the PIDSourceType: " + pidSource.toString());
+	}
+
+	@Override
+	public PIDSourceType getPIDSourceType() 
+	{
+		return PIDSourceType.kDisplacement;
+	}
+
+	@Override
+	public double pidGet() 
+	{
+		double navxYaw = Navx.getYaw();
+		
+		//System.out.println("In pidGet, the Navx yaw: " + navxYaw);
+		
+		return navxYaw;
 	}
 }
