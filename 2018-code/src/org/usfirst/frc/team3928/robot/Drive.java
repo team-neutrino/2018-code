@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is for the information associated with the 
@@ -88,7 +89,33 @@ public class Drive implements PIDSource, PIDOutput
 		Navx = new AHRS(SerialPort.Port.kUSB);
 		Navx.setAngleAdjustment(5.5);
 		
-		PIDControllerInst =  new PIDController(0.018, 0.002153, 0.04, 0.0, this, this);
+		if (!SmartDashboard.getKeys().contains("P: "))
+		{
+			System.out.println("Added the P");
+			SmartDashboard.putNumber("P: ", 0);
+		}
+	
+		if (!SmartDashboard.getKeys().contains("I: "))
+		{
+			System.out.println("Added the I");
+			SmartDashboard.putNumber("I: ", 0);
+		}
+		
+		if (!SmartDashboard.getKeys().contains("D: "))
+		{
+			System.out.println("Added the D");
+			SmartDashboard.putNumber("D: ", 0);
+		}
+		
+		double Pval = SmartDashboard.getNumber("P: ", 0.0);
+		double Ival = SmartDashboard.getNumber("I: ", 0.0);
+		double Dval = SmartDashboard.getNumber("D: ", 0.0);
+		
+		System.out.println("P: " + Pval + " I: " + Ival + " D: " + Dval);
+		
+		//PIDControllerInst =  new PIDController(0.018, 0.002153, 0.04, 0.0, this, this);
+		//PIDControllerInst =  new PIDController(0.0275, 0, 0.045, 0.0, this, this);
+		PIDControllerInst =  new PIDController(Pval, Ival, Dval, 0.0, this, this);
 		PIDControllerInst.setAbsoluteTolerance(2);
 		PIDControllerInst.setContinuous();
 		PIDControllerInst.setInputRange(-180, 180);
@@ -142,8 +169,8 @@ public class Drive implements PIDSource, PIDOutput
 			double rightMotorPower = PID.PIDControl(targetDistance, RightEncoder.getDistance(), 0.05, 0.2, 5, (numTimesThroughLoop % 2000 == -1));
 			double leftMotorPower = PID.PIDControl(targetDistance, LeftEncoder.getDistance(), 0.05, 0.2, 5, (numTimesThroughLoop % 2000 == -1));
 
-//			SetRight(rightMotorPower);
-//			SetLeft(leftMotorPower);
+			SetRight(rightMotorPower);
+			SetLeft(leftMotorPower);
 			
 			numTimesThroughLoop++; 
 			
@@ -170,14 +197,21 @@ public class Drive implements PIDSource, PIDOutput
 		PIDControllerInst.reset();
 		PIDControllerInst.setSetpoint(degree);
 		
-		System.out.println("ABout to enable PIDControler");
+		System.out.println("About to enable PIDControler");
 		PIDControllerInst.enable();
 		
 		while (!DriverStation.getInstance().isDisabled())
 			//(!PIDControllerInst.onTarget() && (DriverStation.getInstance().isAutonomous() && !DriverStation.getInstance().isDisabled()))
 		{
-			Timer.delay(.0001);
-			System.out.println(System.currentTimeMillis() + ", " + Navx.getYaw());
+			double navxYaw = Navx.getYaw();
+			System.out.println("In pidGet, the Navx yaw: " + navxYaw);
+			
+			PIDControllerInst.setP(SmartDashboard.getNumber("P: ", 0));
+			PIDControllerInst.setI(SmartDashboard.getNumber("I: ", 0));
+			PIDControllerInst.setD(SmartDashboard.getNumber("D: ", 0));
+			
+			Timer.delay(1);
+			
 		}
 		
 		PIDControllerInst.disable();
@@ -208,8 +242,6 @@ public class Drive implements PIDSource, PIDOutput
 	public double pidGet() 
 	{
 		double navxYaw = Navx.getYaw();
-		
-		//System.out.println("In pidGet, the Navx yaw: " + navxYaw);
 		
 		return navxYaw;
 	}

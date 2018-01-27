@@ -7,6 +7,8 @@
 
 package org.usfirst.frc.team3928.robot;
 
+import java.util.Set;
+
 import org.usfirst.frc.team3928.robot.CubeManipulator.IntakeState;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -22,6 +24,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -68,6 +71,7 @@ public class Robot extends IterativeRobot
 	 */
 	public static int NumTimesThroughLoop;
 	
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -101,7 +105,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		DriveInst.TurnDegrees(90);
+		DriveInst.TurnDegrees(30);
 		
 	}
 
@@ -133,10 +137,10 @@ public class Robot extends IterativeRobot
 		{
 			CubeManipulatorInst.MoveCube(IntakeState.OFF);
 		}
-		
+
 		if (NumTimesThroughLoop % 10 == 0) // make constant
 		{
-//			System.out.println();
+			System.out.println();
 		}
 		
 		NumTimesThroughLoop++;
