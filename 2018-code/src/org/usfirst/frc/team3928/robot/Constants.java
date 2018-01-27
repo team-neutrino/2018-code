@@ -10,18 +10,18 @@ public class Constants
 	public static final int POWER_OVER_THRESHOLD_TIME_MILLIS = 500;
 	
 	//Drive
-	public static final int WHEEL_DIAMETER = 4;
+	public static final int DRIVE_WHEEL_DIAMETER = 4;
 	public static final int ENCODER_COUNTS_PER_ROTATION = 360;
-	public static final int RIGHT_MOTOR_1 = 1;
-	public static final int RIGHT_MOTOR_2 = 2;
-	public static final int LEFT_MOTOR_1 = 3;
-	public static final int LEFT_MOTOR_2 = 4;
+	public static final int DRIVE_RIGHT_1_CHANNEL = 1;
+	public static final int DRIVE_RIGHT_2_CHANNEL = 2;
+	public static final int DRIVE_EFT_1_CHANNEL = 3;
+	public static final int DRIVE_LEFT_2_CHANNEL = 4;
 	
 	public static final int RIGHT_ENCODER_POWER_CHANNEL = 7;
 	public static final int RIGHT_ENCODER_DATA_CHANNEL = 8;
 	public static final int LEFT_ENCODER_POWER_CHANNEL = 0;
 	public static final int LEFT_ENCODER_DATA_CHANNEL = 1;
-	public static final double ENCODER_DISTANCE_PER_PULSE = WHEEL_DIAMETER * Math.PI / ENCODER_COUNTS_PER_ROTATION;
+	public static final double ENCODER_DISTANCE_PER_PULSE = DRIVE_WHEEL_DIAMETER * Math.PI / ENCODER_COUNTS_PER_ROTATION;
 	
 	public static final double NAVX_ANGLE_ADJUSTMENT = 5.5;
 	
