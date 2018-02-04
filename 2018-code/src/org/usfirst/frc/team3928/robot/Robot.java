@@ -72,6 +72,9 @@ public class Robot extends IterativeRobot
 	 */
 	public static int NumTimesThroughLoop;
 	
+	/**
+	 * The elevator controller 
+	 */
 	public Joystick ThrustMaster;
 	
 	/**
@@ -81,18 +84,16 @@ public class Robot extends IterativeRobot
 	@Override
 	public void robotInit() 
 	{
-		Controller = new XboxController(0); // make constant
-		LeftJoystick = new Joystick(1); // make constant
-		RightJoystick = new Joystick(2); // make constant
+		Controller = new XboxController(Constants.XBOX_CONTROLLER); 
+		ThrustMaster = new Joystick(Constants.THRUST_MASTER_CONTROLLER);
+		LeftJoystick = new Joystick(Constants.LEFT_JOYSTICK); 
+		RightJoystick = new Joystick(Constants.RIGHT_JOYSTICK); 
 		
 		ElevatorInst = new Elevator();
 		DriveInst = new Drive();
 		CubeManipulatorInst = new CubeManipulator();
 		
 		NumTimesThroughLoop = 0;
-		
-		ThrustMaster = new Joystick(3);
-		
 	}
 
 	/**
@@ -131,6 +132,7 @@ public class Robot extends IterativeRobot
 	{	
 		double leftY = LeftJoystick.getY();
 		double rightY = RightJoystick.getY();
+		
 		if (Math.abs(leftY) < 0.05)
 		{
 			leftY = 0;
@@ -140,24 +142,25 @@ public class Robot extends IterativeRobot
 		{
 			rightY = 0;
 		}
+		
 		DriveInst.SetLeft(leftY);
 		DriveInst.SetRight(rightY);
 		
-		/*
-		if (LeftJoystick.getRawButton(1))
-		{
-			CubeManipulatorInst.MoveCube(IntakeState.INTAKE);
-		}
-		else if (LeftJoystick.getRawButton(2))
-		{
-			CubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-		}
-		else
-		{
-			CubeManipulatorInst.MoveCube(IntakeState.OFF);
-		}
-		*/
-		if (NumTimesThroughLoop % 10 == 0) // make constant
+	
+//		if (LeftJoystick.getRawButton(1))
+//		{
+//			CubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+//		}
+//		else if (LeftJoystick.getRawButton(2))
+//		{
+//			CubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+//		}
+//		else
+//		{
+//			CubeManipulatorInst.MoveCube(IntakeState.OFF);
+//		}
+		
+		if (NumTimesThroughLoop % Constants.PRINT_SPEED_DIVIDER == 0) 
 		{
 			System.out.println();
 		}
@@ -172,7 +175,6 @@ public class Robot extends IterativeRobot
 		{
 			e.printStackTrace();
 		}
-		
 		
 	}
 

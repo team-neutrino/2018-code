@@ -71,16 +71,16 @@ public class Drive implements PIDSource, PIDOutput
 	 */
 	public Drive()
 	{
-		RightMotor1 = new TalonSRX(1); // make constant
-		RightMotor2 = new TalonSRX(2); // make constant
-		LeftMotor1 = new TalonSRX(3); // make constant
-		LeftMotor2 = new TalonSRX(4); // make constant
+		RightMotor1 = new TalonSRX(Constants.DRIVE_RIGHT_1_CHANNEL); 
+		RightMotor2 = new TalonSRX(Constants.DRIVE_RIGHT_2_CHANNEL); 
+		LeftMotor1 = new TalonSRX(Constants.DRIVE_LEFT_1_CHANNEL); 
+		LeftMotor2 = new TalonSRX(Constants.DRIVE_LEFT_2_CHANNEL); 
 		
-		RightEncoder = new Encoder(7, 8); // make constant
-		LeftEncoder = new Encoder(0, 1); // make constant
+		RightEncoder = new Encoder(Constants.DRIVE_RIGHT_ENCODER_POWER_CHANNEL, Constants.DRIVE_RIGHT_ENCODER_DATA_CHANNEL); 
+		LeftEncoder = new Encoder(Constants.DRIVE_LEFT_ENCODER_POWER_CHANNEL, Constants.DRIVE_LEFT_ENCODER_DATA_CHANNEL); 
 		
-		int WheelRadius = 2; // make constant
-		int CountsPerRotation = 360; // make constant
+		int WheelRadius = Constants.DRIVE_WHEEL_RADUIS;
+		int CountsPerRotation = Constants.ENCODER_COUNTS_PER_ROTATION; 
 		
 		RightEncoder.setDistancePerPulse(2 * WheelRadius * Math.PI / CountsPerRotation);
 		LeftEncoder.setDistancePerPulse(2 * WheelRadius * Math.PI / CountsPerRotation);
@@ -89,7 +89,7 @@ public class Drive implements PIDSource, PIDOutput
 		LeftEncoder.reset();
 	
 		Navx = new AHRS(SPI.Port.kMXP);
-		Navx.setAngleAdjustment(5.5);
+		Navx.setAngleAdjustment(Constants.DRIVE_NAVX_ANGLE_ADJUSTMENT); // Do we need this still? 
 		
 //		if (!SmartDashboard.getKeys().contains("P: "))
 //		{
@@ -115,13 +115,12 @@ public class Drive implements PIDSource, PIDOutput
 //		
 //		System.out.println("P: " + Pval + " I: " + Ival + " D: " + Dval);
 		
-		//PIDControllerInst =  new PIDController(0.018, 0.002153, 0.04, 0.0, this, this);
-		PIDControllerInst =  new PIDController(0.03, 0.0, 0.045, 0.0, this, this);
-		//PIDControllerInst =  new PIDController(Pval, Ival, Dval, 0.0, this, this);
-		PIDControllerInst.setAbsoluteTolerance(2);
+		PIDControllerInst =  new PIDController(Constants.DRIVE_P_VALUE_DEGREE_TURN, Constants.DRIVE_I_VALUE_DEGREE_TURN, 
+				 							  Constants.DRIVE_D_VALUE_DEGREE_TURN, 0.0, this, this);
+		PIDControllerInst.setAbsoluteTolerance(Constants.DRIVE_ABSOLUTE_VALUE_TOLERANCE_DEGREE_TURN);
 		
-		PIDControllerInst.setInputRange(-180, 180);
-		PIDControllerInst.setOutputRange(-1, 1);
+		PIDControllerInst.setInputRange(Constants.DRIVE_PID_INPUT_RANGE_MIN, Constants.DRIVE_PID_INPUT_RANGE_MAX);
+		PIDControllerInst.setOutputRange(Constants.DRIVE_PID_OUTPUT_RANGE_MIN, Constants.DRIVE_PID_OUTPUT_RANGE_MAX);
 	}
 	
 	/**
@@ -133,7 +132,6 @@ public class Drive implements PIDSource, PIDOutput
 	 */
 	public void SetRight(double motorPower)
 	{
-		// make one negative
 		RightMotor1.set(ControlMode.PercentOutput, motorPower);
 		RightMotor2.set(ControlMode.PercentOutput, motorPower);
 	}
@@ -222,8 +220,6 @@ public class Drive implements PIDSource, PIDOutput
 	@Override
 	public void pidWrite(double output)
 	{		
-		//System.out.println("From pidWrite method: " + output);
-		
 		SetRight(output);
 		SetLeft(-output);
 	}

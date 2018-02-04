@@ -45,8 +45,8 @@ public class CubeManipulator
 	 */
 	public CubeManipulator()
 	{
-		IntakeMotor1 = new TalonSRX(8); // make constant
-		IntakeMotor2 = new TalonSRX(9); // make constant
+		IntakeMotor1 = new TalonSRX(Constants.INTAKE_MOTOR_1); 
+		IntakeMotor2 = new TalonSRX(Constants.INTAKE_MOTOR_2); 
 		
 		stoppedIntaking = false;
 		FirstTimeOverThreshold = 0;
@@ -66,11 +66,11 @@ public class CubeManipulator
 		
 		if (state == IntakeState.INTAKE)
 		{
-			motorPower = 1; // make constant
+			motorPower = Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
 		}
 		else if (state == IntakeState.OUTTAKE)
 		{
-			motorPower = -1; // make constant
+			motorPower = -Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
 		}
 		else
 		{
@@ -79,22 +79,22 @@ public class CubeManipulator
 			stoppedIntaking = false;
 		}
 		
-		if (IntakeMotor1.getOutputCurrent() > 10 && FirstTimeOverThreshold == 0) // make constant
+		if (IntakeMotor1.getOutputCurrent() > Constants.STALLED_MOTOR_CURRENT && FirstTimeOverThreshold == 0) 
 		{
 			FirstTimeOverThreshold = System.currentTimeMillis();
 		}
-		else if (IntakeMotor1.getOutputCurrent() < 10 && stoppedIntaking == false) // make constant
+		else if (IntakeMotor1.getOutputCurrent() < Constants.STALLED_MOTOR_CURRENT && stoppedIntaking == false) 
 		{
 			FirstTimeOverThreshold = 0;
 		}
 		
-		if ((FirstTimeOverThreshold != 0) && (System.currentTimeMillis() - FirstTimeOverThreshold > 500)) // make constant
+		if ((FirstTimeOverThreshold != 0) && (System.currentTimeMillis() - FirstTimeOverThreshold > Constants.CURRENT_OVER_THRESHOLD_TIME_MILLIS)) 
 		{
 			stoppedIntaking = true;
 			motorPower = 0;
 		}
 		
-		if (Robot.NumTimesThroughLoop % 10 == 0) // make constant
+		if (Robot.NumTimesThroughLoop % Constants.PRINT_SPEED_DIVIDER == 0) 
 		{
 			//System.out.println("Current: " + IntakeMotor1.getOutputCurrent());
 		}

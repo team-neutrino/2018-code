@@ -27,11 +27,11 @@ public class Elevator
 	 */
 	public Elevator()
 	{
-		ElevatorEncoder = new Encoder(4, 5); // make constant
+		ElevatorEncoder = new Encoder(Constants.ELEVATOR_ENCODER_POWER_CHANNEL, Constants.ELEVATOR_ENCODER_DATA_CHANNEL); 
 		ElevatorEncoder.reset();
-		ElevatorEncoder.setDistancePerPulse(9.0/360); // make constant
+		ElevatorEncoder.setDistancePerPulse(Constants.ELEVATOR_DISTANCE_TRAVELED_PER_ROTATION/Constants.ENCODER_COUNTS_PER_ROTATION); 
 		
-		ElevatorMotor = new Talon(3); // make constant
+		ElevatorMotor = new Talon(Constants.ELEVATOR_MOTOR_1); 
 	}
 	
 	//Make a move method once we have encoders that work
