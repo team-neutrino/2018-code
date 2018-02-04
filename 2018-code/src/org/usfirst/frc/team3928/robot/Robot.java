@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.hal.PDPJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -71,6 +72,7 @@ public class Robot extends IterativeRobot
 	 */
 	public static int NumTimesThroughLoop;
 	
+	public Joystick ThrustMaster;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -89,6 +91,8 @@ public class Robot extends IterativeRobot
 		
 		NumTimesThroughLoop = 0;
 		
+		ThrustMaster = new Joystick(3);
+		
 	}
 
 	/**
@@ -105,7 +109,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		DriveInst.TurnDegrees(30);
+		DriveInst.TurnDegrees(90);
 		
 	}
 
@@ -125,6 +129,21 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic() 
 	{	
+		double leftY = LeftJoystick.getY();
+		double rightY = RightJoystick.getY();
+		if (Math.abs(leftY) < 0.05)
+		{
+			leftY = 0;
+		}
+		
+		if (Math.abs(rightY) < 0.05)
+		{
+			rightY = 0;
+		}
+		DriveInst.SetLeft(leftY);
+		DriveInst.SetRight(rightY);
+		
+		/*
 		if (LeftJoystick.getRawButton(1))
 		{
 			CubeManipulatorInst.MoveCube(IntakeState.INTAKE);
@@ -137,7 +156,7 @@ public class Robot extends IterativeRobot
 		{
 			CubeManipulatorInst.MoveCube(IntakeState.OFF);
 		}
-
+		*/
 		if (NumTimesThroughLoop % 10 == 0) // make constant
 		{
 			System.out.println();
@@ -165,5 +184,7 @@ public class Robot extends IterativeRobot
 	{
 		
 	}
+	
+	
 	
 }
