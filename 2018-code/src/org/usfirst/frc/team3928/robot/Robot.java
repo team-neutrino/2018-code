@@ -94,6 +94,7 @@ public class Robot extends IterativeRobot
 		CubeManipulatorInst = new CubeManipulator();
 		
 		NumTimesThroughLoop = 0;
+		ElevatorInst.setMotorSpeed(1);
 	}
 
 	/**
@@ -110,7 +111,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		DriveInst.TurnDegrees(90);
+		//DriveInst.TurnDegrees(90);
 		
 	}
 
@@ -146,7 +147,6 @@ public class Robot extends IterativeRobot
 		DriveInst.SetLeft(leftY);
 		DriveInst.SetRight(rightY);
 		
-	
 //		if (LeftJoystick.getRawButton(1))
 //		{
 //			CubeManipulatorInst.MoveCube(IntakeState.INTAKE);
@@ -162,7 +162,7 @@ public class Robot extends IterativeRobot
 		
 		if (NumTimesThroughLoop % Constants.PRINT_SPEED_DIVIDER == 0) 
 		{
-			System.out.println();
+			System.out.println("The value of the elevator encoder is: " + ElevatorInst.getEncoderValue());
 		}
 		
 		NumTimesThroughLoop++;
