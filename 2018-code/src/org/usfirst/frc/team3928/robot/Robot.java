@@ -84,7 +84,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void robotInit() 
 	{
-		Controller = new XboxController(Constants.XBOX_CONTROLLER); 
 		ThrustMaster = new Joystick(Constants.THRUST_MASTER_CONTROLLER);
 		LeftJoystick = new Joystick(Constants.LEFT_JOYSTICK); 
 		RightJoystick = new Joystick(Constants.RIGHT_JOYSTICK); 
@@ -94,7 +93,6 @@ public class Robot extends IterativeRobot
 		CubeManipulatorInst = new CubeManipulator();
 		
 		NumTimesThroughLoop = 0;
-		ElevatorInst.setMotorSpeed(1);
 	}
 
 	/**
@@ -131,6 +129,9 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic() 
 	{	
+		double elevatorPercent = (-ThrustMaster.getZ() + 1) / 2;
+		ElevatorInst.setDistancePercent(elevatorPercent);
+		
 		double leftY = LeftJoystick.getY();
 		double rightY = RightJoystick.getY();
 		
@@ -162,7 +163,7 @@ public class Robot extends IterativeRobot
 		
 		if (NumTimesThroughLoop % Constants.PRINT_SPEED_DIVIDER == 0) 
 		{
-			System.out.println("The value of the elevator encoder is: " + ElevatorInst.getEncoderValue());
+
 		}
 		
 		NumTimesThroughLoop++;

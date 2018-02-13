@@ -38,7 +38,7 @@ public class Constants
 	//Elevator
 	public static final int ELEVATOR_ENCODER_POWER_CHANNEL = 0;
 	public static final int ELEVATOR_ENCODER_DATA_CHANNEL = 1;
-	public static final double ELEVATOR_DISTANCE_TRAVELED_PER_ROTATION = 9.0;
+	public static final double ELEVATOR_DISTANCE_TRAVELED_PER_ROTATION = 8.0;
 	
 	public static final int ELEVATOR_MOTOR_1 = 4;
 	public static final int ELEVATOR_MOTOR_2 = 5;

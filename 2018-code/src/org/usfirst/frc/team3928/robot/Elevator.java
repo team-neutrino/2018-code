@@ -5,6 +5,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Talon;
 
 /**
@@ -14,7 +18,7 @@ import edu.wpi.first.wpilibj.Talon;
  * @author NicoleEssner
  *
  */
-public class Elevator 
+public class Elevator implements Runnable, PIDSource, PIDOutput
 {
 	/**
 	 * The encoder that is attached to the elevator mechanism.  
@@ -47,6 +51,8 @@ public class Elevator
 	 */
 	private DigitalInput LiftButton;
 	
+	private PIDController PIDControllerInst;
+	
 	/**
 	 * Constructor for the elevator object.
 	 */
@@ -62,6 +68,13 @@ public class Elevator
 		ElevatorMotor4 = new TalonSRX(Constants.ELEVATOR_MOTOR_4); 
 		
 		LiftButton = new DigitalInput(Constants.ELEVATOR_BUTTON);
+		
+		PIDControllerInst = new PIDController(0.2, 0, 0, 0, this, this);
+		PIDControllerInst.setAbsoluteTolerance(0.5);
+		PIDControllerInst.setInputRange(1, 70);
+		PIDControllerInst.setOutputRange(-1, 1);
+		
+		new Thread(this).start();
 	}
 	
 	/**
@@ -72,20 +85,9 @@ public class Elevator
 	 * @return
 	 * 		The current state that the button is in. 
 	 */
-	public boolean getButtonState()
+	private boolean getButtonState()
 	{	
-		return LiftButton.get();
-	}
-	
-	/**
-	 * This will probably be deleted 
-	 * 
-	 * @return
-	 * 		The current value of the elevator encoder.
-	 */
-	public double getEncoderValue()
-	{
-		return ElevatorEncoder.getDistance();
+		return !LiftButton.get();
 	}
 	
 	/**
@@ -95,14 +97,75 @@ public class Elevator
 	 * @param speed
 	 * 		The value to set the elevator motors to. 
 	 */
-	public void setMotorSpeed(double speed)
+	private void setMotorSpeed(double speed)
 	{
+		if (getButtonState() && (speed < 0 ))
+		{
+			speed = 0;
+		}
 		ElevatorMotor1.set(ControlMode.PercentOutput, speed);
 		ElevatorMotor2.set(ControlMode.PercentOutput, speed);
 		ElevatorMotor3.set(ControlMode.PercentOutput, speed);
 		ElevatorMotor4.set(ControlMode.PercentOutput, speed);
 	}
 	
-	//Make a move method once we have encoders that work
+	private void zeroElevator()
+	{
+		System.out.println("zeroing elevator");
+		setMotorSpeed(-0.3);
+		while (!getButtonState())
+		{
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		System.out.println("left while loop");
+		setMotorSpeed(0);
+		ElevatorEncoder.reset();
+		PIDControllerInst.enable();
+	}
+
+	public void run() 
+	{
+		zeroElevator();	
+	}
+
+	@Override
+	public void pidWrite(double output) 
+	{
+		setMotorSpeed(output);
+	}
+
+	@Override
+	public void setPIDSourceType(PIDSourceType pidSource) 
+	{
+		System.out.println("This is the PIDSourceType: " + pidSource.toString());
+	}
+
+	@Override
+	public PIDSourceType getPIDSourceType() 
+	{
+		return PIDSourceType.kDisplacement;
+	}
+
+	@Override
+	public double pidGet() 
+	{
+		return ElevatorEncoder.getDistance();
+	}
+	
+	public void setDistanceInches(double distance)
+	{
+		PIDControllerInst.setSetpoint(distance);
+	}
+	
+	public void setDistancePercent(double percent)
+	{
+		double distance = percent * 70;
+		setDistanceInches(distance);
+	}
 	
 }
