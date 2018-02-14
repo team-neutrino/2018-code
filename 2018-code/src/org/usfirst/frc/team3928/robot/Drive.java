@@ -66,6 +66,8 @@ public class Drive implements PIDSource, PIDOutput
 	
 	private PIDController PIDControllerInst;
 	
+	private long NavxTimeInPID;
+	
 	/**
 	 * Constructor for the Drive class. 
 	 */
@@ -121,6 +123,8 @@ public class Drive implements PIDSource, PIDOutput
 		
 		PIDControllerInst.setInputRange(Constants.DRIVE_PID_INPUT_RANGE_MIN, Constants.DRIVE_PID_INPUT_RANGE_MAX);
 		PIDControllerInst.setOutputRange(Constants.DRIVE_PID_OUTPUT_RANGE_MIN, Constants.DRIVE_PID_OUTPUT_RANGE_MAX);
+		
+		NavxTimeInPID = 0;
 	}
 	
 	/**
@@ -132,8 +136,8 @@ public class Drive implements PIDSource, PIDOutput
 	 */
 	public void SetRight(double motorPower)
 	{
-		RightMotor1.set(ControlMode.PercentOutput, motorPower);
-		RightMotor2.set(ControlMode.PercentOutput, motorPower);
+		RightMotor1.set(ControlMode.PercentOutput, -motorPower);
+		RightMotor2.set(ControlMode.PercentOutput, -motorPower);
 	}
 	
 	/**
@@ -162,12 +166,17 @@ public class Drive implements PIDSource, PIDOutput
 		
 		int numTimesThroughLoop = 0;  
 		
+		
+		
 		while(Math.abs(targetDistance) > Math.abs(RightEncoder.getDistance()) && 
 			  Math.abs(targetDistance) > Math.abs(LeftEncoder.getDistance()) &&
 			  (DriverStation.getInstance().isAutonomous() && !DriverStation.getInstance().isDisabled()))
 		{
-			double rightMotorPower = PID.PIDControl(targetDistance, RightEncoder.getDistance(), 0.05, 0.2, 5, (numTimesThroughLoop % 2000 == -1));
-			double leftMotorPower = PID.PIDControl(targetDistance, LeftEncoder.getDistance(), 0.05, 0.2, 5, (numTimesThroughLoop % 2000 == -1));
+//			System.out.println("Encoder right value: " + RightEncoder.getDistance());
+//			System.out.println("Encoder left value: " + LeftEncoder.getDistance());
+			
+			double rightMotorPower = PID.PIDControl(targetDistance, RightEncoder.getDistance(), 0.05, 0.2, 2, (numTimesThroughLoop % 2000 == -1));
+			double leftMotorPower = PID.PIDControl(targetDistance, LeftEncoder.getDistance(), 0.05, 0.2, 2, (numTimesThroughLoop % 2000 == -1));
 
 			SetRight(rightMotorPower);
 			SetLeft(leftMotorPower);
@@ -183,6 +192,8 @@ public class Drive implements PIDSource, PIDOutput
 				e.printStackTrace();
 			}
 		}
+		
+		
 	}	
 	
 	/**
@@ -200,9 +211,17 @@ public class Drive implements PIDSource, PIDOutput
 		System.out.println("About to enable PIDControler");
 		PIDControllerInst.enable();
 		
-		while (!DriverStation.getInstance().isDisabled())
+		NavxTimeInPID = System.currentTimeMillis();
+		
+		while (!DriverStation.getInstance().isDisabled() && !PIDControllerInst.onTarget())
 			//(!PIDControllerInst.onTarget() && (DriverStation.getInstance().isAutonomous() && !DriverStation.getInstance().isDisabled()))
 		{
+			if (System.currentTimeMillis() - NavxTimeInPID > 3000)
+			{
+				System.out.println("PID loop had to be broken");
+				break;
+			}
+			
 			double navxYaw = Navx.getYaw();
 			System.out.println("In pidGet, the Navx yaw: " + navxYaw);
 			

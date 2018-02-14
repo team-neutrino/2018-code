@@ -19,7 +19,7 @@ public class Constants
 	public static final int DRIVE_RIGHT_ENCODER_DATA_CHANNEL = 5;
 	public static final int DRIVE_LEFT_ENCODER_POWER_CHANNEL = 2;
 	public static final int DRIVE_LEFT_ENCODER_DATA_CHANNEL = 3;
-	public static final int DRIVE_WHEEL_RADUIS = 4;
+	public static final int DRIVE_WHEEL_RADUIS = 2;
 	public static final int DRIVE_WHEEL_DIAMETER = 4;
 	public static final int ENCODER_COUNTS_PER_ROTATION = 360;
 	public static final double DRIVE_ENCODER_DISTANCE_PER_PULSE = DRIVE_WHEEL_DIAMETER * Math.PI / ENCODER_COUNTS_PER_ROTATION; // Should this be radius or diameter?
@@ -32,8 +32,8 @@ public class Constants
 	public static final int DRIVE_ABSOLUTE_VALUE_TOLERANCE_DEGREE_TURN = 2;
 	public static final int DRIVE_PID_INPUT_RANGE_MIN = -180;
 	public static final int DRIVE_PID_INPUT_RANGE_MAX = 180;
-	public static final int DRIVE_PID_OUTPUT_RANGE_MIN = -1;
-	public static final int DRIVE_PID_OUTPUT_RANGE_MAX = 1;
+	public static final double DRIVE_PID_OUTPUT_RANGE_MIN = -0.4;
+	public static final double DRIVE_PID_OUTPUT_RANGE_MAX = 0.4;
 	
 	//Elevator
 	public static final int ELEVATOR_ENCODER_POWER_CHANNEL = 0;

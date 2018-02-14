@@ -110,8 +110,39 @@ public class Robot extends IterativeRobot
 	public void autonomousInit() 
 	{
 		//DriveInst.TurnDegrees(90);
+		//DriveInst.DriveDistance(140);
+		
+		
+//		try 
+//		{
+//			ElevatorInst.setDistanceInches(30);
+//			DriveInst.DriveDistance(140);
+//			Thread.sleep(1000);
+//			DriveInst.TurnDegrees(-90);
+//			Thread.sleep(1000);
+//			DriveInst.DriveDistance(40);
+//		} 
+//		catch (InterruptedException e) 
+//		{
+//			e.printStackTrace();
+//		}
+		
+		try 
+		{
+			ElevatorInst.setDistanceInches(30);
+			DriveInst.DriveDistance(140);
+			Thread.sleep(1000);
+			DriveInst.TurnDegrees(90);
+			Thread.sleep(1000);
+			DriveInst.DriveDistance(40);
+		} 
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
 		
 	}
+	
 
 	/**
 	 * This function is called periodically during autonomous.
