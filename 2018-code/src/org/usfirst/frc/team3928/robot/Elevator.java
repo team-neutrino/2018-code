@@ -52,6 +52,10 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 */
 	private DigitalInput LiftButton;
 
+	/**
+	 * The PIDController for using the elevator encoder to raise the elevator 
+	 * a distance. 
+	 */
 	private PIDController PIDControllerInst;
 
 	/**
@@ -70,18 +74,18 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 
 		LiftButton = new DigitalInput(Constants.ELEVATOR_BUTTON);
 
-		PIDControllerInst = new PIDController(0.2, 0, 0, 0, this, this);
-		PIDControllerInst.setAbsoluteTolerance(0.5);
-		PIDControllerInst.setInputRange(1, 70);
-		PIDControllerInst.setOutputRange(-1, 1);
+		PIDControllerInst = new PIDController(0.2, 0, 0, 0, this, this); // Make constant
+		PIDControllerInst.setAbsoluteTolerance(0.5); // Make constant
+		PIDControllerInst.setInputRange(1, 70); // Make constant
+		PIDControllerInst.setOutputRange(-1, 1); // Make constant
 
 		new Thread(this).start();
 	}
 
 	/**
 	 * Returns the state of the button. Is true when the 
-	 * button is not being pushed and false when the 
-	 * button is pushed. 
+	 * button is being pushed and false when the 
+	 * button is not pushed. 
 	 * 
 	 * @return
 	 * 		The current state that the button is in. 
@@ -111,46 +115,41 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		ElevatorMotor4.set(ControlMode.PercentOutput, speed);
 	}
 
+	/**
+	 * Is called once the robot is enabled. Will zero the elevator 
+	 * to get the correct encoder value. 
+	 */
 	private void zeroElevator()
 	{
 		while (true)
 		{
 			PIDControllerInst.disable();
 			
-			//System.out.println("zeroing elevator");
+//			System.out.println("zeroing elevator");
 			setMotorSpeed(-0.3);
 			while (!getButtonState())
 			{
-				try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				Utill.SleepThread(1);
 			}
 			
-			//System.out.println("left while loop");
+//			System.out.println("left while loop");
 			setMotorSpeed(0);
 			ElevatorEncoder.reset();
 			PIDControllerInst.enable();
 			
 			while (DriverStation.getInstance().isEnabled())
 			{
-				try {
-					Thread.sleep(5);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				Utill.SleepThread(1);
 			}
 		}
 	}
 
+	@Override
 	public void run() 
 	{
 		zeroElevator();	
 	}
-
+	
 	@Override
 	public void pidWrite(double output) 
 	{
@@ -175,15 +174,29 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		return ElevatorEncoder.getDistance();
 	}
 
+	/**
+	 * Will set the elevator to a distance in inches. Should this be made private?
+	 * 
+	 * @param distance
+	 * 		The distance to move the elevator to. 
+	 */
 	public void setDistanceInches(double distance)
 	{
 		PIDControllerInst.setSetpoint(distance);
 	}
 
+	/**
+	 * Will set the elevator to a position based on a percent. 
+	 * 
+	 * @param percent
+	 * 		The percent the elevator position should be. 
+	 */
 	public void setDistancePercent(double percent)
 	{
 		double distance = percent * 70;
 		setDistanceInches(distance);
 	}
+
+	
 
 }

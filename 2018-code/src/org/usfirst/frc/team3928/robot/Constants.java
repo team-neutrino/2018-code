@@ -19,10 +19,9 @@ public class Constants
 	public static final int DRIVE_RIGHT_ENCODER_DATA_CHANNEL = 5;
 	public static final int DRIVE_LEFT_ENCODER_POWER_CHANNEL = 2;
 	public static final int DRIVE_LEFT_ENCODER_DATA_CHANNEL = 3;
+	
 	public static final int DRIVE_WHEEL_RADUIS = 2;
-	public static final int DRIVE_WHEEL_DIAMETER = 4;
 	public static final int ENCODER_COUNTS_PER_ROTATION = 360;
-	public static final double DRIVE_ENCODER_DISTANCE_PER_PULSE = DRIVE_WHEEL_DIAMETER * Math.PI / ENCODER_COUNTS_PER_ROTATION; // Should this be radius or diameter?
 	
 	public static final double DRIVE_NAVX_ANGLE_ADJUSTMENT = 5.5;
 	

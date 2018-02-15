@@ -46,13 +46,13 @@ public class PID
 		double difference = sensorPosition - target;
 		double motorPower = difference * pVal;
 		
-		if (motorPower < -0.5)
+		if (motorPower < -0.5) // Make constant 
 		{
-			motorPower = -0.5;
+			motorPower = -0.5; // Make constant 
 		}
-		else if (motorPower > 0.5)
+		else if (motorPower > 0.5) // Make constant 
 		{
-			motorPower = 0.5;
+			motorPower = 0.5; // Make constant 
 		}
 		
 		if (Math.abs(motorPower) < minimumMotorPower && 

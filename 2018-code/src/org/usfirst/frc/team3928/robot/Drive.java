@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -64,17 +63,35 @@ public class Drive implements PIDSource, PIDOutput
 	 */
 	private AHRS Navx;
 	
+	/**
+	 * The PIDController for using the navx to turn a number 
+	 * of degrees. 
+	 */
 	private PIDController TurnDegreesPIDController;
 	
+	/**
+	 * The PIDController for the right side of the drive train 
+	 * for driving a distance. 
+	 */
 	private PIDController RightDrivePIDController;
 	
+	/**
+	 * The PIDController for the left side of the drive train 
+	 * for driving a distance. 
+	 */
 	private PIDController LeftDrivePIDController;
 	
+	/**
+	 * The time that the PID Loop for turning degrees 
+	 * has been executing. 
+	 */
 	private long TurnDegreesTimeInPID;
 	
+	/**
+	 * The time that the PID Loop for driving a distance 
+	 * has been executing. 
+	 */
 	private long DriveDistanceTimeInPID;
-	
-	private boolean isDrivingDistance; 
 	
 	/**
 	 * Constructor for the Drive class. 
@@ -89,17 +106,14 @@ public class Drive implements PIDSource, PIDOutput
 		RightEncoder = new Encoder(Constants.DRIVE_RIGHT_ENCODER_POWER_CHANNEL, Constants.DRIVE_RIGHT_ENCODER_DATA_CHANNEL); 
 		LeftEncoder = new Encoder(Constants.DRIVE_LEFT_ENCODER_POWER_CHANNEL, Constants.DRIVE_LEFT_ENCODER_DATA_CHANNEL); 
 		
-		int WheelRadius = Constants.DRIVE_WHEEL_RADUIS;
-		int CountsPerRotation = Constants.ENCODER_COUNTS_PER_ROTATION; 
-		
-		RightEncoder.setDistancePerPulse(2 * WheelRadius * Math.PI / CountsPerRotation);
-		LeftEncoder.setDistancePerPulse(2 * WheelRadius * Math.PI / CountsPerRotation);
+		RightEncoder.setDistancePerPulse(2 * Constants.DRIVE_WHEEL_RADUIS * Math.PI / Constants.ENCODER_COUNTS_PER_ROTATION);
+		LeftEncoder.setDistancePerPulse(2 * Constants.DRIVE_WHEEL_RADUIS * Math.PI / Constants.ENCODER_COUNTS_PER_ROTATION);
 		
 		RightEncoder.reset();
 		LeftEncoder.reset();
 	
 		Navx = new AHRS(SPI.Port.kMXP);
-		Navx.setAngleAdjustment(Constants.DRIVE_NAVX_ANGLE_ADJUSTMENT); // Do we need this still? 
+		Navx.setAngleAdjustment(Constants.DRIVE_NAVX_ANGLE_ADJUSTMENT); 
 		
 //		if (!SmartDashboard.getKeys().contains("P: "))
 //		{
@@ -131,17 +145,15 @@ public class Drive implements PIDSource, PIDOutput
 		TurnDegreesPIDController.setInputRange(Constants.DRIVE_PID_INPUT_RANGE_MIN, Constants.DRIVE_PID_INPUT_RANGE_MAX);
 		TurnDegreesPIDController.setOutputRange(Constants.DRIVE_PID_OUTPUT_RANGE_MIN, Constants.DRIVE_PID_OUTPUT_RANGE_MAX);
 		
-		RightDrivePIDController = new PIDController(0.025, 0.01, 0.4, RightEncoder, new DrivePID(DriveSide.RIGHT)); 
-		RightDrivePIDController.setAbsoluteTolerance(1);
-		RightDrivePIDController.setInputRange(-200, 200);
-		RightDrivePIDController.setOutputRange(-0.8, 0.8);
+		RightDrivePIDController = new PIDController(0.025, 0.01, 0.4, RightEncoder, new DrivePID(DriveSide.RIGHT)); // Make constant
+		RightDrivePIDController.setAbsoluteTolerance(1); // Make constant
+		RightDrivePIDController.setInputRange(-200, 200); // Make constant
+		RightDrivePIDController.setOutputRange(-0.8, 0.8); // Make constant
 		
-		LeftDrivePIDController = new PIDController(0.025, 0.01, 0.4, LeftEncoder, new DrivePID(DriveSide.LEFT)); 
-		LeftDrivePIDController.setAbsoluteTolerance(1);
-		LeftDrivePIDController.setInputRange(-200, 200);
-		LeftDrivePIDController.setOutputRange(-0.8, 0.8);
-		
-		isDrivingDistance = false;
+		LeftDrivePIDController = new PIDController(0.025, 0.01, 0.4, LeftEncoder, new DrivePID(DriveSide.LEFT)); // Make constant
+		LeftDrivePIDController.setAbsoluteTolerance(1); // Make constant
+		LeftDrivePIDController.setInputRange(-200, 200); // Make constant
+		LeftDrivePIDController.setOutputRange(-0.8, 0.8); // Make constant
 		
 		DriveDistanceTimeInPID = 0;
 		TurnDegreesTimeInPID = 0;
@@ -181,11 +193,11 @@ public class Drive implements PIDSource, PIDOutput
 	 */
 	public void DriveDistance(double targetDistance)
 	{
-//		isDrivingDistance = true;
-//		
 		RightEncoder.reset();
 		LeftEncoder.reset();
-//		
+		
+//		isDrivingDistance = true;
+//
 //		RightDrivePIDController.reset();
 //		LeftDrivePIDController.reset();
 //		
@@ -234,14 +246,7 @@ public class Drive implements PIDSource, PIDOutput
 			
 			numTimesThroughLoop++; 
 			
-			try 
-			{
-				Thread.sleep(1);
-			} 
-			catch (InterruptedException e) 
-			{
-				e.printStackTrace();
-			}
+			Utill.SleepThread(1);
 		}	
 	}	
 	
@@ -263,7 +268,6 @@ public class Drive implements PIDSource, PIDOutput
 		TurnDegreesTimeInPID = System.currentTimeMillis();
 		
 		while (!DriverStation.getInstance().isDisabled() && !TurnDegreesPIDController.onTarget())
-			//(!PIDControllerInst.onTarget() && (DriverStation.getInstance().isAutonomous() && !DriverStation.getInstance().isDisabled()))
 		{
 			if (System.currentTimeMillis() - TurnDegreesTimeInPID > 3000)
 			{
@@ -278,8 +282,7 @@ public class Drive implements PIDSource, PIDOutput
 //			PIDControllerInst.setI(SmartDashboard.getNumber("I: ", 0));
 //			PIDControllerInst.setD(SmartDashboard.getNumber("D: ", 0));
 //			
-			Timer.delay(0.1);
-			
+			Utill.SleepThread(1);
 		}
 		
 		TurnDegreesPIDController.disable();
@@ -310,16 +313,39 @@ public class Drive implements PIDSource, PIDOutput
 		return Navx.getYaw();
 	}
 	
+	/**
+	 * Enum for which side the pidWrite function should run on. 
+	 * 
+	 * @author NicoleEssner
+	 *
+	 */
 	private enum DriveSide
 	{
 		LEFT, RIGHT;
 	}
 	
+	/**
+	 * This is a private class for running multiple instance of PIDController 
+	 * in the same class. 
+	 * 
+	 * @author NicoleEssner
+	 *
+	 */
 	private class DrivePID implements PIDOutput
 	{
-		
+		/**
+		 * Enum value for the which side of the drive train 
+		 * the PID should run on. 
+		 */
 		private DriveSide Side;
 		
+		/**
+		 * Construction for DrivePID class.
+		 * 
+		 * @param state
+		 * 		The side of the drive the PID should run
+		 * 		on.  
+		 */
 		public DrivePID(DriveSide state)
 		{
 			Side = state;
@@ -337,6 +363,5 @@ public class Drive implements PIDSource, PIDOutput
 				SetRight(-output);
 			}
 		}
-		
 	}
 }

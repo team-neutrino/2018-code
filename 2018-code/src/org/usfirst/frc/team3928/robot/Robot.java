@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.hal.PDPJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -112,7 +111,7 @@ public class Robot extends IterativeRobot
 	{
 		//DriveInst.TurnDegrees(90);
 		DriveInst.DriveDistance(100);
-		Timer.delay(1);
+		Utill.SleepThread(1000);
 		DriveInst.DriveDistance(-100);
 		
 //		try 
@@ -152,7 +151,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousPeriodic() 
 	{
-		
 		
 	}
 
@@ -201,15 +199,7 @@ public class Robot extends IterativeRobot
 		
 		NumTimesThroughLoop++;
 		
-		try 
-		{
-			Thread.sleep(1);
-		} 
-		catch (InterruptedException e) 
-		{
-			e.printStackTrace();
-		}
-		
+		Utill.SleepThread(1);
 	}
 
 	/**
