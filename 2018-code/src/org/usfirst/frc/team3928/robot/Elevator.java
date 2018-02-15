@@ -104,6 +104,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		{
 			speed = 0;
 		}
+		
 		ElevatorMotor1.set(ControlMode.PercentOutput, speed);
 		ElevatorMotor2.set(ControlMode.PercentOutput, speed);
 		ElevatorMotor3.set(ControlMode.PercentOutput, speed);

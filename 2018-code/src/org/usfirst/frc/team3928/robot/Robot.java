@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.hal.PDPJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -110,8 +111,9 @@ public class Robot extends IterativeRobot
 	public void autonomousInit() 
 	{
 		//DriveInst.TurnDegrees(90);
-		//DriveInst.DriveDistance(140);
-		
+		DriveInst.DriveDistance(100);
+		Timer.delay(1);
+		DriveInst.DriveDistance(-100);
 		
 //		try 
 //		{
@@ -127,19 +129,19 @@ public class Robot extends IterativeRobot
 //			e.printStackTrace();
 //		}
 		
-		try 
-		{
-			ElevatorInst.setDistanceInches(30);
-			DriveInst.DriveDistance(140);
-			Thread.sleep(1000);
-			DriveInst.TurnDegrees(90);
-			Thread.sleep(1000);
-			DriveInst.DriveDistance(40);
-		} 
-		catch (InterruptedException e) 
-		{
-			e.printStackTrace();
-		}
+//		try 
+//		{
+//			ElevatorInst.setDistanceInches(30);
+//			DriveInst.DriveDistance(140);
+//			Thread.sleep(1000);
+//			DriveInst.TurnDegrees(90);
+//			Thread.sleep(1000);
+//			DriveInst.DriveDistance(40);
+//		} 
+//		catch (InterruptedException e) 
+//		{
+//			e.printStackTrace();
+//		}
 		
 	}
 	
