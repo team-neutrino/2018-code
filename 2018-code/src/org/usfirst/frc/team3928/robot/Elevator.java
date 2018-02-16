@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 
 /**
@@ -58,6 +59,10 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 */
 	private PIDController PIDControllerInst;
 
+	private Solenoid IntakeActuatorIn;
+	
+	private Solenoid IntakeActuatorOut;
+	
 	/**
 	 * Constructor for the elevator object.
 	 */
@@ -79,13 +84,22 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		PIDControllerInst.setInputRange(1, 70); // Make constant
 		PIDControllerInst.setOutputRange(-1, 1); // Make constant
 
+		IntakeActuatorIn = new Solenoid(0);
+		IntakeActuatorOut = new Solenoid(1);
+		
 		new Thread(this).start();
 	}
 
+	public void MoveIntakeOut(boolean isMovingOut)
+	{
+
+		IntakeActuatorOut.set(isMovingOut);
+		IntakeActuatorIn.set(!isMovingOut);
+	}
+	
 	/**
-	 * Returns the state of the button. Is true when the 
-	 * button is being pushed and false when the 
-	 * button is not pushed. 
+	 * Returns the state of the button. Is true when the button is being 
+	 * pushed and false when the button is not pushed. 
 	 * 
 	 * @return
 	 * 		The current state that the button is in. 

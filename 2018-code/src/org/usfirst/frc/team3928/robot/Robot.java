@@ -109,39 +109,11 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		//DriveInst.TurnDegrees(90);
+		//AutonomousModes.PickAutonomousMode(1, CubeManipulatorInst, ElevatorInst, DriveInst);
+		
 		DriveInst.DriveDistance(100);
 		Utill.SleepThread(1000);
 		DriveInst.DriveDistance(-100);
-		
-//		try 
-//		{
-//			ElevatorInst.setDistanceInches(30);
-//			DriveInst.DriveDistance(140);
-//			Thread.sleep(1000);
-//			DriveInst.TurnDegrees(-90);
-//			Thread.sleep(1000);
-//			DriveInst.DriveDistance(40);
-//		} 
-//		catch (InterruptedException e) 
-//		{
-//			e.printStackTrace();
-//		}
-		
-//		try 
-//		{
-//			ElevatorInst.setDistanceInches(30);
-//			DriveInst.DriveDistance(140);
-//			Thread.sleep(1000);
-//			DriveInst.TurnDegrees(90);
-//			Thread.sleep(1000);
-//			DriveInst.DriveDistance(40);
-//		} 
-//		catch (InterruptedException e) 
-//		{
-//			e.printStackTrace();
-//		}
-		
 	}
 	
 
@@ -179,18 +151,18 @@ public class Robot extends IterativeRobot
 		DriveInst.SetLeft(leftY);
 		DriveInst.SetRight(rightY);
 		
-//		if (LeftJoystick.getRawButton(1))
-//		{
-//			CubeManipulatorInst.MoveCube(IntakeState.INTAKE);
-//		}
-//		else if (LeftJoystick.getRawButton(2))
-//		{
-//			CubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-//		}
-//		else
-//		{
-//			CubeManipulatorInst.MoveCube(IntakeState.OFF);
-//		}
+		if (LeftJoystick.getRawButton(1))
+		{
+			CubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+		}
+		else if (RightJoystick.getRawButton(1))
+		{
+			CubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+		}
+		else
+		{
+			CubeManipulatorInst.MoveCube(IntakeState.OFF);
+		}
 		
 		if (NumTimesThroughLoop % Constants.PRINT_SPEED_DIVIDER == 0) 
 		{

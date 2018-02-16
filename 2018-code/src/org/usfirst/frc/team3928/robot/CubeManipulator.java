@@ -21,12 +21,7 @@ public class CubeManipulator
 	/**
 	 * The first motor on the cube manipulator.
 	 */
-	private TalonSRX IntakeMotor1;
-	
-	/**
-	 * The second motor on the cube manipulator. 
-	 */
-	private TalonSRX IntakeMotor2;
+	private TalonSRX IntakeMotor;
 	
 	/**
 	 * The first time the current on the motor is above
@@ -45,8 +40,7 @@ public class CubeManipulator
 	 */
 	public CubeManipulator()
 	{
-		IntakeMotor1 = new TalonSRX(Constants.INTAKE_MOTOR_1); 
-		IntakeMotor2 = new TalonSRX(Constants.INTAKE_MOTOR_2); 
+		IntakeMotor = new TalonSRX(Constants.INTAKE_MOTOR_1); 
 		
 		stoppedIntaking = false;
 		FirstTimeOverThreshold = 0;
@@ -79,11 +73,13 @@ public class CubeManipulator
 			stoppedIntaking = false;
 		}
 		
-		if (IntakeMotor1.getOutputCurrent() > Constants.STALLED_MOTOR_CURRENT && FirstTimeOverThreshold == 0) 
+		System.out.println("The current of the motor is: " + IntakeMotor.getOutputCurrent());
+		
+		if (IntakeMotor.getOutputCurrent() > Constants.STALLED_MOTOR_CURRENT && FirstTimeOverThreshold == 0) 
 		{
 			FirstTimeOverThreshold = System.currentTimeMillis();
 		}
-		else if (IntakeMotor1.getOutputCurrent() < Constants.STALLED_MOTOR_CURRENT && stoppedIntaking == false) 
+		else if (IntakeMotor.getOutputCurrent() < Constants.STALLED_MOTOR_CURRENT && stoppedIntaking == false) 
 		{
 			FirstTimeOverThreshold = 0;
 		}
@@ -99,7 +95,6 @@ public class CubeManipulator
 			//System.out.println("Current: " + IntakeMotor1.getOutputCurrent());
 		}
 		
-		IntakeMotor1.set(ControlMode.PercentOutput, motorPower);
-		IntakeMotor2.set(ControlMode.PercentOutput, motorPower);
+		IntakeMotor.set(ControlMode.PercentOutput, motorPower);
 	}
 }
