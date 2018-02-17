@@ -140,7 +140,7 @@ public class Drive implements PIDSource, PIDOutput
 //		System.out.println("P: " + Pval + " I: " + Ival + " D: " + Dval);
 		
 		TurnDegreesPIDController =  new PIDController(Constants.DRIVE_P_VALUE_DEGREE_TURN, Constants.DRIVE_I_VALUE_DEGREE_TURN, 
-				 							  Constants.DRIVE_D_VALUE_DEGREE_TURN, this, this); // navx don't implement PIDOutput
+				 							  Constants.DRIVE_D_VALUE_DEGREE_TURN, Navx, this); 
 		TurnDegreesPIDController.setAbsoluteTolerance(Constants.DRIVE_ABSOLUTE_VALUE_TOLERANCE_DEGREE_TURN);
 		TurnDegreesPIDController.setInputRange(Constants.DRIVE_PID_INPUT_RANGE_MIN, Constants.DRIVE_PID_INPUT_RANGE_MAX);
 		TurnDegreesPIDController.setOutputRange(Constants.DRIVE_PID_OUTPUT_RANGE_MIN, Constants.DRIVE_PID_OUTPUT_RANGE_MAX);

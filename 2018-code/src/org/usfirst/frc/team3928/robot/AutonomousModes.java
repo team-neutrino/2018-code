@@ -58,7 +58,7 @@ public class AutonomousModes
 	 * @param driveInst
 	 * 		An instance of the drive. 
 	 */
-	public static void DriveForward(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	private static void DriveForward(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 		driveInst.DriveDistance(140);
 	}
@@ -73,7 +73,7 @@ public class AutonomousModes
 	 * @param driveInst
 	 * 		An instance of the drive. 
 	 */
-	public static void SwitchRight(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	private static void SwitchRight(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 		elevatorInst.setDistanceInches(30);
 		driveInst.DriveDistance(140);
@@ -93,7 +93,7 @@ public class AutonomousModes
 	 * @param driveInst
 	 * 		An instance of the drive. 
 	 */
-	public static void SwitchLeft(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	private static void SwitchLeft(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 		elevatorInst.setDistanceInches(30);
 		driveInst.DriveDistance(140);
