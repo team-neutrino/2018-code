@@ -73,7 +73,8 @@ public class CubeManipulator
 			stoppedIntaking = false;
 		}
 		
-		System.out.println("The current of the motor is: " + IntakeMotor.getOutputCurrent());
+		// TODO
+		//System.out.println("The current of the motor is: " + IntakeMotor.getOutputCurrent());
 		
 		if (IntakeMotor.getOutputCurrent() > Constants.STALLED_MOTOR_CURRENT && FirstTimeOverThreshold == 0) 
 		{

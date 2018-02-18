@@ -8,14 +8,14 @@ public class Constants
 	public static final int STALLED_MOTOR_CURRENT = 45; //10
 	public static final int CURRENT_OVER_THRESHOLD_TIME_MILLIS = 500;
 	
-	//Drive
+	// Drive
 	public static final int DRIVE_RIGHT_1_CHANNEL = 0;
 	public static final int DRIVE_RIGHT_2_CHANNEL = 1;
 	public static final int DRIVE_LEFT_1_CHANNEL = 2;
 	public static final int DRIVE_LEFT_2_CHANNEL = 3;
 	
-	public static final int DRIVE_RIGHT_ENCODER_POWER_CHANNEL = 4;
-	public static final int DRIVE_RIGHT_ENCODER_DATA_CHANNEL = 5;
+	public static final int DRIVE_RIGHT_ENCODER_POWER_CHANNEL = 8; // this change 4
+	public static final int DRIVE_RIGHT_ENCODER_DATA_CHANNEL = 9; // this change  5
 	public static final int DRIVE_LEFT_ENCODER_POWER_CHANNEL = 2;
 	public static final int DRIVE_LEFT_ENCODER_DATA_CHANNEL = 3;
 	
@@ -28,14 +28,28 @@ public class Constants
 	public static final double DRIVE_I_VALUE_DEGREE_TURN = 0.0;
 	public static final double DRIVE_D_VALUE_DEGREE_TURN = 0.045; 
 	public static final int DRIVE_ABSOLUTE_VALUE_TOLERANCE_DEGREE_TURN = 2;
-	public static final int DRIVE_PID_INPUT_RANGE_MIN = -180;
-	public static final int DRIVE_PID_INPUT_RANGE_MAX = 180;
-	public static final double DRIVE_PID_OUTPUT_RANGE_MIN = -0.4;
-	public static final double DRIVE_PID_OUTPUT_RANGE_MAX = 0.4;
+	public static final int DRIVE_PID_INPUT_RANGE_MIN_DEGREE_TURN = -180;
+	public static final int DRIVE_PID_INPUT_RANGE_MAX_DEGREE_TURN = 180;
+	public static final double DRIVE_PID_OUTPUT_RANGE_MIN_DEGREE_TURN = -0.4;
+	public static final double DRIVE_PID_OUTPUT_RANGE_MAX_DEGREE_TURN  = 0.4;
 	
-	//Elevator
-	public static final int ELEVATOR_ENCODER_POWER_CHANNEL = 0;
-	public static final int ELEVATOR_ENCODER_DATA_CHANNEL = 1;
+	public static final double DRIVE_P_VALUE_RIGHT = 0.025;
+	public static final double DRIVE_I_VALUE_RIGHT = 0.01;
+	public static final double DRIVE_D_VALUE_RIGHT = 0.01;
+	
+	public static final double DRIVE_P_VALUE_LEFT = 0.025;
+	public static final double DRIVE_I_VALUE_LEFT = 0.01;
+	public static final double DRIVE_D_VALUE_LEFT = 0.4;
+	
+	public static final int DRIVE_ABSOLUTE_VALUE_TOLERANCE = 1;
+	public static final int DRIVE_PID_INPUT_RANGE_MIN = -200;
+	public static final int DRIVE_PID_INPUT_RANGE_MAX = 200;
+	public static final double DRIVE_PID_OUTPUT_RANGE_MIN = -0.8;
+	public static final double DRIVE_PID_OUTPUT_RANGE_MAX = 0.8;
+	
+	// Elevator
+	public static final int ELEVATOR_ENCODER_POWER_CHANNEL = 0; 
+	public static final int ELEVATOR_ENCODER_DATA_CHANNEL = 1; 
 	public static final double ELEVATOR_DISTANCE_TRAVELED_PER_ROTATION = 8.0;
 	
 	public static final int ELEVATOR_MOTOR_1 = 4;
@@ -45,18 +59,20 @@ public class Constants
 	
 	public static final int ELEVATOR_BUTTON = 6;
 	
+	public static final double ELEVATOR_P_VALUE = 0.02;
+	public static final double ELEVATOR_I_VALUE = 0.0;
+	public static final double ELEVATOR_D_VALUE = 0.0;
+	public static final double ELEVATOR_ABSOLUTE_VALUE_TOLERANCE = 0.5;
+	public static final int ELEVATOR_PID_INPUT_RANGE_MIN = 1;
+	public static final int ELEVATOR_PID_INPUT_RANGE_MAX = 70;
+	public static final double ELEVATOR_PID_OUTPUT_RANGE_MIN = -1;
+	public static final double ELEVATOR_PID_OUTPUT_RANGE_MAX = 1;
+	
 	// Joysticks 
+	public static final int THRUST_MASTER_CONTROLLER = 0;
 	public static final int LEFT_JOYSTICK = 1;
 	public static final int RIGHT_JOYSTICK = 2;
 	
-	// Controller
-	public static final int XBOX_CONTROLLER = 0;
-	public static final int THRUST_MASTER_CONTROLLER = 3;
-	
 	// Misc
-	public static final int PRINT_SPEED_DIVIDER = 10;
-	
-	
-	
-			
+	public static final int PRINT_SPEED_DIVIDER = 10;	
 }

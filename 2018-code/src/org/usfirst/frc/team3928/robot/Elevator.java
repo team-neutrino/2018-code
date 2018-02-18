@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Talon;
 
 /**
  * This class is for the information associated with the 
@@ -59,9 +58,25 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 */
 	private PIDController PIDControllerInst;
 
+	/**
+	 * Actuation for the intake to go in. 
+	 */
 	private Solenoid IntakeActuatorIn;
 	
+	/**
+	 * Actuation for the intake to go out. 
+	 */
 	private Solenoid IntakeActuatorOut;
+	
+	/**
+	 * Actuation to trigger the climber. 
+	 */
+	private Solenoid ClimbUp;
+	
+	/**
+	 * Actuation to stop triggering the climber.
+	 */
+	private Solenoid StopClimb;
 	
 	/**
 	 * Constructor for the elevator object.
@@ -79,20 +94,32 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 
 		LiftButton = new DigitalInput(Constants.ELEVATOR_BUTTON);
 
-		PIDControllerInst = new PIDController(0.2, 0, 0, 0, this, this); // Make constant
-		PIDControllerInst.setAbsoluteTolerance(0.5); // Make constant
-		PIDControllerInst.setInputRange(1, 70); // Make constant
-		PIDControllerInst.setOutputRange(-1, 1); // Make constant
+		PIDControllerInst = new PIDController(Constants.ELEVATOR_P_VALUE, Constants.ELEVATOR_I_VALUE, Constants.ELEVATOR_D_VALUE, 
+											  this, this); 
+		PIDControllerInst.setAbsoluteTolerance(Constants.ELEVATOR_ABSOLUTE_VALUE_TOLERANCE); 
+		PIDControllerInst.setInputRange(Constants.ELEVATOR_PID_INPUT_RANGE_MIN, Constants.ELEVATOR_PID_INPUT_RANGE_MAX); 
+		PIDControllerInst.setOutputRange(-Constants.ELEVATOR_PID_OUTPUT_RANGE_MIN, Constants.ELEVATOR_PID_OUTPUT_RANGE_MAX); 
 
-		IntakeActuatorIn = new Solenoid(0);
-		IntakeActuatorOut = new Solenoid(1);
+		IntakeActuatorIn = new Solenoid(2);
+		IntakeActuatorOut = new Solenoid(3);
 		
+		ClimbUp = new Solenoid(0);
+		StopClimb = new Solenoid(1);
+		
+		MoveIntakeOut(false);
 		new Thread(this).start();
 	}
 
+	/**
+	 * Method that will move the intake down from the starting 
+	 * position. 
+	 * 
+	 * @param isMovingOut
+	 * 		True when the intake is out, false when it is in.
+	 */
 	public void MoveIntakeOut(boolean isMovingOut)
 	{
-
+		// TODO this need to make sense code wise
 		IntakeActuatorOut.set(isMovingOut);
 		IntakeActuatorIn.set(!isMovingOut);
 	}
@@ -158,6 +185,48 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		}
 	}
 
+	/**
+	 * Will set the elevator to a distance in inches. Should this be made private?
+	 * 
+	 * @param distance
+	 * 		The distance to move the elevator to. 
+	 */
+	public void setDistanceInches(double distance)
+	{
+		PIDControllerInst.setSetpoint(distance);
+	}
+
+	/**
+	 * Will set the elevator to a position based on a percent. 
+	 * 
+	 * @param percent
+	 * 		The percent the elevator position should be. 
+	 */
+	public void setDistancePercent(double percent)
+	{
+		double distance = percent * 70;
+		setDistanceInches(distance);
+	}
+
+	/**
+	 * Triggers the actuation that causes the climber to move,
+	 * this also disables the PID as soon as the input is true.
+	 * 
+	 * @param isClimbing
+	 * 		True when the climber is being triggered, false 
+	 * 		when not. 
+	 */
+	public void Climb(boolean isClimbing)
+	{
+		if (isClimbing)
+		{
+			PIDControllerInst.disable();
+		}
+		
+		ClimbUp.set(isClimbing);
+		StopClimb.set(!isClimbing);
+	}
+
 	@Override
 	public void run() 
 	{
@@ -187,30 +256,4 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	{
 		return ElevatorEncoder.getDistance();
 	}
-
-	/**
-	 * Will set the elevator to a distance in inches. Should this be made private?
-	 * 
-	 * @param distance
-	 * 		The distance to move the elevator to. 
-	 */
-	public void setDistanceInches(double distance)
-	{
-		PIDControllerInst.setSetpoint(distance);
-	}
-
-	/**
-	 * Will set the elevator to a position based on a percent. 
-	 * 
-	 * @param percent
-	 * 		The percent the elevator position should be. 
-	 */
-	public void setDistancePercent(double percent)
-	{
-		double distance = percent * 70;
-		setDistanceInches(distance);
-	}
-
-	
-
 }

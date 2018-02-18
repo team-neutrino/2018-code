@@ -7,25 +7,12 @@
 
 package org.usfirst.frc.team3928.robot;
 
-import java.util.Set;
 
 import org.usfirst.frc.team3928.robot.CubeManipulator.IntakeState;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.hal.PDPJNI;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,43 +27,38 @@ public class Robot extends IterativeRobot
 	 * The left joystick on the drivers station. 
 	 */
 	private Joystick LeftJoystick;
-	
+
 	/**
 	 * The right joystick on the drivers station. 
 	 */
 	private Joystick RightJoystick;
-	
-	/**
-	 * The x-box controller on the drivers station. 
-	 */
-	private XboxController Controller;
-	
+
 	/**
 	 * The object for the elevator. 
 	 */
 	private Elevator ElevatorInst;
-	
+
 	/**
 	 * The object for the drive. 
 	 */
 	private Drive DriveInst;
-	
+
 	/**
 	 * the object for the cube manipulator;
 	 */
 	private CubeManipulator CubeManipulatorInst;
-	
+
 	/**
 	 * The number of times that the teleopPeriodic loop 
 	 * has run. 
 	 */
 	public static int NumTimesThroughLoop;
-	
+
 	/**
 	 * The elevator controller 
 	 */
-	public Joystick ThrustMaster;
-	
+	private Joystick ThrustMaster;
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -91,7 +73,7 @@ public class Robot extends IterativeRobot
 		ElevatorInst = new Elevator();
 		DriveInst = new Drive();
 		CubeManipulatorInst = new CubeManipulator();
-		
+
 		NumTimesThroughLoop = 0;
 	}
 
@@ -109,13 +91,9 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		//AutonomousModes.PickAutonomousMode(1, CubeManipulatorInst, ElevatorInst, DriveInst);
-		
-		DriveInst.DriveDistance(100);
-		Utill.SleepThread(1000);
-		DriveInst.DriveDistance(-100);
+		AutonomousModes.PickAutonomousMode(0, CubeManipulatorInst, ElevatorInst, DriveInst);
 	}
-	
+
 
 	/**
 	 * This function is called periodically during autonomous.
@@ -123,7 +101,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousPeriodic() 
 	{
-		
+
 	}
 
 	/**
@@ -134,28 +112,47 @@ public class Robot extends IterativeRobot
 	{	
 		double elevatorPercent = (-ThrustMaster.getZ() + 1) / 2;
 		ElevatorInst.setDistancePercent(elevatorPercent);
-		
+
+		if (ThrustMaster.getRawButton(1))
+		{
+			ElevatorInst.Climb(true);
+		}
+		else
+		{
+			ElevatorInst.Climb(false);
+		}
+
+
+		if (ThrustMaster.getRawButton(7))
+		{
+			ElevatorInst.MoveIntakeOut(false);
+		}
+		else if (ThrustMaster.getRawButton(9))
+		{
+			ElevatorInst.MoveIntakeOut(true);
+		}
+
 		double leftY = LeftJoystick.getY();
 		double rightY = RightJoystick.getY();
-		
+
 		if (Math.abs(leftY) < 0.05)
 		{
 			leftY = 0;
 		}
-		
+
 		if (Math.abs(rightY) < 0.05)
 		{
 			rightY = 0;
 		}
-		
+
 		DriveInst.SetLeft(leftY);
 		DriveInst.SetRight(rightY);
-		
-		if (LeftJoystick.getRawButton(1))
+
+		if (ThrustMaster.getRawAxis(5) > 0.5)
 		{
 			CubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 		}
-		else if (RightJoystick.getRawButton(1))
+		else if (ThrustMaster.getRawAxis(5) < -0.5)
 		{
 			CubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
 		}
@@ -163,14 +160,13 @@ public class Robot extends IterativeRobot
 		{
 			CubeManipulatorInst.MoveCube(IntakeState.OFF);
 		}
-		
+
 		if (NumTimesThroughLoop % Constants.PRINT_SPEED_DIVIDER == 0) 
 		{
 
 		}
-		
+
 		NumTimesThroughLoop++;
-		
 		Utill.SleepThread(1);
 	}
 
@@ -180,9 +176,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void testPeriodic() 
 	{
-		
+
 	}
-	
-	
-	
 }
