@@ -112,7 +112,7 @@ public class Robot extends IterativeRobot
 	{	
 		double elevatorPercent = (-ThrustMaster.getZ() + 1) / 2;
 		ElevatorInst.setDistancePercent(elevatorPercent);
-
+		
 		if (ThrustMaster.getRawButton(1))
 		{
 			ElevatorInst.Climb(true);
@@ -122,14 +122,13 @@ public class Robot extends IterativeRobot
 			ElevatorInst.Climb(false);
 		}
 
-
-		if (ThrustMaster.getRawButton(7))
+		if (ThrustMaster.getRawButton(9))
 		{
-			ElevatorInst.MoveIntakeOut(false);
+			ElevatorInst.ReleaseIntake(false);
 		}
-		else if (ThrustMaster.getRawButton(9))
+		else if (ThrustMaster.getRawButton(7))
 		{
-			ElevatorInst.MoveIntakeOut(true);
+			ElevatorInst.ReleaseIntake(true);
 		}
 
 		double leftY = LeftJoystick.getY();

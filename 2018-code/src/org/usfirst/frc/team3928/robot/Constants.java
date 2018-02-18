@@ -59,7 +59,7 @@ public class Constants
 	
 	public static final int ELEVATOR_BUTTON = 6;
 	
-	public static final double ELEVATOR_P_VALUE = 0.02;
+	public static final double ELEVATOR_P_VALUE = 0.2;
 	public static final double ELEVATOR_I_VALUE = 0.0;
 	public static final double ELEVATOR_D_VALUE = 0.0;
 	public static final double ELEVATOR_ABSOLUTE_VALUE_TOLERANCE = 0.5;
@@ -69,7 +69,7 @@ public class Constants
 	public static final double ELEVATOR_PID_OUTPUT_RANGE_MAX = 1;
 	
 	// Joysticks 
-	public static final int THRUST_MASTER_CONTROLLER = 0;
+	public static final int THRUST_MASTER_CONTROLLER = 3;
 	public static final int LEFT_JOYSTICK = 1;
 	public static final int RIGHT_JOYSTICK = 2;
 	

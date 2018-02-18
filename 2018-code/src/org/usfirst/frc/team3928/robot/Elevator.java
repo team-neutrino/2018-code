@@ -94,19 +94,19 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 
 		LiftButton = new DigitalInput(Constants.ELEVATOR_BUTTON);
 
-		PIDControllerInst = new PIDController(Constants.ELEVATOR_P_VALUE, Constants.ELEVATOR_I_VALUE, Constants.ELEVATOR_D_VALUE, 
+		PIDControllerInst = new PIDController(Constants.ELEVATOR_P_VALUE, Constants.ELEVATOR_I_VALUE, Constants.ELEVATOR_D_VALUE, 0, 
 											  this, this); 
 		PIDControllerInst.setAbsoluteTolerance(Constants.ELEVATOR_ABSOLUTE_VALUE_TOLERANCE); 
 		PIDControllerInst.setInputRange(Constants.ELEVATOR_PID_INPUT_RANGE_MIN, Constants.ELEVATOR_PID_INPUT_RANGE_MAX); 
-		PIDControllerInst.setOutputRange(-Constants.ELEVATOR_PID_OUTPUT_RANGE_MIN, Constants.ELEVATOR_PID_OUTPUT_RANGE_MAX); 
+		PIDControllerInst.setOutputRange(Constants.ELEVATOR_PID_OUTPUT_RANGE_MIN, Constants.ELEVATOR_PID_OUTPUT_RANGE_MAX); 
 
-		IntakeActuatorIn = new Solenoid(2);
-		IntakeActuatorOut = new Solenoid(3);
+		IntakeActuatorIn = new Solenoid(4); // change practice
+		IntakeActuatorOut = new Solenoid(5); // change practice
 		
-		ClimbUp = new Solenoid(0);
+		ClimbUp = new Solenoid(0); 
 		StopClimb = new Solenoid(1);
 		
-		MoveIntakeOut(false);
+		ReleaseIntake(false);
 		new Thread(this).start();
 	}
 
@@ -117,7 +117,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 * @param isMovingOut
 	 * 		True when the intake is out, false when it is in.
 	 */
-	public void MoveIntakeOut(boolean isMovingOut)
+	public void ReleaseIntake(boolean isMovingOut)
 	{
 		// TODO this need to make sense code wise
 		IntakeActuatorOut.set(isMovingOut);
@@ -167,7 +167,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 			PIDControllerInst.disable();
 			
 //			System.out.println("zeroing elevator");
-			setMotorSpeed(-0.3);
+			setMotorSpeed(-0.15);
 			while (!getButtonState())
 			{
 				Utill.SleepThread(1);
@@ -223,8 +223,8 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 			PIDControllerInst.disable();
 		}
 		
-		ClimbUp.set(isClimbing);
-		StopClimb.set(!isClimbing);
+		ClimbUp.set(!isClimbing);
+		StopClimb.set(isClimbing);
 	}
 
 	@Override
