@@ -62,22 +62,23 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 * Actuation for the intake to go in. 
 	 */
 	private Solenoid IntakeActuatorIn;
-	
+
 	/**
 	 * Actuation for the intake to go out. 
 	 */
 	private Solenoid IntakeActuatorOut;
-	
+
 	/**
 	 * Actuation to trigger the climber. 
 	 */
 	private Solenoid ClimbUp;
-	
+
 	/**
 	 * Actuation to stop triggering the climber.
 	 */
 	private Solenoid StopClimb;
 	
+	private boolean isElevatorOn;
 	/**
 	 * Constructor for the elevator object.
 	 */
@@ -95,16 +96,18 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		LiftButton = new DigitalInput(Constants.ELEVATOR_BUTTON);
 
 		PIDControllerInst = new PIDController(Constants.ELEVATOR_P_VALUE, Constants.ELEVATOR_I_VALUE, Constants.ELEVATOR_D_VALUE, 0, 
-											  this, this); 
+				this, this); 
 		PIDControllerInst.setAbsoluteTolerance(Constants.ELEVATOR_ABSOLUTE_VALUE_TOLERANCE); 
 		PIDControllerInst.setInputRange(Constants.ELEVATOR_PID_INPUT_RANGE_MIN, Constants.ELEVATOR_PID_INPUT_RANGE_MAX); 
 		PIDControllerInst.setOutputRange(Constants.ELEVATOR_PID_OUTPUT_RANGE_MIN, Constants.ELEVATOR_PID_OUTPUT_RANGE_MAX); 
 
-		IntakeActuatorIn = new Solenoid(4); // change practice
-		IntakeActuatorOut = new Solenoid(5); // change practice
-		
-		ClimbUp = new Solenoid(0); 
-		StopClimb = new Solenoid(1);
+		IntakeActuatorIn = new Solenoid(4); // Make Constant
+		IntakeActuatorOut = new Solenoid(5); // Make Constant
+
+		ClimbUp = new Solenoid(0); // Make Constant
+		StopClimb = new Solenoid(1); // Make Constant
+
+		isElevatorOn = false;
 		
 		ReleaseIntake(false);
 		new Thread(this).start();
@@ -123,7 +126,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		IntakeActuatorOut.set(isMovingOut);
 		IntakeActuatorIn.set(!isMovingOut);
 	}
-	
+
 	/**
 	 * Returns the state of the button. Is true when the button is being 
 	 * pushed and false when the button is not pushed. 
@@ -149,7 +152,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		{
 			speed = 0;
 		}
-		
+
 		ElevatorMotor1.set(ControlMode.PercentOutput, speed);
 		ElevatorMotor2.set(ControlMode.PercentOutput, speed);
 		ElevatorMotor3.set(ControlMode.PercentOutput, speed);
@@ -165,19 +168,19 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		while (true)
 		{
 			PIDControllerInst.disable();
-			
-//			System.out.println("zeroing elevator");
+
+			//			System.out.println("zeroing elevator");
 			setMotorSpeed(-0.15);
 			while (!getButtonState())
 			{
 				Utill.SleepThread(1);
 			}
-			
-//			System.out.println("left while loop");
+
+			//			System.out.println("left while loop");
 			setMotorSpeed(0);
 			ElevatorEncoder.reset();
 			PIDControllerInst.enable();
-			
+
 			while (DriverStation.getInstance().isEnabled())
 			{
 				Utill.SleepThread(1);
@@ -220,9 +223,25 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	{
 		if (isClimbing)
 		{
+			isElevatorOn = true;
+			
 			PIDControllerInst.disable();
+
+			ElevatorMotor1.set(ControlMode.PercentOutput, -0.4);
+			ElevatorMotor2.set(ControlMode.PercentOutput, -0.4);
+			ElevatorMotor3.set(ControlMode.PercentOutput, -0.4);
+			ElevatorMotor4.set(ControlMode.PercentOutput, -0.4);
 		}
-		
+		else if (!isClimbing && isElevatorOn)	
+		{
+			isElevatorOn = false;
+			
+			ElevatorMotor1.set(ControlMode.PercentOutput, 0.0);
+			ElevatorMotor2.set(ControlMode.PercentOutput, 0.0);
+			ElevatorMotor3.set(ControlMode.PercentOutput, 0.0);
+			ElevatorMotor4.set(ControlMode.PercentOutput, 0.0);
+		}
+
 		ClimbUp.set(!isClimbing);
 		StopClimb.set(isClimbing);
 	}
@@ -232,7 +251,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	{
 		zeroElevator();	
 	}
-	
+
 	@Override
 	public void pidWrite(double output) 
 	{
