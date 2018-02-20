@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3928.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * Class the holds all the autonomous methods.
  * 
@@ -8,6 +10,16 @@ package org.usfirst.frc.team3928.robot;
  */
 public class AutonomousModes 
 {
+	private enum FieldElementColorSide
+	{
+		LEFT, RIGHT;
+	}
+	
+	private enum FieldElement
+	{
+		SWITCH, SCALE;
+	}
+	
 	/**
 	 * Will take in an integer value corresponding to the autonomous mode, also passed in the 
 	 * objects needed to make the autonomous mode possible. 
@@ -101,5 +113,43 @@ public class AutonomousModes
 		driveInst.TurnDegrees(90);
 		Utill.SleepThread(1000);
 		driveInst.DriveDistance(40);
+	}
+	
+	private static FieldElementColorSide getFieldElementSideColor(FieldElement fieldElement)
+	{
+		DriverStation driverStationInst = DriverStation.getInstance();
+		String gameData = "";
+		char sideColor = ' ';
+		
+		while (gameData.length() == 0)
+		{
+			gameData = driverStationInst.getGameSpecificMessage();
+			
+			Utill.SleepThread(1);
+		}
+		
+		if (fieldElement == FieldElement.SWITCH)
+		{
+			sideColor = gameData.charAt(0);
+		}
+		else if (fieldElement == FieldElement.SCALE)
+		{
+			sideColor = gameData.charAt(1);
+		}
+		
+		if (sideColor == 'R')
+		{
+			return FieldElementColorSide.RIGHT;
+		}
+		else if (sideColor == 'L')
+		{
+			return FieldElementColorSide.LEFT;
+		}
+		else 
+		{
+			// Might want to throw and error here 
+			return null;
+		}
+		
 	}
 }

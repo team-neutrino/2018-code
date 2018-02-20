@@ -14,8 +14,8 @@ public class Constants
 	public static final int DRIVE_LEFT_1_CHANNEL = 2;
 	public static final int DRIVE_LEFT_2_CHANNEL = 3;
 	
-	public static final int DRIVE_RIGHT_ENCODER_POWER_CHANNEL = 8; // this change 4
-	public static final int DRIVE_RIGHT_ENCODER_DATA_CHANNEL = 9; // this change  5
+	public static final int DRIVE_RIGHT_ENCODER_POWER_CHANNEL = 4; 
+	public static final int DRIVE_RIGHT_ENCODER_DATA_CHANNEL = 5; 
 	public static final int DRIVE_LEFT_ENCODER_POWER_CHANNEL = 2;
 	public static final int DRIVE_LEFT_ENCODER_DATA_CHANNEL = 3;
 	
