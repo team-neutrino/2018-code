@@ -72,6 +72,9 @@ public class Constants
 	public static final double ELEVATOR_PID_OUTPUT_RANGE_MIN = -1;
 	public static final double ELEVATOR_PID_OUTPUT_RANGE_MAX = 1;
 	
+	public static final int ELEVATOR_CLIMBER_SOLENOID_OUT = 0;
+	public static final int ELEVATOR_CLIMBER_SOLENOID_IN = 1;
+	
 	// Joysticks 
 	public static final int THRUST_MASTER_CONTROLLER = 3;
 	public static final int LEFT_JOYSTICK = 1;

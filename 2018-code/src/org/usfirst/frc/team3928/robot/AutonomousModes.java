@@ -10,16 +10,28 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class AutonomousModes 
 {
+	/**
+	 * The side of the field element to drop the cube in. 
+	 * 
+	 * @author NicoleEssner
+	 *
+	 */
 	private enum FieldElementSide
 	{
 		LEFT, RIGHT;
 	}
-	
+
+	/**
+	 * Which field element that the cube is going to be dropped in in auton. 
+	 * 
+	 * @author NicoleEssner
+	 *
+	 */
 	private enum FieldElement
 	{
 		SWITCH, SCALE;
 	}
-	
+
 	/**
 	 * Will take in an integer value corresponding to the autonomous mode, also passed in the 
 	 * objects needed to make the autonomous mode possible. 
@@ -49,7 +61,7 @@ public class AutonomousModes
 			}
 			case 3:
 			{
-				Yellow(cubeManipulatorInst, elevatorInst, driveInst);
+				Orange(cubeManipulatorInst, elevatorInst, driveInst);
 				break;
 			}
 			default:
@@ -59,7 +71,7 @@ public class AutonomousModes
 			}
 		}
 	}
-	
+
 	/**
 	 * Drives forward across the base line. 
 	 * 
@@ -69,87 +81,89 @@ public class AutonomousModes
 	 * 		An instance of the elevator. 
 	 * @param driveInst
 	 * 		An instance of the drive. 
+	 * 
+	 * TODO update the doc  
 	 */
-	public static void Blue(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	private static void Blue(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		try {
-			Thread.sleep(7000);
-			driveInst.DriveDistance(140, 0.6);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+
+		Utill.SleepThread(7000);
+		driveInst.DriveDistance(140, 0.6);
+
 	}
-	
+
 	/**
 	 * 
 	 * @param cubManipulatorInst
 	 * @param elevatorInst
 	 * @param driveInst
+	 * 
+	 * TODO update the doc 
 	 */
-	public static void Yellow(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	private static void Yellow(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		try
+		int turnDegreesSign = 1;
+		if(getFieldElementSideColor(FieldElement.SWITCH) == FieldElementSide.LEFT)
 		{
-			int turnDegreesSign = 1;
-			if(getFieldElementSideColor(FieldElement.SWITCH) == FieldElementSide.LEFT)
-			{
-				turnDegreesSign = -1;
-			}
-			
-			elevatorInst.setDistanceInches(10);
-			driveInst.DriveDistance(24, 0.6);
-			Thread.sleep(200);
-			driveInst.TurnDegrees(turnDegreesSign * 45);
-			Thread.sleep(100);
-			driveInst.DriveDistance(72, 0.6);
-			Thread.sleep(100);
-			elevatorInst.setDistanceInches(24);
-			driveInst.TurnDegrees(turnDegreesSign * -45);
-			Thread.sleep(100);
-			driveInst.DriveDistance(12, 0.6);
+			turnDegreesSign = -1;
 		}
-		catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		elevatorInst.setDistanceInches(10);
+		driveInst.DriveDistance(24, 0.6);
+		Utill.SleepThread(200);
+		driveInst.TurnDegrees(turnDegreesSign * 45);
+		Utill.SleepThread(100);
+		driveInst.DriveDistance(72, 0.6);
+		Utill.SleepThread(100);
+		elevatorInst.setDistanceInches(24);
+		driveInst.TurnDegrees(turnDegreesSign * -45);
+		Utill.SleepThread(100);
+		driveInst.DriveDistance(12, 0.6);
 	}
-	
-	public static void Orange(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+
+	/**
+	 * 
+	 * @param cubeManipulatorInst
+	 * @param elevatorInst
+	 * @param driveInst
+	 * 
+	 * TODO update the doc
+	 */
+	private static void Orange(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		try
-		{
-			elevatorInst.setDistanceInches(10);
-			driveInst.DriveDistance(324, 0.6);
-			Thread.sleep(2000);
-			elevatorInst.setDistancePercent(1);
-			driveInst.TurnDegrees(-90);
-			Thread.sleep(2000);
-			driveInst.DriveDistance(12, 0.3);
-			Thread.sleep(2000);
-			//eject cube
-		}
-		catch(InterruptedException e)
-		{
-			
-		}
+		elevatorInst.setDistanceInches(10);
+		driveInst.DriveDistance(324, 0.6);
+		Utill.SleepThread(2000);
+		elevatorInst.setDistancePercent(1);
+		driveInst.TurnDegrees(-90);
+		Utill.SleepThread(2000);
+		driveInst.DriveDistance(12, 0.3);
+		Utill.SleepThread(2000);
+		//eject cube
 	}
-	
+
+	/**
+	 * Will get the side of the field element to go to in auton based on 
+	 * the game message. 
+	 * 
+	 * @param fieldElement
+	 * 		The field element that the auton mode will go to. 
+	 * @return
+	 * 		The side of the field element that matches the alliance color. 
+	 */
 	private static FieldElementSide getFieldElementSideColor(FieldElement fieldElement)
 	{
 		DriverStation driverStationInst = DriverStation.getInstance();
 		String gameData = "";
 		char sideColor = ' ';
-		
+
 		while (gameData.length() == 0)
 		{
 			gameData = driverStationInst.getGameSpecificMessage();
-			
+
 			Utill.SleepThread(1);
 		}
-		
+
 		if (fieldElement == FieldElement.SWITCH)
 		{
 			sideColor = gameData.charAt(0);
@@ -158,9 +172,9 @@ public class AutonomousModes
 		{
 			sideColor = gameData.charAt(1);
 		}
-		
+
 		System.out.println("character" + sideColor);
-		
+
 		if (sideColor == 'R')
 		{
 			return FieldElementSide.RIGHT;
@@ -175,6 +189,6 @@ public class AutonomousModes
 			// Might want to throw and error here 
 			return null;
 		}
-		
+
 	}
 }

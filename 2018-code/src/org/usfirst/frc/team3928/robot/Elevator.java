@@ -78,7 +78,11 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 */
 	private Solenoid StopClimb;
 	
-	private boolean isElevatorOn;
+	/**
+	 * Weather the elevator is moving down with the climber. 
+	 */
+	private boolean isElevatorMovingDown;
+	
 	/**
 	 * Constructor for the elevator object.
 	 */
@@ -101,13 +105,13 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		PIDControllerInst.setInputRange(Constants.ELEVATOR_PID_INPUT_RANGE_MIN, Constants.ELEVATOR_PID_INPUT_RANGE_MAX); 
 		PIDControllerInst.setOutputRange(Constants.ELEVATOR_PID_OUTPUT_RANGE_MIN, Constants.ELEVATOR_PID_OUTPUT_RANGE_MAX); 
 
-		IntakeActuatorIn = new Solenoid(4); // Make Constant
+		IntakeActuatorIn = new Solenoid(4); // Make Constant this is probably gonna get deleated 
 		IntakeActuatorOut = new Solenoid(5); // Make Constant
 
-		ClimbUp = new Solenoid(0); // Make Constant
-		StopClimb = new Solenoid(1); // Make Constant
+		ClimbUp = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_OUT); 
+		StopClimb = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_IN); 
 
-		isElevatorOn = false;
+		isElevatorMovingDown = false;
 		
 		ReleaseIntake(false);
 		new Thread(this).start();
@@ -122,7 +126,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 */
 	public void ReleaseIntake(boolean isMovingOut)
 	{
-		// TODO this need to make sense code wise
+		// TODO I think this method will get changed at this point 
 		IntakeActuatorOut.set(isMovingOut);
 		IntakeActuatorIn.set(!isMovingOut);
 	}
@@ -223,7 +227,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	{
 		if (isClimbing)
 		{
-			isElevatorOn = true;
+			isElevatorMovingDown = true;
 			
 			PIDControllerInst.disable();
 
@@ -232,9 +236,9 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 			ElevatorMotor3.set(ControlMode.PercentOutput, -0.4);
 			ElevatorMotor4.set(ControlMode.PercentOutput, -0.4);
 		}
-		else if (!isClimbing && isElevatorOn)	
+		else if (!isClimbing && isElevatorMovingDown)	
 		{
-			isElevatorOn = false;
+			isElevatorMovingDown = false;
 			
 			ElevatorMotor1.set(ControlMode.PercentOutput, 0.0);
 			ElevatorMotor2.set(ControlMode.PercentOutput, 0.0);
