@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class AutonomousModes 
 {
-	private enum FieldElementColorSide
+	private enum FieldElementSide
 	{
 		LEFT, RIGHT;
 	}
@@ -39,22 +39,22 @@ public class AutonomousModes
 		{
 			case 1:
 			{
-				DriveForward(cubeManipulatorInst, elevatorInst, driveInst);
+				Blue(cubeManipulatorInst, elevatorInst, driveInst);
 				break;
 			}
 			case 2:
 			{
-				SwitchRight(cubeManipulatorInst, elevatorInst, driveInst);
+				Yellow(cubeManipulatorInst, elevatorInst, driveInst);
 				break;
 			}
 			case 3:
 			{
-				SwitchLeft(cubeManipulatorInst, elevatorInst, driveInst);
+				Yellow(cubeManipulatorInst, elevatorInst, driveInst);
 				break;
 			}
 			default:
 			{
-				DriveForward(cubeManipulatorInst, elevatorInst, driveInst);
+				Blue(cubeManipulatorInst, elevatorInst, driveInst);
 				break;
 			}
 		}
@@ -70,52 +70,74 @@ public class AutonomousModes
 	 * @param driveInst
 	 * 		An instance of the drive. 
 	 */
-	private static void DriveForward(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	public static void Blue(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		driveInst.DriveDistance(140);
+		try {
+			Thread.sleep(7000);
+			driveInst.DriveDistance(140, 0.6);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	/**
-	 * Will put the cube in the right side of the switch. 
 	 * 
-	 * @param cubeManipulatorInst
-	 * 		An instance of the cube manipulator. 
+	 * @param cubManipulatorInst
 	 * @param elevatorInst
-	 * 		An instance of the elevator. 
 	 * @param driveInst
-	 * 		An instance of the drive. 
 	 */
-	private static void SwitchRight(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	public static void Yellow(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		elevatorInst.setDistanceInches(30);
-		driveInst.DriveDistance(140);
-		Utill.SleepThread(1000);
-		driveInst.TurnDegrees(-90);
-		Utill.SleepThread(1000);
-		driveInst.DriveDistance(40);
+		try
+		{
+			int turnDegreesSign = 1;
+			if(getFieldElementSideColor(FieldElement.SWITCH) == FieldElementSide.LEFT)
+			{
+				turnDegreesSign = -1;
+			}
+			
+			elevatorInst.setDistanceInches(10);
+			driveInst.DriveDistance(24, 0.6);
+			Thread.sleep(200);
+			driveInst.TurnDegrees(turnDegreesSign * 45);
+			Thread.sleep(100);
+			driveInst.DriveDistance(72, 0.6);
+			Thread.sleep(100);
+			elevatorInst.setDistanceInches(24);
+			driveInst.TurnDegrees(turnDegreesSign * -45);
+			Thread.sleep(100);
+			driveInst.DriveDistance(12, 0.6);
+		}
+		catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	/**
-	 * Will put the cube in the left side of the switch.
-	 * 
-	 * @param cubeManipulatorInst
-	 * 		An instance of the cube manipulator. 
-	 * @param elevatorInst
-	 * 		An instance of the elevator. 
-	 * @param driveInst
-	 * 		An instance of the drive. 
-	 */
-	private static void SwitchLeft(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	public static void Orange(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		elevatorInst.setDistanceInches(30);
-		driveInst.DriveDistance(140);
-		Utill.SleepThread(1000);
-		driveInst.TurnDegrees(90);
-		Utill.SleepThread(1000);
-		driveInst.DriveDistance(40);
+		try
+		{
+			elevatorInst.setDistanceInches(10);
+			driveInst.DriveDistance(324, 0.6);
+			Thread.sleep(2000);
+			elevatorInst.setDistancePercent(1);
+			driveInst.TurnDegrees(-90);
+			Thread.sleep(2000);
+			driveInst.DriveDistance(12, 0.3);
+			Thread.sleep(2000);
+			//eject cube
+		}
+		catch(InterruptedException e)
+		{
+			
+		}
 	}
 	
-	private static FieldElementColorSide getFieldElementSideColor(FieldElement fieldElement)
+	private static FieldElementSide getFieldElementSideColor(FieldElement fieldElement)
 	{
 		DriverStation driverStationInst = DriverStation.getInstance();
 		String gameData = "";
@@ -137,16 +159,19 @@ public class AutonomousModes
 			sideColor = gameData.charAt(1);
 		}
 		
+		System.out.println("character" + sideColor);
+		
 		if (sideColor == 'R')
 		{
-			return FieldElementColorSide.RIGHT;
+			return FieldElementSide.RIGHT;
 		}
 		else if (sideColor == 'L')
 		{
-			return FieldElementColorSide.LEFT;
+			return FieldElementSide.LEFT;
 		}
 		else 
 		{
+			System.out.println("Null case happened");
 			// Might want to throw and error here 
 			return null;
 		}

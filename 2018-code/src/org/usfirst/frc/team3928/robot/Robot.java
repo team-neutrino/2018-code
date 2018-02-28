@@ -91,7 +91,8 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		AutonomousModes.PickAutonomousMode(0, CubeManipulatorInst, ElevatorInst, DriveInst);
+		//AutonomousModes.PickAutonomousMode(0, CubeManipulatorInst, ElevatorInst, DriveInst);
+		AutonomousModes.Orange(CubeManipulatorInst, ElevatorInst, DriveInst);
 	}
 
 

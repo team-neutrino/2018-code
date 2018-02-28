@@ -33,19 +33,23 @@ public class Constants
 	public static final double DRIVE_PID_OUTPUT_RANGE_MIN_DEGREE_TURN = -0.4;
 	public static final double DRIVE_PID_OUTPUT_RANGE_MAX_DEGREE_TURN  = 0.4;
 	
-	public static final double DRIVE_P_VALUE_RIGHT = 0.025;
-	public static final double DRIVE_I_VALUE_RIGHT = 0.01;
-	public static final double DRIVE_D_VALUE_RIGHT = 0.01;
+	public static final double DRIVE_P = 0.5; //0.272, 0.2, 0.19, 0.18, 0.15, 0.1, 0.2, 0.4, 0.5
+	public static final double DRIVE_I = 0.014125;
+	public static final double DRIVE_D = 0.15; //0.471, 0.3, 0.2, 0.1, 0.6, 0, 0.3
 	
-	public static final double DRIVE_P_VALUE_LEFT = 0.025;
-	public static final double DRIVE_I_VALUE_LEFT = 0.01;
-	public static final double DRIVE_D_VALUE_LEFT = 0.4;
+	public static final double DRIVE_P_VALUE_RIGHT = DRIVE_P;
+	public static final double DRIVE_I_VALUE_RIGHT = DRIVE_I;
+	public static final double DRIVE_D_VALUE_RIGHT = DRIVE_D;
+	
+	public static final double DRIVE_P_VALUE_LEFT = DRIVE_P;
+	public static final double DRIVE_I_VALUE_LEFT = DRIVE_I;
+	public static final double DRIVE_D_VALUE_LEFT = DRIVE_D;
 	
 	public static final int DRIVE_ABSOLUTE_VALUE_TOLERANCE = 1;
 	public static final int DRIVE_PID_INPUT_RANGE_MIN = -200;
 	public static final int DRIVE_PID_INPUT_RANGE_MAX = 200;
 	public static final double DRIVE_PID_OUTPUT_RANGE_MIN = -0.8;
-	public static final double DRIVE_PID_OUTPUT_RANGE_MAX = 0.8;
+	public static final double DRIVE_PID_OUTPUT_RANGE_MAX = 0.6; //0.8
 	
 	// Elevator
 	public static final int ELEVATOR_ENCODER_POWER_CHANNEL = 0; 
@@ -57,8 +61,8 @@ public class Constants
 	public static final int ELEVATOR_MOTOR_3 = 6;
 	public static final int ELEVATOR_MOTOR_4 = 7;
 	
-	public static final int ELEVATOR_BUTTON = 6;
-	
+	public static final int ELEVATOR_BUTTON = 8;
+
 	public static final double ELEVATOR_P_VALUE = 0.2;
 	public static final double ELEVATOR_I_VALUE = 0.0;
 	public static final double ELEVATOR_D_VALUE = 0.0;

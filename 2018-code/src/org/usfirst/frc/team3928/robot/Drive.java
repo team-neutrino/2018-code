@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -30,7 +31,7 @@ public class Drive implements PIDSource, PIDOutput
 	 */
 	private enum DriveSide
 	{
-		LEFT, RIGHT;
+		LEFT, RIGHT, NAVX;
 	}
 
 	/**
@@ -102,6 +103,8 @@ public class Drive implements PIDSource, PIDOutput
 	 */
 	private long DriveDistanceTimeInPID;
 
+	private double NavxOutput;
+	
 	/**
 	 * Constructor for the Drive class. 
 	 */
@@ -125,27 +128,26 @@ public class Drive implements PIDSource, PIDOutput
 		Navx.setAngleAdjustment(Constants.DRIVE_NAVX_ANGLE_ADJUSTMENT); 
 
 		TurnDegreesPIDController =  new PIDController(Constants.DRIVE_P_VALUE_DEGREE_TURN, Constants.DRIVE_I_VALUE_DEGREE_TURN, 
-													 Constants.DRIVE_D_VALUE_DEGREE_TURN, Navx, this); 
+				Constants.DRIVE_D_VALUE_DEGREE_TURN, Navx, this); 
 		TurnDegreesPIDController.setAbsoluteTolerance(Constants.DRIVE_ABSOLUTE_VALUE_TOLERANCE_DEGREE_TURN);
 		TurnDegreesPIDController.setInputRange(Constants.DRIVE_PID_INPUT_RANGE_MIN_DEGREE_TURN, Constants.DRIVE_PID_INPUT_RANGE_MAX_DEGREE_TURN);
 		TurnDegreesPIDController.setOutputRange(Constants.DRIVE_PID_OUTPUT_RANGE_MIN_DEGREE_TURN, Constants.DRIVE_PID_OUTPUT_RANGE_MAX_DEGREE_TURN);
 
 		RightDrivePIDController = new PIDController(Constants.DRIVE_P_VALUE_RIGHT, Constants.DRIVE_I_VALUE_RIGHT, 
-												   Constants.DRIVE_D_VALUE_RIGHT, RightEncoder, new DrivePID(DriveSide.RIGHT)); 
+				Constants.DRIVE_D_VALUE_RIGHT, RightEncoder, new DrivePID(DriveSide.RIGHT, DriveSide.NAVX)); 
 		RightDrivePIDController.setAbsoluteTolerance(Constants.DRIVE_ABSOLUTE_VALUE_TOLERANCE); 
 		RightDrivePIDController.setInputRange(Constants.DRIVE_PID_INPUT_RANGE_MIN, Constants.DRIVE_PID_INPUT_RANGE_MAX); 
-		RightDrivePIDController.setOutputRange(Constants.DRIVE_PID_OUTPUT_RANGE_MIN, Constants.DRIVE_PID_OUTPUT_RANGE_MAX); 
 
 		LeftDrivePIDController = new PIDController(Constants.DRIVE_P_VALUE_LEFT, Constants.DRIVE_I_VALUE_LEFT, 
-												  Constants.DRIVE_D_VALUE_LEFT, LeftEncoder, new DrivePID(DriveSide.LEFT)); 
+				Constants.DRIVE_D_VALUE_LEFT, LeftEncoder, new DrivePID(DriveSide.LEFT, DriveSide.NAVX)); 
 		LeftDrivePIDController.setAbsoluteTolerance(Constants.DRIVE_ABSOLUTE_VALUE_TOLERANCE); 
 		LeftDrivePIDController.setInputRange(Constants.DRIVE_PID_INPUT_RANGE_MIN, Constants.DRIVE_PID_INPUT_RANGE_MAX); 
-		LeftDrivePIDController.setOutputRange(Constants.DRIVE_PID_OUTPUT_RANGE_MIN, Constants.DRIVE_PID_OUTPUT_RANGE_MAX); 
+		
 
 		DriveDistanceTimeInPID = 0;
 		TurnDegreesTimeInPID = 0;
-		
-//		CreateButtonsOnDashborad();	
+
+		//		CreateButtonsOnDashborad();	
 	}
 
 	/**
@@ -180,65 +182,92 @@ public class Drive implements PIDSource, PIDOutput
 	 * @param targetDistance
 	 * 		The distance to drive. 
 	 */
-	public void DriveDistance(double targetDistance)
+	public void DriveDistance(double targetDistance, double outputRange)
 	{
 		RightEncoder.reset();
 		LeftEncoder.reset();
 
-		//		isDrivingDistance = true;
-		//
-		//		RightDrivePIDController.reset();
-		//		LeftDrivePIDController.reset();
-		//		
-		//		RightDrivePIDController.setSetpoint(targetDistance);
-		//		LeftDrivePIDController.setSetpoint(targetDistance);
-		//		
-		//		System.out.println("About to enable PIDControler");
-		//		RightDrivePIDController.enable();
-		//		LeftDrivePIDController.enable();
-		//		
-		//		DriveDistanceTimeInPID = System.currentTimeMillis();
-		//		
-		//		while (true)//!RightDrivePIDController.onTarget() || !LeftDrivePIDController.onTarget())
-		//		{
-		//			if (System.currentTimeMillis() - DriveDistanceTimeInPID > 10000)
-		//			{
-		//				System.out.println("PID loop had to be broken");
-		//				break;
-		//			}
-		//			
-		//			System.out.println("The right encoder value is: " + RightEncoder.getDistance());
-		//			System.out.println("The left encoder value is: " + LeftEncoder.getDistance());
-		//			
-		//			Timer.delay(0.05);
-		//		}
-		//		
-		//		RightDrivePIDController.disable();
-		//		LeftDrivePIDController.disable();
-		//		
-		//		isDrivingDistance = false;
+		// TODO
+		RightDrivePIDController.setOutputRange(-outputRange, outputRange); 
+		LeftDrivePIDController.setOutputRange(-outputRange, outputRange); 
+		
+		boolean isDrivingDistance = true;
 
-		int numTimesThroughLoop = 0;  
+		RightDrivePIDController.reset();
+		LeftDrivePIDController.reset();
 
-		while(Math.abs(targetDistance) > Math.abs(RightEncoder.getDistance()) && 
-				Math.abs(targetDistance) > Math.abs(LeftEncoder.getDistance()) &&
-				(DriverStation.getInstance().isAutonomous() && !DriverStation.getInstance().isDisabled()))
+		RightDrivePIDController.setSetpoint(targetDistance);
+		LeftDrivePIDController.setSetpoint(targetDistance);
+
+		System.out.println("About to enable PIDControler");
+		RightDrivePIDController.enable();
+		LeftDrivePIDController.enable();
+
+		DriveDistanceTimeInPID = System.currentTimeMillis();
+
+		while (!RightDrivePIDController.onTarget() && !LeftDrivePIDController.onTarget())
 		{
-			System.out.println("Encoder right value: " + RightEncoder.getDistance());
-			System.out.println("Encoder left value: " + LeftEncoder.getDistance());
+			if (System.currentTimeMillis() - DriveDistanceTimeInPID > 10000)
+			{
+				System.out.println("PID loop had to be broken");
+				break;
+			}
 
-			double rightMotorPower = PID.PIDControl(targetDistance, RightEncoder.getDistance(), 0.05, 0.2, 2, (numTimesThroughLoop % 2000 == -1));
-			double leftMotorPower = PID.PIDControl(targetDistance, LeftEncoder.getDistance(), 0.05, 0.2, 2, (numTimesThroughLoop % 2000 == -1));
+			//					System.out.println("The right encoder value is: " + RightEncoder.getDistance());
+			//					System.out.println("The left encoder value is: " + LeftEncoder.getDistance());
+			//					
+			Timer.delay(0.05);
+		}
 
-			SetRight(rightMotorPower);
-			SetLeft(leftMotorPower);
+		RightDrivePIDController.disable();
+		LeftDrivePIDController.disable();
 
-			numTimesThroughLoop++; 
+		isDrivingDistance = false;
 
-			Utill.SleepThread(1);
-		}	
+		//		int numTimesThroughLoop = 0;  
+		//
+		//		while(Math.abs(targetDistance) > Math.abs(RightEncoder.getDistance()) && 
+		//				Math.abs(targetDistance) > Math.abs(LeftEncoder.getDistance()) &&
+		//				(DriverStation.getInstance().isAutonomous() && !DriverStation.getInstance().isDisabled()))
+		//		{
+		//			System.out.println("Encoder right value: " + RightEncoder.getDistance());
+		//			System.out.println("Encoder left value: " + LeftEncoder.getDistance());
+		//
+		//			double rightMotorPower = PID.PIDControl(targetDistance, RightEncoder.getDistance(), 0.05, 0.2, 2, (numTimesThroughLoop % 2000 == -1));
+		//			double leftMotorPower = PID.PIDControl(targetDistance, LeftEncoder.getDistance(), 0.05, 0.2, 2, (numTimesThroughLoop % 2000 == -1));
+		//
+		//			SetRight(rightMotorPower);
+		//			SetLeft(leftMotorPower);
+		//
+		//			numTimesThroughLoop++; 
+		//
+		//			Utill.SleepThread(1);
+		//		}	
 	}	
 
+	public void DriveDistanceWithNAVX(double distance)
+	{
+		// TODO
+		Navx.zeroYaw();
+		TurnDegreesPIDController.reset();
+		TurnDegreesPIDController.setSetpoint(0);
+		
+		RightEncoder.reset();
+		LeftEncoder.reset();
+		RightDrivePIDController.setOutputRange(-1, 1); 
+		LeftDrivePIDController.setOutputRange(-1, 1); 
+		RightDrivePIDController.reset();
+		LeftDrivePIDController.reset();
+		RightDrivePIDController.setSetpoint(distance);
+		LeftDrivePIDController.setSetpoint(distance);
+		
+		while (!RightDrivePIDController.onTarget() && !LeftDrivePIDController.onTarget())
+		{
+			Utill.SleepThread(1);
+		}
+		
+	}
+	
 	/**
 	 * Method that will turn a given number of degrees.
 	 * 
@@ -265,7 +294,7 @@ public class Drive implements PIDSource, PIDOutput
 			}
 
 			double navxYaw = Navx.getYaw();
-			System.out.println("In pidGet, the Navx yaw: " + navxYaw);
+			//			System.out.println("In pidGet, the Navx yaw: " + navxYaw);
 
 			//			PIDControllerInst.setP(SmartDashboard.getNumber("P: ", 0));
 			//			PIDControllerInst.setI(SmartDashboard.getNumber("I: ", 0));
@@ -306,7 +335,7 @@ public class Drive implements PIDSource, PIDOutput
 
 		System.out.println("P: " + Pval + " I: " + Ival + " D: " + Dval);
 	}
-	
+
 	/**
 	 * This is a private class for running multiple instance of PIDController 
 	 * in the same class. 
@@ -322,6 +351,8 @@ public class Drive implements PIDSource, PIDOutput
 		 */
 		private DriveSide Side;
 
+		private DriveSide isNavx;
+		
 		/**
 		 * Construction for DrivePID class.
 		 * 
@@ -329,7 +360,7 @@ public class Drive implements PIDSource, PIDOutput
 		 * 		The side of the drive the PID should run
 		 * 		on.  
 		 */
-		public DrivePID(DriveSide state)
+		public DrivePID(DriveSide state, DriveSide navx)
 		{
 			Side = state;
 		}
@@ -337,20 +368,33 @@ public class Drive implements PIDSource, PIDOutput
 		@Override
 		public void pidWrite(double output) 
 		{
-			if (Side == DriveSide.LEFT)
+			
+			
+			if (Side == DriveSide.LEFT && isNavx == DriveSide.NAVX)
 			{
-				SetLeft(-output);
+				output = output / 2; 
+				double temp = NavxOutput / 2;
+				
+				double sum = output - temp;
+				
+				SetLeft(-sum);
 			}
 			else
 			{
+				output = output / 2; 
+				double temp = NavxOutput / 2;
+				
+				double sum = output + temp;
+				
 				SetRight(-output);
 			}
 		}
 	}
-	
+
 	@Override
 	public void pidWrite(double output)
 	{		
+		NavxOutput = output; 
 		SetRight(output);
 		SetLeft(-output);
 	}
