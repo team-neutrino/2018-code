@@ -117,7 +117,7 @@ public class Drive implements PIDSource, PIDOutput
 	public void SetRight(double motorPower)
 	{
 		RightMotor1.set(ControlMode.PercentOutput, -motorPower); 
-		//RightMotor2.set(ControlMode.PercentOutput, -motorPower); 
+		RightMotor2.set(ControlMode.PercentOutput, -motorPower); 
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class Drive implements PIDSource, PIDOutput
 	public void SetLeft(double motorPower)
 	{
 		LeftMotor1.set(ControlMode.PercentOutput, motorPower);
-		//LeftMotor2.set(ControlMode.PercentOutput, motorPower);
+		LeftMotor2.set(ControlMode.PercentOutput, motorPower);
 	}
 
 	/**
@@ -144,6 +144,7 @@ public class Drive implements PIDSource, PIDOutput
 		double pVal = 0.04;
 		LeftEncoder.reset();
 		RightEncoder.reset();
+		Navx.zeroYaw();
 		
 		boolean isFirstTimeOnTarget = false;
 		long firstTimeOnTarget = 0;
@@ -215,6 +216,33 @@ public class Drive implements PIDSource, PIDOutput
 				rightMotorPower = 0.15;
 			}
 			
+			double maxAngle = 5;
+			double proportionalDifference = 1 / maxAngle;
+					
+			if(Navx.getYaw() < 0)
+			{
+				if(Math.abs(Navx.getYaw()) > maxAngle)
+				{
+					leftMotorPower = leftMotorPower + 0.5;
+				}
+				else
+				{
+					leftMotorPower = leftMotorPower + Navx.getYaw() * -proportionalDifference;
+				}
+			}
+			else
+			{
+				if(Math.abs(Navx.getYaw()) > maxAngle)
+				{
+					rightMotorPower = rightMotorPower + 0.5;
+				}
+				else
+				{
+					rightMotorPower = rightMotorPower + Navx.getYaw() * proportionalDifference;
+				}
+			}
+			
+			
 			System.out.println("left side power: " + leftMotorPower);
 			System.out.println("right side power: " + rightMotorPower);
 			
@@ -244,6 +272,8 @@ public class Drive implements PIDSource, PIDOutput
 		
 		System.out.println("Right encoder value: " + RightEncoder.getDistance());
 		System.out.println("Left encoder value: " + LeftEncoder.getDistance());
+		
+		System.out.println("\n\nDone idiots\n\n");
 	}	
 
 	/**

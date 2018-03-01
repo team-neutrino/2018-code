@@ -132,8 +132,8 @@ public class Robot extends IterativeRobot
 		}
 
 		// TODO flip this with set left and right update 
-		double leftY = LeftJoystick.getY();
-		double rightY = RightJoystick.getY();
+		double leftY = -LeftJoystick.getY();
+		double rightY = -RightJoystick.getY();
 
 		if (Math.abs(leftY) < 0.05)
 		{
