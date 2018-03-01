@@ -29,7 +29,7 @@ public class PID
 	 * 		implemented on move. 
 	 * 
 	 * @param allowedError
-	 * 		The allowed error margin in inches that final position of 
+	 * 		The allowed error margin in inches that final position of 3
 	 * 		the mechanism can be off by. 
 	 * 
 	 * @param isPrinting

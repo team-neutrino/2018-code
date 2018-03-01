@@ -24,17 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drive implements PIDSource, PIDOutput 
 {
 	/**
-	 * Enum for which side the pidWrite function should run on. 
-	 * 
-	 * @author NicoleEssner
-	 *
-	 */
-	private enum DriveSide
-	{
-		LEFT, RIGHT, NAVX;
-	}
-
-	/**
 	 * The first speed controller on the right side of drive 
 	 * train.  
 	 */
@@ -80,33 +69,10 @@ public class Drive implements PIDSource, PIDOutput
 	private PIDController TurnDegreesPIDController;
 
 	/**
-	 * The PIDController for the right side of the drive train 
-	 * for driving a distance. 
-	 */
-	private PIDController RightDrivePIDController;
-
-	/**
-	 * The PIDController for the left side of the drive train 
-	 * for driving a distance. 
-	 */
-	private PIDController LeftDrivePIDController;
-
-	/**
 	 * The time that the PID Loop for turning degrees 
 	 * has been executing. 
 	 */
 	private long TurnDegreesTimeInPID;
-
-	/**
-	 * The time that the PID Loop for driving a distance 
-	 * has been executing. 
-	 */
-	private long DriveDistanceTimeInPID;
-
-	/**
-	 * The motor output value for the Navx PID.
-	 */
-	private double NavxPIDOutput;
 
 	/**
 	 * Constructor for the Drive class. 
@@ -136,18 +102,6 @@ public class Drive implements PIDSource, PIDOutput
 		TurnDegreesPIDController.setInputRange(Constants.DRIVE_PID_INPUT_RANGE_MIN_DEGREE_TURN, Constants.DRIVE_PID_INPUT_RANGE_MAX_DEGREE_TURN);
 		TurnDegreesPIDController.setOutputRange(Constants.DRIVE_PID_OUTPUT_RANGE_MIN_DEGREE_TURN, Constants.DRIVE_PID_OUTPUT_RANGE_MAX_DEGREE_TURN);
 
-		RightDrivePIDController = new PIDController(Constants.DRIVE_P_VALUE_RIGHT, Constants.DRIVE_I_VALUE_RIGHT, 
-				Constants.DRIVE_D_VALUE_RIGHT, RightEncoder, new DrivePID(DriveSide.RIGHT, true)); 
-		RightDrivePIDController.setAbsoluteTolerance(Constants.DRIVE_ABSOLUTE_VALUE_TOLERANCE); 
-		RightDrivePIDController.setInputRange(Constants.DRIVE_PID_INPUT_RANGE_MIN, Constants.DRIVE_PID_INPUT_RANGE_MAX); 
-
-		LeftDrivePIDController = new PIDController(Constants.DRIVE_P_VALUE_LEFT, Constants.DRIVE_I_VALUE_LEFT, 
-				Constants.DRIVE_D_VALUE_LEFT, LeftEncoder, new DrivePID(DriveSide.LEFT, true)); 
-		LeftDrivePIDController.setAbsoluteTolerance(Constants.DRIVE_ABSOLUTE_VALUE_TOLERANCE); 
-		LeftDrivePIDController.setInputRange(Constants.DRIVE_PID_INPUT_RANGE_MIN, Constants.DRIVE_PID_INPUT_RANGE_MAX); 
-
-
-		DriveDistanceTimeInPID = 0;
 		TurnDegreesTimeInPID = 0;
 
 		//		CreateButtonsOnDashborad();	
@@ -162,8 +116,8 @@ public class Drive implements PIDSource, PIDOutput
 	 */
 	public void SetRight(double motorPower)
 	{
-		RightMotor1.set(ControlMode.PercentOutput, motorPower); 
-		RightMotor2.set(ControlMode.PercentOutput, motorPower); 
+		RightMotor1.set(ControlMode.PercentOutput, -motorPower); 
+		//RightMotor2.set(ControlMode.PercentOutput, -motorPower); 
 	}
 
 	/**
@@ -175,8 +129,8 @@ public class Drive implements PIDSource, PIDOutput
 	 */
 	public void SetLeft(double motorPower)
 	{
-		LeftMotor1.set(ControlMode.PercentOutput, -motorPower);
-		LeftMotor2.set(ControlMode.PercentOutput, -motorPower);
+		LeftMotor1.set(ControlMode.PercentOutput, motorPower);
+		//LeftMotor2.set(ControlMode.PercentOutput, motorPower);
 	}
 
 	/**
@@ -185,96 +139,112 @@ public class Drive implements PIDSource, PIDOutput
 	 * @param targetDistance
 	 * 		The distance to drive. 
 	 */
-	public void DriveDistance(double targetDistance, double outputRange)
+	public void DriveDistance(double targetDistance)
 	{
-		RightEncoder.reset();
+		double pVal = 0.04;
 		LeftEncoder.reset();
-
-		// TODO this needs help at some point
-		RightDrivePIDController.setOutputRange(-outputRange, outputRange); 
-		LeftDrivePIDController.setOutputRange(-outputRange, outputRange); 
-
-		RightDrivePIDController.reset();
-		LeftDrivePIDController.reset();
-
-		RightDrivePIDController.setSetpoint(targetDistance);
-		LeftDrivePIDController.setSetpoint(targetDistance);
-
-		System.out.println("About to enable PIDControler");
-		RightDrivePIDController.enable();
-		LeftDrivePIDController.enable();
-
-		DriveDistanceTimeInPID = System.currentTimeMillis();
-
-		while (!RightDrivePIDController.onTarget() && !LeftDrivePIDController.onTarget())
+		RightEncoder.reset();
+		
+		boolean isFirstTimeOnTarget = false;
+		long firstTimeOnTarget = 0;
+		long timeOnTarget = 0; 
+		
+		while (( ((Math.abs(LeftEncoder.getDistance()) - targetDistance < 1) || (Math.abs(RightEncoder.getDistance()) - targetDistance < 1)) 
+				&& ((timeOnTarget - firstTimeOnTarget < 500)) && !DriverStation.getInstance().isDisabled()))
 		{
-			if (System.currentTimeMillis() - DriveDistanceTimeInPID > 10000)
+//			System.out.println("time first on target: " + firstTimeOnTarget);
+//			System.out.println("time on target: " + timeOnTarget);
+			
+			if ((Math.abs(LeftEncoder.getDistance() - targetDistance) < 1) && (Math.abs(RightEncoder.getDistance() - targetDistance) < 1))
 			{
-				System.out.println("PID loop had to be broken");
-				break;
+				System.out.println("Was on target");
+				if (!isFirstTimeOnTarget)
+				{
+					isFirstTimeOnTarget = true;
+					firstTimeOnTarget = System.currentTimeMillis(); 
+				}
+				
+				timeOnTarget = System.currentTimeMillis();
 			}
-
-			//					System.out.println("The right encoder value is: " + RightEncoder.getDistance());
-			//					System.out.println("The left encoder value is: " + LeftEncoder.getDistance());
-			//					
-			Timer.delay(0.05);
+			else
+			{
+				isFirstTimeOnTarget = false; 
+				timeOnTarget = 0;
+			}
+			
+//			System.out.println("Right encoder value: " + RightEncoder.getDistance());
+//			System.out.println("Left encoder value: " + LeftEncoder.getDistance());
+			
+			double leftDifference = Math.abs(LeftEncoder.getDistance() - targetDistance);
+			double rightDifference = Math.abs(RightEncoder.getDistance() - targetDistance);
+			
+			double leftMotorPower = leftDifference * pVal;
+			double rightMotorPower = rightDifference * pVal;
+			
+			if (leftMotorPower > 0.5)
+			{
+				leftMotorPower = 0.5;
+			}
+			else if (leftMotorPower < -0.5)
+			{
+				leftMotorPower = -0.5;
+			}
+			
+			if (rightMotorPower > 0.5)
+			{
+				rightMotorPower = 0.5;
+			}
+			else if (rightMotorPower < -0.5)
+			{
+				rightMotorPower = -0.5;
+			}
+			
+			System.out.println("Left rate: " + LeftEncoder.getRate());
+			System.out.println("Right rate: " + RightEncoder.getRate());
+			
+			// TODO make go backwards 
+			if (LeftEncoder.getRate() < 9 && leftMotorPower < 0.15)
+			{
+				System.out.println("The speed of the encoder was less than 0.5, left");
+				leftMotorPower = 0.15;
+			}
+			
+			if (RightEncoder.getRate() < 9 && rightMotorPower < 0.15)
+			{
+				System.out.println("The speed of the encoder was less than 0.5, right");
+				rightMotorPower = 0.15;
+			}
+			
+			System.out.println("left side power: " + leftMotorPower);
+			System.out.println("right side power: " + rightMotorPower);
+			
+			if (Math.abs(LeftEncoder.getDistance() - targetDistance) < 1)
+			{
+				SetLeft(0);
+			}
+			else
+			{
+				SetLeft(leftMotorPower);
+			}
+			
+			if (Math.abs(RightEncoder.getDistance() - targetDistance) < 1)
+			{
+				SetRight(0);
+			}
+			else
+			{
+				SetRight(rightMotorPower);
+			}
+			
+			Utill.SleepThread(1);
 		}
-
-		RightDrivePIDController.disable();
-		LeftDrivePIDController.disable();
+		
+		SetLeft(0);
+		SetRight(0);
+		
+		System.out.println("Right encoder value: " + RightEncoder.getDistance());
+		System.out.println("Left encoder value: " + LeftEncoder.getDistance());
 	}	
-
-	
-	/**
-	 * Will drive a distance with out PID.
-	 * 
-	 * @param targetDistance
-	 */
-	private void DriveDistanceNeutrinoPID(double targetDistance)
-	{
-		int numTimesThroughLoop = 0;  
-
-		while(Math.abs(targetDistance) > Math.abs(RightEncoder.getDistance()) && 
-				Math.abs(targetDistance) > Math.abs(LeftEncoder.getDistance()) &&
-				(DriverStation.getInstance().isAutonomous() && !DriverStation.getInstance().isDisabled()))
-		{
-			System.out.println("Encoder right value: " + RightEncoder.getDistance());
-			System.out.println("Encoder left value: " + LeftEncoder.getDistance());
-
-			double rightMotorPower = PID.PIDControl(targetDistance, RightEncoder.getDistance(), 0.05, 0.2, 2, (numTimesThroughLoop % 2000 == -1));
-			double leftMotorPower = PID.PIDControl(targetDistance, LeftEncoder.getDistance(), 0.05, 0.2, 2, (numTimesThroughLoop % 2000 == -1));
-
-			SetRight(rightMotorPower);
-			SetLeft(leftMotorPower);
-
-			numTimesThroughLoop++; 
-
-			Utill.SleepThread(1);
-		}	
-	}
-
-	public void DriveDistanceWithNAVX(double targetDistance)
-	{
-		// TODO
-		Navx.zeroYaw();
-		TurnDegreesPIDController.reset();
-		TurnDegreesPIDController.setSetpoint(0);
-
-		RightEncoder.reset();
-		LeftEncoder.reset();
-		RightDrivePIDController.setOutputRange(-1, 1); 
-		LeftDrivePIDController.setOutputRange(-1, 1); 
-		RightDrivePIDController.reset();
-		LeftDrivePIDController.reset();
-		RightDrivePIDController.setSetpoint(targetDistance);
-		LeftDrivePIDController.setSetpoint(targetDistance);
-
-		while (!RightDrivePIDController.onTarget() && !LeftDrivePIDController.onTarget())
-		{
-			Utill.SleepThread(1);
-		}
-
-	}
 
 	/**
 	 * Method that will turn a given number of degrees.
@@ -340,7 +310,6 @@ public class Drive implements PIDSource, PIDOutput
 	@Override
 	public void pidWrite(double output)
 	{		
-		NavxPIDOutput = output; 
 		SetRight(output);
 		SetLeft(-output);
 	}
@@ -361,67 +330,5 @@ public class Drive implements PIDSource, PIDOutput
 	public double pidGet() 
 	{
 		return Navx.getYaw();
-	}
-	
-	/**
-	 * This is a private class for running multiple instance of PIDController 
-	 * in the same class. 
-	 * 
-	 * @author NicoleEssner
-	 *
-	 */
-	private class DrivePID implements PIDOutput
-	{
-		/**
-		 * Enum value for the which side of the drive train 
-		 * the PID should run on. 
-		 */
-		private DriveSide Side;
-
-		/**
-		 * Weather the drive distance with the navx is running.
-		 */
-		private boolean isNavxPID;
-
-		/**
-		 * Construction for DrivePID class.
-		 * 
-		 * @param state
-		 * 		The side of the drive the PID should run
-		 * 		on.  
-		 */
-		public DrivePID(DriveSide state, boolean isNavx)
-		{
-			Side = state;
-			isNavxPID = isNavx;
-		}
-
-		@Override
-		public void pidWrite(double output) 
-		{
-			output = output / 2; 
-			double temp = NavxPIDOutput / 2;
-			
-			if (Side == DriveSide.LEFT && isNavxPID)
-			{
-				double sum = output - temp;
-
-				SetLeft(-sum);
-			}
-			else if (Side == DriveSide.LEFT && isNavxPID)
-			{
-				double sum = output + temp;
-
-				SetRight(-sum);
-			}
-			else if (Side == DriveSide.LEFT && !isNavxPID)
-			{
-				SetLeft(-output);
-			}
-			else if (Side == DriveSide.LEFT && !isNavxPID)
-			{
-				SetRight(output);
-			}
-		}
 	}
 }

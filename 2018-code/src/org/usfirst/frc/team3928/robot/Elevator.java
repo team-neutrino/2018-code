@@ -3,6 +3,7 @@ package org.usfirst.frc.team3928.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
@@ -59,16 +60,6 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	private PIDController PIDControllerInst;
 
 	/**
-	 * Actuation for the intake to go in. 
-	 */
-	private Solenoid IntakeActuatorIn;
-
-	/**
-	 * Actuation for the intake to go out. 
-	 */
-	private Solenoid IntakeActuatorOut;
-
-	/**
 	 * Actuation to trigger the climber. 
 	 */
 	private Solenoid ClimbUp;
@@ -81,7 +72,9 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	/**
 	 * Weather the elevator is moving down with the climber. 
 	 */
-	private boolean isElevatorMovingDown;
+	private boolean IsElevatorMovingDown;
+	
+	private AnalogPotentiometer IntakeEncoder;
 	
 	/**
 	 * Constructor for the elevator object.
@@ -105,14 +98,14 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		PIDControllerInst.setInputRange(Constants.ELEVATOR_PID_INPUT_RANGE_MIN, Constants.ELEVATOR_PID_INPUT_RANGE_MAX); 
 		PIDControllerInst.setOutputRange(Constants.ELEVATOR_PID_OUTPUT_RANGE_MIN, Constants.ELEVATOR_PID_OUTPUT_RANGE_MAX); 
 
-		IntakeActuatorIn = new Solenoid(4); // Make Constant this is probably gonna get deleated 
-		IntakeActuatorOut = new Solenoid(5); // Make Constant
-
 		ClimbUp = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_OUT); 
 		StopClimb = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_IN); 
 
-		isElevatorMovingDown = false;
+		IsElevatorMovingDown = false;
 		
+		IntakeEncoder = new AnalogPotentiometer(0, 360, -180);
+		
+		// TODO 
 		ReleaseIntake(false);
 		new Thread(this).start();
 	}
@@ -127,8 +120,8 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	public void ReleaseIntake(boolean isMovingOut)
 	{
 		// TODO I think this method will get changed at this point 
-		IntakeActuatorOut.set(isMovingOut);
-		IntakeActuatorIn.set(!isMovingOut);
+//		IntakeActuatorOut.set(isMovingOut);
+//		IntakeActuatorIn.set(!isMovingOut);
 	}
 
 	/**
@@ -227,7 +220,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	{
 		if (isClimbing)
 		{
-			isElevatorMovingDown = true;
+			IsElevatorMovingDown = true;
 			
 			PIDControllerInst.disable();
 
@@ -236,9 +229,9 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 			ElevatorMotor3.set(ControlMode.PercentOutput, -0.4);
 			ElevatorMotor4.set(ControlMode.PercentOutput, -0.4);
 		}
-		else if (!isClimbing && isElevatorMovingDown)	
+		else if (!isClimbing && IsElevatorMovingDown)	
 		{
-			isElevatorMovingDown = false;
+			IsElevatorMovingDown = false;
 			
 			ElevatorMotor1.set(ControlMode.PercentOutput, 0.0);
 			ElevatorMotor2.set(ControlMode.PercentOutput, 0.0);

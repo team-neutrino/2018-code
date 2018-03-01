@@ -87,8 +87,8 @@ public class AutonomousModes
 	private static void Blue(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 
-		Utill.SleepThread(7000);
-		driveInst.DriveDistance(140, 0.6);
+		//Utill.SleepThread(7000);
+		driveInst.DriveDistance(100);
 
 	}
 
@@ -109,16 +109,16 @@ public class AutonomousModes
 		}
 
 		elevatorInst.setDistanceInches(10);
-		driveInst.DriveDistance(24, 0.6);
+		driveInst.DriveDistance(24);
 		Utill.SleepThread(200);
 		driveInst.TurnDegrees(turnDegreesSign * 45);
 		Utill.SleepThread(100);
-		driveInst.DriveDistance(72, 0.6);
+		driveInst.DriveDistance(72);
 		Utill.SleepThread(100);
 		elevatorInst.setDistanceInches(24);
 		driveInst.TurnDegrees(turnDegreesSign * -45);
 		Utill.SleepThread(100);
-		driveInst.DriveDistance(12, 0.6);
+		driveInst.DriveDistance(12);
 	}
 
 	/**
@@ -132,12 +132,12 @@ public class AutonomousModes
 	private static void Orange(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 		elevatorInst.setDistanceInches(10);
-		driveInst.DriveDistance(324, 0.6);
+		driveInst.DriveDistance(324);
 		Utill.SleepThread(2000);
 		elevatorInst.setDistancePercent(1);
 		driveInst.TurnDegrees(-90);
 		Utill.SleepThread(2000);
-		driveInst.DriveDistance(12, 0.3);
+		driveInst.DriveDistance(12);
 		Utill.SleepThread(2000);
 		//eject cube
 	}
