@@ -141,7 +141,7 @@ public class Drive implements PIDSource, PIDOutput
 	 */
 	public void DriveDistance(double targetDistance)
 	{
-		double pVal = 0.04;
+		double pVal = 0.02;
 		LeftEncoder.reset();
 		RightEncoder.reset();
 		Navx.zeroYaw();
@@ -150,15 +150,11 @@ public class Drive implements PIDSource, PIDOutput
 		long firstTimeOnTarget = 0;
 		long timeOnTarget = 0; 
 		
-		while (( ((Math.abs(LeftEncoder.getDistance()) - targetDistance < 1) || (Math.abs(RightEncoder.getDistance()) - targetDistance < 1)) 
-				&& ((timeOnTarget - firstTimeOnTarget < 500)) && !DriverStation.getInstance().isDisabled()))
+		while ((timeOnTarget - firstTimeOnTarget < 500) && !DriverStation.getInstance().isDisabled()) 
 		{
-//			System.out.println("time first on target: " + firstTimeOnTarget);
-//			System.out.println("time on target: " + timeOnTarget);
 			
 			if ((Math.abs(LeftEncoder.getDistance() - targetDistance) < 1) && (Math.abs(RightEncoder.getDistance() - targetDistance) < 1))
 			{
-				System.out.println("Was on target");
 				if (!isFirstTimeOnTarget)
 				{
 					isFirstTimeOnTarget = true;
@@ -170,12 +166,10 @@ public class Drive implements PIDSource, PIDOutput
 			else
 			{
 				isFirstTimeOnTarget = false; 
+				firstTimeOnTarget = 0;
 				timeOnTarget = 0;
 			}
-			
-//			System.out.println("Right encoder value: " + RightEncoder.getDistance());
-//			System.out.println("Left encoder value: " + LeftEncoder.getDistance());
-			
+
 			double leftDifference = Math.abs(LeftEncoder.getDistance() - targetDistance);
 			double rightDifference = Math.abs(RightEncoder.getDistance() - targetDistance);
 			
@@ -200,19 +194,14 @@ public class Drive implements PIDSource, PIDOutput
 				rightMotorPower = -0.5;
 			}
 			
-			System.out.println("Left rate: " + LeftEncoder.getRate());
-			System.out.println("Right rate: " + RightEncoder.getRate());
-			
 			// TODO make go backwards 
 			if (LeftEncoder.getRate() < 9 && leftMotorPower < 0.15)
 			{
-				System.out.println("The speed of the encoder was less than 0.5, left");
 				leftMotorPower = 0.15;
 			}
 			
 			if (RightEncoder.getRate() < 9 && rightMotorPower < 0.15)
 			{
-				System.out.println("The speed of the encoder was less than 0.5, right");
 				rightMotorPower = 0.15;
 			}
 			
@@ -242,11 +231,7 @@ public class Drive implements PIDSource, PIDOutput
 				}
 			}
 			
-			
-			System.out.println("left side power: " + leftMotorPower);
-			System.out.println("right side power: " + rightMotorPower);
-			
-			if (Math.abs(LeftEncoder.getDistance() - targetDistance) < 1)
+			if (targetDistance - LeftEncoder.getDistance() < 1)
 			{
 				SetLeft(0);
 			}
@@ -255,7 +240,7 @@ public class Drive implements PIDSource, PIDOutput
 				SetLeft(leftMotorPower);
 			}
 			
-			if (Math.abs(RightEncoder.getDistance() - targetDistance) < 1)
+			if (targetDistance - RightEncoder.getDistance() < 1)
 			{
 				SetRight(0);
 			}
@@ -267,13 +252,10 @@ public class Drive implements PIDSource, PIDOutput
 			Utill.SleepThread(1);
 		}
 		
-		SetLeft(0);
-		SetRight(0);
+		System.out.println("\n\nThe loop exited\n\n");
 		
-		System.out.println("Right encoder value: " + RightEncoder.getDistance());
-		System.out.println("Left encoder value: " + LeftEncoder.getDistance());
-		
-		System.out.println("\n\nDone idiots\n\n");
+		System.out.println("Right encoder: " + RightEncoder.getDistance());
+		System.out.println("Left encoder: " + LeftEncoder.getDistance());
 	}	
 
 	/**
@@ -340,8 +322,8 @@ public class Drive implements PIDSource, PIDOutput
 	@Override
 	public void pidWrite(double output)
 	{		
-		SetRight(output);
-		SetLeft(-output);
+		SetRight(-output);
+		SetLeft(output);
 	}
 
 	@Override

@@ -86,8 +86,8 @@ public class AutonomousModes
 	 */
 	private static void Blue(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-
-		//Utill.SleepThread(7000);
+		System.out.println("Blue");
+		Utill.SleepThread(7000);
 		driveInst.DriveDistance(200);
 
 	}
@@ -102,6 +102,7 @@ public class AutonomousModes
 	 */
 	private static void Yellow(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
+		System.out.println("Yellow");
 		int turnDegreesSign = 1;
 		if(getFieldElementSideColor(FieldElement.SWITCH) == FieldElementSide.LEFT)
 		{
@@ -131,8 +132,9 @@ public class AutonomousModes
 	 */
 	private static void Orange(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
+		System.out.println("Orange");
 		elevatorInst.setDistanceInches(10);
-		driveInst.DriveDistance(324);
+		driveInst.DriveDistance(290); //324
 		Utill.SleepThread(2000);
 		elevatorInst.setDistancePercent(1);
 		driveInst.TurnDegrees(-90);
