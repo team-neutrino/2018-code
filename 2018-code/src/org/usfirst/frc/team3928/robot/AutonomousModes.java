@@ -64,6 +64,16 @@ public class AutonomousModes
 				Orange(cubeManipulatorInst, elevatorInst, driveInst);
 				break;
 			}
+			case 4:
+			{
+				Green(cubeManipulatorInst, elevatorInst, driveInst);
+				break;
+			}
+			case 5:
+			{
+				Test(cubeManipulatorInst, elevatorInst, driveInst);
+				break;
+			}
 			default:
 			{
 				Blue(cubeManipulatorInst, elevatorInst, driveInst);
@@ -89,6 +99,7 @@ public class AutonomousModes
 		System.out.println("Blue");
 		Utill.SleepThread(7000);
 		driveInst.DriveDistance(200);
+		
 
 	}
 
@@ -113,12 +124,12 @@ public class AutonomousModes
 		driveInst.DriveDistance(24);
 		Utill.SleepThread(200);
 		driveInst.TurnDegrees(turnDegreesSign * 45);
-		Utill.SleepThread(100);
+		//Utill.SleepThread(100);
 		driveInst.DriveDistance(72);
-		Utill.SleepThread(100);
+		//Utill.SleepThread(100);
 		elevatorInst.setDistanceInches(24);
 		driveInst.TurnDegrees(turnDegreesSign * -45);
-		Utill.SleepThread(100);
+		//Utill.SleepThread(100);
 		driveInst.DriveDistance(12);
 	}
 
@@ -133,17 +144,41 @@ public class AutonomousModes
 	private static void Orange(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 		System.out.println("Orange");
+		int turnDegreesSign = 1;
+		if(getFieldElementSideColor(FieldElement.SWITCH) == FieldElementSide.LEFT)
+		{
+			turnDegreesSign = -1;
+		}
 		elevatorInst.setDistanceInches(10);
 		driveInst.DriveDistance(290); //324
-		Utill.SleepThread(2000);
+		Utill.SleepThread(100);
 		elevatorInst.setDistancePercent(1);
-		driveInst.TurnDegrees(-90);
-		Utill.SleepThread(2000);
+		driveInst.TurnDegrees(turnDegreesSign * -90);
+		Utill.SleepThread(100);
 		driveInst.DriveDistance(12);
-		Utill.SleepThread(2000);
+		Utill.SleepThread(100);
 		//eject cube
 	}
 
+	private static void Green(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	{
+		System.out.println("Green");
+		elevatorInst.setDistanceInches(12);
+		driveInst.DriveDistance(210);
+		Utill.SleepThread(100);
+		driveInst.TurnDegrees(-37);
+		elevatorInst.setDistancePercent(100);
+		Utill.SleepThread(100);
+		driveInst.DriveDistance(43);
+		//spit cube
+		elevatorInst.setDistancePercent(0);
+		driveInst.TurnDegrees(-120);
+		driveInst.DriveDistance(50);
+		//nom nom cube
+		elevatorInst.setDistanceInches(30);
+		driveInst.DriveDistance(20);
+		//pew pew cube
+	}
 	/**
 	 * Will get the side of the field element to go to in auton based on 
 	 * the game message. 
@@ -193,4 +228,10 @@ public class AutonomousModes
 		}
 
 	}
+	
+	public static void Test(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	{
+		driveInst.TurnDegrees(90);
+	}
 }
+

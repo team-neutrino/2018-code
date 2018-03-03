@@ -30,8 +30,8 @@ public class Constants
 	public static final int DRIVE_ABSOLUTE_VALUE_TOLERANCE_DEGREE_TURN = 2;
 	public static final int DRIVE_PID_INPUT_RANGE_MIN_DEGREE_TURN = -180;
 	public static final int DRIVE_PID_INPUT_RANGE_MAX_DEGREE_TURN = 180;
-	public static final double DRIVE_PID_OUTPUT_RANGE_MIN_DEGREE_TURN = -0.4;
-	public static final double DRIVE_PID_OUTPUT_RANGE_MAX_DEGREE_TURN  = 0.4;
+	public static final double DRIVE_PID_OUTPUT_RANGE_MIN_DEGREE_TURN = -0.8;
+	public static final double DRIVE_PID_OUTPUT_RANGE_MAX_DEGREE_TURN  = 0.8;
 	
 	public static final double DRIVE_P = 0.5; //0.272, 0.2, 0.19, 0.18, 0.15, 0.1, 0.2, 0.4, 0.5
 	public static final double DRIVE_I = 0.014125;

@@ -153,7 +153,7 @@ public class Drive implements PIDSource, PIDOutput
 		while ((timeOnTarget - firstTimeOnTarget < 500) && !DriverStation.getInstance().isDisabled()) 
 		{
 			
-			if ((Math.abs(LeftEncoder.getDistance() - targetDistance) < 1) && (Math.abs(RightEncoder.getDistance() - targetDistance) < 1))
+			if ((targetDistance - LeftEncoder.getDistance() < 1) && (targetDistance - RightEncoder.getDistance() < 1))
 			{
 				if (!isFirstTimeOnTarget)
 				{
@@ -176,22 +176,22 @@ public class Drive implements PIDSource, PIDOutput
 			double leftMotorPower = leftDifference * pVal;
 			double rightMotorPower = rightDifference * pVal;
 			
-			if (leftMotorPower > 0.5)
+			if (leftMotorPower > 0.8)
 			{
-				leftMotorPower = 0.5;
+				leftMotorPower = 0.8;
 			}
-			else if (leftMotorPower < -0.5)
+			else if (leftMotorPower < -0.8)
 			{
-				leftMotorPower = -0.5;
+				leftMotorPower = -0.8;
 			}
 			
-			if (rightMotorPower > 0.5)
+			if (rightMotorPower > 0.8)
 			{
-				rightMotorPower = 0.5;
+				rightMotorPower = 0.8;
 			}
-			else if (rightMotorPower < -0.5)
+			else if (rightMotorPower < -0.8)
 			{
-				rightMotorPower = -0.5;
+				rightMotorPower = -0.8;
 			}
 			
 			// TODO make go backwards 
@@ -274,10 +274,11 @@ public class Drive implements PIDSource, PIDOutput
 		TurnDegreesPIDController.enable();
 
 		TurnDegreesTimeInPID = System.currentTimeMillis();
-
+	
 		while (!DriverStation.getInstance().isDisabled() && !TurnDegreesPIDController.onTarget())
 		{
-			if (System.currentTimeMillis() - TurnDegreesTimeInPID > 3000)
+			System.out.println(Navx.getYaw());
+			if (System.currentTimeMillis() - TurnDegreesTimeInPID > 10000)
 			{
 				System.out.println("PID loop had to be broken");
 				break;
@@ -285,7 +286,7 @@ public class Drive implements PIDSource, PIDOutput
 						
 			Utill.SleepThread(1);
 		}
-
+		System.out.println("left turn PID");
 		TurnDegreesPIDController.disable();
 	}
 
