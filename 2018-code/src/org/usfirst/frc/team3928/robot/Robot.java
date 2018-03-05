@@ -10,6 +10,7 @@ package org.usfirst.frc.team3928.robot;
 
 import org.usfirst.frc.team3928.robot.CubeManipulator.IntakeState;
 
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -124,11 +125,11 @@ public class Robot extends IterativeRobot
 
 		if (ThrustMaster.getRawButton(9))
 		{
-			ElevatorInst.ReleaseIntake(false);
+			//ElevatorInst.ReleaseIntake(false); TODO
 		}
 		else if (ThrustMaster.getRawButton(7))
 		{
-			ElevatorInst.ReleaseIntake(true);
+			//ElevatorInst.ReleaseIntake(true); TODO
 		}
 
 		// TODO flip this with set left and right update 

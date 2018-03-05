@@ -57,7 +57,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 * The PIDController for using the elevator encoder to raise the elevator 
 	 * a distance. 
 	 */
-	private PIDController PIDControllerInst;
+	private PIDController ElevatorPIDController;
 
 	/**
 	 * Actuation to trigger the climber. 
@@ -76,6 +76,10 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	
 	private AnalogPotentiometer IntakeEncoder;
 	
+	private PIDController IntakePIDController;
+	
+	private TalonSRX IntakeMotor;
+	
 	/**
 	 * Constructor for the elevator object.
 	 */
@@ -92,11 +96,11 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 
 		LiftButton = new DigitalInput(Constants.ELEVATOR_BUTTON);
 
-		PIDControllerInst = new PIDController(Constants.ELEVATOR_P_VALUE, Constants.ELEVATOR_I_VALUE, Constants.ELEVATOR_D_VALUE, 0, 
+		ElevatorPIDController = new PIDController(Constants.ELEVATOR_P_VALUE, Constants.ELEVATOR_I_VALUE, Constants.ELEVATOR_D_VALUE, 0, 
 				this, this); 
-		PIDControllerInst.setAbsoluteTolerance(Constants.ELEVATOR_ABSOLUTE_VALUE_TOLERANCE); 
-		PIDControllerInst.setInputRange(Constants.ELEVATOR_PID_INPUT_RANGE_MIN, Constants.ELEVATOR_PID_INPUT_RANGE_MAX); 
-		PIDControllerInst.setOutputRange(Constants.ELEVATOR_PID_OUTPUT_RANGE_MIN, Constants.ELEVATOR_PID_OUTPUT_RANGE_MAX); 
+		ElevatorPIDController.setAbsoluteTolerance(Constants.ELEVATOR_ABSOLUTE_VALUE_TOLERANCE); 
+		ElevatorPIDController.setInputRange(Constants.ELEVATOR_PID_INPUT_RANGE_MIN, Constants.ELEVATOR_PID_INPUT_RANGE_MAX); 
+		ElevatorPIDController.setOutputRange(Constants.ELEVATOR_PID_OUTPUT_RANGE_MIN, Constants.ELEVATOR_PID_OUTPUT_RANGE_MAX); 
 
 		ClimbUp = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_OUT); 
 		StopClimb = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_IN); 
@@ -105,8 +109,17 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		
 		IntakeEncoder = new AnalogPotentiometer(0, 360, -180);
 		
+		IntakePIDController = new PIDController(0.0, 0.0, 0.0, 0.0, IntakeEncoder, new PIDOutput() 
+		{
+			@Override
+			public void pidWrite(double output) 
+			{
+				IntakeMotor.set(ControlMode.PercentOutput, output);
+			}
+		});
+		
 		// TODO 
-		ReleaseIntake(false);
+		//setIntake(0);
 		new Thread(this).start();
 	}
 
@@ -117,11 +130,20 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 * @param isMovingOut
 	 * 		True when the intake is out, false when it is in.
 	 */
-	public void ReleaseIntake(boolean isMovingOut)
+	public void setIntake(double position)
 	{
 		// TODO I think this method will get changed at this point 
-//		IntakeActuatorOut.set(isMovingOut);
-//		IntakeActuatorIn.set(!isMovingOut);
+		IntakePIDController.reset();
+		IntakePIDController.setSetpoint(position); // TODO
+		
+		IntakePIDController.enable();
+		
+		while (!DriverStation.getInstance().isDisabled() && !IntakePIDController.onTarget())
+		{
+			Utill.SleepThread(1);
+		}
+		
+		IntakePIDController.disable();
 	}
 
 	/**
@@ -164,7 +186,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	{
 		while (true)
 		{
-			PIDControllerInst.disable();
+			ElevatorPIDController.disable();
 
 			//			System.out.println("zeroing elevator");
 			setMotorSpeed(-0.15);
@@ -176,7 +198,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 			//			System.out.println("left while loop");
 			setMotorSpeed(0);
 			ElevatorEncoder.reset();
-			PIDControllerInst.enable();
+			ElevatorPIDController.enable();
 
 			while (DriverStation.getInstance().isEnabled())
 			{
@@ -193,7 +215,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 */
 	public void setDistanceInches(double distance)
 	{
-		PIDControllerInst.setSetpoint(distance);
+		ElevatorPIDController.setSetpoint(distance);
 	}
 
 	/**
@@ -222,7 +244,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		{
 			IsElevatorMovingDown = true;
 			
-			PIDControllerInst.disable();
+			ElevatorPIDController.disable();
 
 			ElevatorMotor1.set(ControlMode.PercentOutput, -0.4);
 			ElevatorMotor2.set(ControlMode.PercentOutput, -0.4);
