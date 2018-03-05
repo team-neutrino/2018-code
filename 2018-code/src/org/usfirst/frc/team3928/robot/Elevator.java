@@ -109,7 +109,30 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		
 		IntakeEncoder = new AnalogPotentiometer(0, 360, -180);
 		
-		IntakePIDController = new PIDController(0.0, 0.0, 0.0, 0.0, IntakeEncoder, new PIDOutput() 
+		IntakePIDController = new PIDController(0.0, 0.0, 0.0, 0.0, 
+		new PIDSource() 
+		{
+			@Override
+			public void setPIDSourceType(PIDSourceType pidSource) 
+			{
+				System.out.println("This is the PIDSourceType: " + pidSource.toString());
+			}
+			
+			@Override
+			public double pidGet() 
+			{
+				System.out.println("Intake encoder: " + IntakeEncoder.get());
+				return IntakeEncoder.get();
+			}
+			
+			@Override
+			public PIDSourceType getPIDSourceType() 
+			{
+				return PIDSourceType.kDisplacement;
+			}
+		}
+		, 
+		new PIDOutput() 
 		{
 			@Override
 			public void pidWrite(double output) 
