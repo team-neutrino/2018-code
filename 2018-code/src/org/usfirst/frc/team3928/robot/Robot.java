@@ -113,6 +113,7 @@ public class Robot extends IterativeRobot
 	{	
 		double elevatorPercent = (-ThrustMaster.getZ() + 1) / 2;
 		ElevatorInst.setDistancePercent(elevatorPercent);
+	
 		
 		if (ThrustMaster.getRawButton(1))
 		{

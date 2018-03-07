@@ -107,22 +107,38 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 
 		IsElevatorMovingDown = false;
 		
+		IntakeMotor = new TalonSRX(9);
 		IntakeEncoder = new AnalogPotentiometer(0, 360, -180);
 		
-		IntakePIDController = new PIDController(0.0, 0.0, 0.0, 0.0, 
+		// TODO add values
+		IntakePIDController = new PIDController(0.015, 0.0, 0.0, 0.0, 
 		new PIDSource() 
 		{
 			@Override
 			public void setPIDSourceType(PIDSourceType pidSource) 
 			{
-				System.out.println("This is the PIDSourceType: " + pidSource.toString());
+				//System.out.println("This is the PIDSourceType: " + pidSource.toString());
 			}
 			
 			@Override
 			public double pidGet() 
 			{
-				System.out.println("Intake encoder: " + IntakeEncoder.get());
-				return IntakeEncoder.get();
+				
+				
+				double value;
+				
+				if (IntakeEncoder.get() >= 0)
+				{
+					value = 180 - IntakeEncoder.get();
+				}
+				else
+				{
+					value = -180 - IntakeEncoder.get();
+				}
+				
+				//System.out.println("Intake encoder: " + value);
+				
+				return value;
 			}
 			
 			@Override
@@ -137,9 +153,14 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 			@Override
 			public void pidWrite(double output) 
 			{
+				//System.out.println("motor output: " + output);
 				IntakeMotor.set(ControlMode.PercentOutput, output);
 			}
 		});
+		
+		IntakePIDController.setAbsoluteTolerance(5);
+		IntakePIDController.setInputRange(-180, 180);
+		IntakePIDController.setOutputRange(-0.7, 0.7);
 		
 		// TODO 
 		//setIntake(0);
@@ -156,17 +177,13 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	public void setIntake(double position)
 	{
 		// TODO I think this method will get changed at this point 
-		IntakePIDController.reset();
-		IntakePIDController.setSetpoint(position); // TODO
+		 
+		//System.out.println("Set point: " + position);
+		
+		 // TODO
 		
 		IntakePIDController.enable();
-		
-		while (!DriverStation.getInstance().isDisabled() && !IntakePIDController.onTarget())
-		{
-			Utill.SleepThread(1);
-		}
-		
-		IntakePIDController.disable();
+
 	}
 
 	/**
@@ -239,6 +256,22 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	public void setDistanceInches(double distance)
 	{
 		ElevatorPIDController.setSetpoint(distance);
+		
+		double position;
+		
+		if (distance < 12)
+		{
+			position = 0.0;
+		}
+		else 
+		{
+			position = 0.6;
+		}
+		
+		position = (position * 79) - 45;
+		
+		IntakePIDController.setSetpoint(position);
+		IntakePIDController.enable();
 	}
 
 	/**
@@ -303,7 +336,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) 
 	{
-		System.out.println("This is the PIDSourceType: " + pidSource.toString());
+		//System.out.println("This is the PIDSourceType: " + pidSource.toString());
 	}
 
 	@Override
