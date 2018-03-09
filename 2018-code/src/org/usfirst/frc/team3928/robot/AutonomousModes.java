@@ -99,7 +99,6 @@ public class AutonomousModes
 	private static void Blue(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 		System.out.println("Blue");
-		cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 		Utill.SleepThread(7000);
 		driveInst.DriveDistance(200);
 		
@@ -122,8 +121,6 @@ public class AutonomousModes
 		{
 			turnDegreesSign = -1;
 		}
-
-		cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 		elevatorInst.setDistanceInches(10);
 		driveInst.DriveDistance(24);
 		Utill.SleepThread(200);
@@ -156,7 +153,6 @@ public class AutonomousModes
 		{
 			turnDegreesSign = -1;
 		}
-		cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 		elevatorInst.setDistanceInches(10);
 		driveInst.DriveDistance(290); //324
 		Utill.SleepThread(100);
@@ -164,16 +160,15 @@ public class AutonomousModes
 		driveInst.TurnDegrees(turnDegreesSign * -90);
 		Utill.SleepThread(100);
 		driveInst.DriveDistance(12);
-		Utill.SleepThread(50);
+		Utill.SleepThread(100);
 		cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-		Utill.SleepThread(500);
+		Utill.SleepThread(1000);
 		cubeManipulatorInst.MoveCube(IntakeState.OFF);
 	}
 
 	private static void Green(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 		System.out.println("Green");
-		cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 		elevatorInst.setDistanceInches(12);
 		driveInst.DriveDistance(210);
 		Utill.SleepThread(100);
@@ -186,12 +181,15 @@ public class AutonomousModes
 		cubeManipulatorInst.MoveCube(IntakeState.OFF);
 		elevatorInst.setDistancePercent(0);
 		driveInst.TurnDegrees(-120);
-		driveInst.DriveDistance(50);
 		cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+		driveInst.DriveDistance(66);
+		Utill.SleepThread(250);
+		cubeManipulatorInst.MoveCube(IntakeState.OFF);
 		elevatorInst.setDistanceInches(30);
-		driveInst.DriveDistance(20);
+		Utill.SleepThread(1000);
+		//driveInst.DriveDistance(20);
 		cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-		Utill.SleepThread(500);
+		Utill.SleepThread(1000);
 		cubeManipulatorInst.MoveCube(IntakeState.OFF);
 	}
 	/**
