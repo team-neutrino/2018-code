@@ -127,6 +127,10 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 				
 				double value;
 				
+//				if(ElevatorEncoder.getDistance() < 20);
+//				{
+//					
+//				}
 				if (IntakeEncoder.get() >= 0)
 				{
 					value = 180 - IntakeEncoder.get();
@@ -155,6 +159,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 			{
 				//System.out.println("motor output: " + output);
 				IntakeMotor.set(ControlMode.PercentOutput, output);
+				//System.out.println("encoder Value: " + IntakeEncoder.get());
 			}
 		});
 		
@@ -259,7 +264,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		
 		double position;
 		
-		if (distance < 12)
+		if (distance < 2)
 		{
 			position = 0.0;
 		}
@@ -321,6 +326,11 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		StopClimb.set(isClimbing);
 	}
 
+//	public void startClimb()
+//	{
+//		setDistancePercent(1);
+//		IntakePIDController.setSetpoint();
+//	}
 	@Override
 	public void run() 
 	{

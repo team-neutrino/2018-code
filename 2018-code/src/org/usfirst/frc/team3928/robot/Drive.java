@@ -152,6 +152,8 @@ public class Drive implements PIDSource, PIDOutput
 		
 		while ((timeOnTarget - firstTimeOnTarget < 500) && !DriverStation.getInstance().isDisabled()) 
 		{
+			System.out.println("Right encoder: " + RightEncoder.getDistance());
+			System.out.println("Left encoder: " + LeftEncoder.getDistance());
 			
 			if ((targetDistance - LeftEncoder.getDistance() < 1) && (targetDistance - RightEncoder.getDistance() < 1))
 			{

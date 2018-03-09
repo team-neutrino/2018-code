@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3928.robot;
 
+import org.usfirst.frc.team3928.robot.CubeManipulator.IntakeState;
+
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -97,6 +99,7 @@ public class AutonomousModes
 	private static void Blue(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 		System.out.println("Blue");
+		cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 		Utill.SleepThread(7000);
 		driveInst.DriveDistance(200);
 		
@@ -120,6 +123,7 @@ public class AutonomousModes
 			turnDegreesSign = -1;
 		}
 
+		cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 		elevatorInst.setDistanceInches(10);
 		driveInst.DriveDistance(24);
 		Utill.SleepThread(200);
@@ -131,6 +135,9 @@ public class AutonomousModes
 		driveInst.TurnDegrees(turnDegreesSign * -45);
 		//Utill.SleepThread(100);
 		driveInst.DriveDistance(12);
+		cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+		Utill.SleepThread(500);
+		cubeManipulatorInst.MoveCube(IntakeState.OFF);
 	}
 
 	/**
@@ -149,6 +156,7 @@ public class AutonomousModes
 		{
 			turnDegreesSign = -1;
 		}
+		cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 		elevatorInst.setDistanceInches(10);
 		driveInst.DriveDistance(290); //324
 		Utill.SleepThread(100);
@@ -156,13 +164,16 @@ public class AutonomousModes
 		driveInst.TurnDegrees(turnDegreesSign * -90);
 		Utill.SleepThread(100);
 		driveInst.DriveDistance(12);
-		Utill.SleepThread(100);
-		//eject cube
+		Utill.SleepThread(50);
+		cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+		Utill.SleepThread(500);
+		cubeManipulatorInst.MoveCube(IntakeState.OFF);
 	}
 
 	private static void Green(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 		System.out.println("Green");
+		cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 		elevatorInst.setDistanceInches(12);
 		driveInst.DriveDistance(210);
 		Utill.SleepThread(100);
@@ -170,14 +181,18 @@ public class AutonomousModes
 		elevatorInst.setDistancePercent(100);
 		Utill.SleepThread(100);
 		driveInst.DriveDistance(43);
-		//spit cube
+		cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+		Utill.SleepThread(500);
+		cubeManipulatorInst.MoveCube(IntakeState.OFF);
 		elevatorInst.setDistancePercent(0);
 		driveInst.TurnDegrees(-120);
 		driveInst.DriveDistance(50);
-		//nom nom cube
+		cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 		elevatorInst.setDistanceInches(30);
 		driveInst.DriveDistance(20);
-		//pew pew cube
+		cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+		Utill.SleepThread(500);
+		cubeManipulatorInst.MoveCube(IntakeState.OFF);
 	}
 	/**
 	 * Will get the side of the field element to go to in auton based on 

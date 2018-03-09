@@ -60,11 +60,11 @@ public class CubeManipulator
 		
 		if (state == IntakeState.INTAKE)
 		{
-			motorPower = Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
+			motorPower = -Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
 		}
 		else if (state == IntakeState.OUTTAKE)
 		{
-			motorPower = -Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
+			motorPower = Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
 		}
 		else
 		{
@@ -74,7 +74,7 @@ public class CubeManipulator
 		}
 		
 		// TODO
-		System.out.println("The current of the motor is: " + IntakeMotor.getOutputCurrent());
+		//System.out.println("The current of the motor is: " + IntakeMotor.getOutputCurrent());
 		
 		if (IntakeMotor.getOutputCurrent() > Constants.STALLED_MOTOR_CURRENT && FirstTimeOverThreshold == 0) 
 		{
