@@ -60,11 +60,11 @@ public class CubeManipulator
 		
 		if (state == IntakeState.INTAKE)
 		{
-			motorPower = -Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
+			motorPower = Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
 		}
 		else if (state == IntakeState.OUTTAKE)
 		{
-			motorPower = Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
+			motorPower = -Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
 		}
 		else
 		{
