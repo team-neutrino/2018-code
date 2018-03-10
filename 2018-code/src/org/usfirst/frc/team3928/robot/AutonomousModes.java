@@ -206,25 +206,26 @@ public class AutonomousModes
 				cubeManipulatorInst.MoveCube(IntakeState.OFF);
 				elevatorInst.setDistanceInches(30);
 				Utill.SleepThread(1000);
-				//driveInst.DriveDistance(20);
 				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
 				Utill.SleepThread(1000);
 				cubeManipulatorInst.MoveCube(IntakeState.OFF);
 			}
 			else
 			{	
-				driveInst.TurnDegrees(-143);
-				driveInst.DriveDistance(36);
-				driveInst.TurnDegrees(90);
-				driveInst.DriveDistance(125);
-				driveInst.TurnDegrees(-60);
+				driveInst.DriveDistanceBackwards(-40);
+				driveInst.TurnDegrees(-53);
+				driveInst.DriveDistance(80);
+				driveInst.DriveDistance(90);
 				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
-				driveInst.DriveDistance(24);
-				Utill.SleepThread(250);
-				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-				elevatorInst.setDistanceInches(30);
+				driveInst.TurnDegrees(-90);
+				driveInst.SetLeft(0.4);
+				driveInst.SetRight(0.4);
 				Utill.SleepThread(1000);
-				//driveInst.DriveDistance(20);
+				driveInst.SetLeft(0);
+				driveInst.SetRight(0);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				elevatorInst.setDistanceInches(36);
+				Utill.SleepThread(200);
 				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
 				Utill.SleepThread(1000);
 				cubeManipulatorInst.MoveCube(IntakeState.OFF);
