@@ -258,7 +258,136 @@ public class Drive implements PIDSource, PIDOutput
 		
 		System.out.println("Right encoder: " + RightEncoder.getDistance());
 		System.out.println("Left encoder: " + LeftEncoder.getDistance());
-	}	
+	}
+	
+	/**
+	 * Method that will drive a given distance. 
+	 * 
+	 * @param targetDistance
+	 * 		The distance to drive. 
+	 */
+	public void DriveDistanceBackwards(double targetDistance)
+	{
+		double pVal = 0.02;
+		LeftEncoder.reset();
+		RightEncoder.reset();
+		Navx.zeroYaw();
+		
+		boolean isFirstTimeOnTarget = false;
+		long firstTimeOnTarget = 0;
+		long timeOnTarget = 0; 
+		
+		while ((timeOnTarget - firstTimeOnTarget < 500) && !DriverStation.getInstance().isDisabled()) 
+		{
+			System.out.println("Right encoder: " + RightEncoder.getDistance());
+			System.out.println("Left encoder: " + LeftEncoder.getDistance());
+			
+			if ((targetDistance - LeftEncoder.getDistance() > -1) && (targetDistance - RightEncoder.getDistance() > -1))
+			{
+				if (!isFirstTimeOnTarget)
+				{
+					isFirstTimeOnTarget = true;
+					firstTimeOnTarget = System.currentTimeMillis(); 
+				}
+				
+				timeOnTarget = System.currentTimeMillis();
+			}
+			else
+			{
+				isFirstTimeOnTarget = false; 
+				firstTimeOnTarget = 0;
+				timeOnTarget = 0;
+			}
+
+			double leftDifference = Math.abs(LeftEncoder.getDistance() - targetDistance);
+			double rightDifference = Math.abs(RightEncoder.getDistance() - targetDistance);
+			
+			double leftMotorPower = -(leftDifference * pVal);
+			double rightMotorPower = -(rightDifference * pVal);
+			
+			if (leftMotorPower > 0.8)
+			{
+				leftMotorPower = 0.8;
+			}
+			else if (leftMotorPower < -0.8)
+			{
+				leftMotorPower = -0.8;
+			}
+			
+			if (rightMotorPower > 0.8)
+			{
+				rightMotorPower = 0.8;
+			}
+			else if (rightMotorPower < -0.8)
+			{
+				rightMotorPower = -0.8;
+			}
+			
+			if (LeftEncoder.getRate() > -9 && leftMotorPower > -0.15)
+			{
+				leftMotorPower = -0.15;
+			}
+			
+			if (RightEncoder.getRate() < -9 && rightMotorPower > -0.15)
+			{
+				rightMotorPower = -0.15;
+			}
+			
+			double maxAngle = 5;
+			double proportionalDifference = 1 / maxAngle;
+			
+			//TODO
+			if(Navx.getYaw() < 0)
+			{
+				if(Math.abs(Navx.getYaw()) > maxAngle)
+				{
+					rightMotorPower = rightMotorPower - 0.5;
+					
+				}
+				else
+				{
+					rightMotorPower = rightMotorPower - Navx.getYaw() * -proportionalDifference;
+				}
+			}
+			else
+			{
+				if(Math.abs(Navx.getYaw()) > maxAngle)
+				{
+					leftMotorPower = leftMotorPower - 0.5;
+				}
+				else
+				{
+
+					leftMotorPower = leftMotorPower - Navx.getYaw() * proportionalDifference;
+				}
+			}
+			
+			if (targetDistance - LeftEncoder.getDistance() > -1)
+			{
+				SetLeft(0);
+			}
+			else
+			{
+				SetLeft(leftMotorPower);
+			}
+			
+			if (targetDistance - RightEncoder.getDistance() > -1)
+			{
+				SetRight(0);
+			}
+			else
+			{
+				SetRight(rightMotorPower);
+			}
+			
+			Utill.SleepThread(1);
+		}
+		
+		System.out.println("\n\nThe loop exited\n\n");
+		
+		System.out.println("Right encoder: " + RightEncoder.getDistance());
+		System.out.println("Left encoder: " + LeftEncoder.getDistance());
+	}
 
 	/**
 	 * Method that will turn a given number of degrees.

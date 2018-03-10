@@ -36,7 +36,7 @@ public class AutonomousModes
 	
 	public enum AutonomousColor
 	{
-		BLUE, YELLOW, GREEN, ORANGE, PURPLE;
+		BLUE, YELLOW, GREEN, ORANGE, PURPLE, TEST;
 	}
 
 	/**
@@ -81,6 +81,11 @@ public class AutonomousModes
 				Test(cubeManipulatorInst, elevatorInst, driveInst);
 				break;
 			}
+			case TEST:
+			{
+				Test(cubeManipulatorInst, elevatorInst, driveInst);
+				break;
+			}
 			default:
 			{
 				Blue(cubeManipulatorInst, elevatorInst, driveInst);
@@ -106,8 +111,6 @@ public class AutonomousModes
 		System.out.println("Blue");
 		Utill.SleepThread(7000);
 		driveInst.DriveDistance(200);
-		
-
 	}
 
 	/**
@@ -287,7 +290,7 @@ public class AutonomousModes
 	
 	public static void Test(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		driveInst.TurnDegrees(90);
+		driveInst.DriveDistanceBackwards(-200);
 	}
 }
 
