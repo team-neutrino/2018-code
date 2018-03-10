@@ -33,6 +33,11 @@ public class AutonomousModes
 	{
 		SWITCH, SCALE;
 	}
+	
+	public enum AutonomousColor
+	{
+		BLUE, YELLOW, GREEN, ORANGE, PURPLE;
+	}
 
 	/**
 	 * Will take in an integer value corresponding to the autonomous mode, also passed in the 
@@ -47,31 +52,31 @@ public class AutonomousModes
 	 * @param driveInst
 	 * 		An instance of the drive. 
 	 */
-	public static void PickAutonomousMode(int autonomousMode, CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	public static void PickAutonomousMode(AutonomousColor color, CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		switch (autonomousMode)
+		switch (color)
 		{
-			case 1:
+			case BLUE:
 			{
 				Blue(cubeManipulatorInst, elevatorInst, driveInst);
 				break;
 			}
-			case 2:
+			case YELLOW:
 			{
 				Yellow(cubeManipulatorInst, elevatorInst, driveInst);
 				break;
 			}
-			case 3:
-			{
-				Orange(cubeManipulatorInst, elevatorInst, driveInst);
-				break;
-			}
-			case 4:
+			case GREEN:
 			{
 				Green(cubeManipulatorInst, elevatorInst, driveInst);
 				break;
 			}
-			case 5:
+			case ORANGE:
+			{
+				Orange(cubeManipulatorInst, elevatorInst, driveInst);
+				break;
+			}
+			case PURPLE:
 			{
 				Test(cubeManipulatorInst, elevatorInst, driveInst);
 				break;
@@ -117,7 +122,7 @@ public class AutonomousModes
 	{
 		System.out.println("Yellow");
 		int turnDegreesSign = 1;
-		if(getFieldElementSideColor(FieldElement.SWITCH) == FieldElementSide.LEFT)
+		if(getFieldElementSideColor()[0] == FieldElementSide.LEFT)
 		{
 			turnDegreesSign = -1;
 		}
@@ -145,11 +150,11 @@ public class AutonomousModes
 	 * 
 	 * TODO update the doc
 	 */
-	private static void Orange(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	private static void Green(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		System.out.println("Orange");
+		System.out.println("Green");
 		int turnDegreesSign = 1;
-		if(getFieldElementSideColor(FieldElement.SWITCH) == FieldElementSide.LEFT)
+		if(getFieldElementSideColor()[0] == FieldElementSide.LEFT)
 		{
 			turnDegreesSign = -1;
 		}
@@ -164,33 +169,77 @@ public class AutonomousModes
 		cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
 		Utill.SleepThread(1000);
 		cubeManipulatorInst.MoveCube(IntakeState.OFF);
+		elevatorInst.setDistancePercent(0);
+		driveInst.TurnDegrees(-90);
+		driveInst.DriveDistance(48);
+		
 	}
 
-	private static void Green(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	private static void Orange(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		System.out.println("Green");
+		System.out.println("Orange");
 		elevatorInst.setDistanceInches(12);
-		driveInst.DriveDistance(210);
-		Utill.SleepThread(100);
-		driveInst.TurnDegrees(-37);
-		elevatorInst.setDistancePercent(100);
-		Utill.SleepThread(100);
-		driveInst.DriveDistance(43);
-		cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-		Utill.SleepThread(500);
-		cubeManipulatorInst.MoveCube(IntakeState.OFF);
-		elevatorInst.setDistancePercent(0);
-		driveInst.TurnDegrees(-120);
-		cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
-		driveInst.DriveDistance(66);
-		Utill.SleepThread(250);
-		cubeManipulatorInst.MoveCube(IntakeState.OFF);
-		elevatorInst.setDistanceInches(30);
-		Utill.SleepThread(1000);
-		//driveInst.DriveDistance(20);
-		cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-		Utill.SleepThread(1000);
-		cubeManipulatorInst.MoveCube(IntakeState.OFF);
+		
+		if(getFieldElementSideColor()[0] == FieldElementSide.RIGHT)
+		{
+			elevatorInst.setDistanceInches(12);
+			driveInst.DriveDistance(210);
+			Utill.SleepThread(100);
+			driveInst.TurnDegrees(-37);
+			elevatorInst.setDistancePercent(100);
+			Utill.SleepThread(100);
+			driveInst.DriveDistance(43);
+			cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+			Utill.SleepThread(500);
+			cubeManipulatorInst.MoveCube(IntakeState.OFF);
+			elevatorInst.setDistancePercent(0);
+			
+			if(getFieldElementSideColor()[1] == FieldElementSide.RIGHT)
+			{	
+				driveInst.TurnDegrees(-120);
+				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+				driveInst.DriveDistance(66);
+				Utill.SleepThread(250);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				elevatorInst.setDistanceInches(30);
+				Utill.SleepThread(1000);
+				//driveInst.DriveDistance(20);
+				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+				Utill.SleepThread(1000);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+			}
+			else
+			{	
+				driveInst.TurnDegrees(-143);
+				driveInst.DriveDistance(36);
+				driveInst.TurnDegrees(90);
+				driveInst.DriveDistance(125);
+				driveInst.TurnDegrees(-60);
+				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+				driveInst.DriveDistance(24);
+				Utill.SleepThread(250);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				elevatorInst.setDistanceInches(30);
+				Utill.SleepThread(1000);
+				//driveInst.DriveDistance(20);
+				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+				Utill.SleepThread(1000);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+			}
+				
+		}
+		else
+		{
+			if(getFieldElementSideColor()[1] == FieldElementSide.RIGHT)
+			{
+				
+			}
+			else
+			{
+				
+			}
+		}
+		
 	}
 	/**
 	 * Will get the side of the field element to go to in auton based on 
@@ -201,11 +250,12 @@ public class AutonomousModes
 	 * @return
 	 * 		The side of the field element that matches the alliance color. 
 	 */
-	private static FieldElementSide getFieldElementSideColor(FieldElement fieldElement)
+	private static FieldElementSide[] getFieldElementSideColor()
 	{
+		FieldElementSide[] fieldElements = new FieldElementSide[2];
+		
 		DriverStation driverStationInst = DriverStation.getInstance();
 		String gameData = "";
-		char sideColor = ' ';
 
 		while (gameData.length() == 0)
 		{
@@ -214,32 +264,25 @@ public class AutonomousModes
 			Utill.SleepThread(1);
 		}
 
-		if (fieldElement == FieldElement.SWITCH)
+		if (gameData.charAt(0) == 'R')
 		{
-			sideColor = gameData.charAt(0);
+			fieldElements[0] = FieldElementSide.RIGHT;
 		}
-		else if (fieldElement == FieldElement.SCALE)
+		else if (gameData.charAt(0) == 'L')
 		{
-			sideColor = gameData.charAt(1);
-		}
-
-		System.out.println("character" + sideColor);
-
-		if (sideColor == 'R')
-		{
-			return FieldElementSide.RIGHT;
-		}
-		else if (sideColor == 'L')
-		{
-			return FieldElementSide.LEFT;
-		}
-		else 
-		{
-			System.out.println("Null case happened");
-			// Might want to throw and error here 
-			return null;
+			fieldElements[0] = FieldElementSide.LEFT;
 		}
 
+		if (gameData.charAt(1) == 'R')
+		{
+			fieldElements[1] = FieldElementSide.RIGHT;
+		}
+		else if (gameData.charAt(0) == 'L')
+		{
+			fieldElements[1] = FieldElementSide.LEFT;
+		}
+		
+		return fieldElements;
 	}
 	
 	public static void Test(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)

@@ -68,18 +68,18 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 * Actuation to stop triggering the climber.
 	 */
 	private Solenoid StopClimb;
-	
+
 	/**
 	 * Weather the elevator is moving down with the climber. 
 	 */
 	private boolean IsElevatorMovingDown;
-	
+
 	private AnalogPotentiometer IntakeEncoder;
-	
+
 	private PIDController IntakePIDController;
-	
+
 	private TalonSRX IntakeMotor;
-	
+
 	/**
 	 * Constructor for the elevator object.
 	 */
@@ -106,31 +106,27 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		StopClimb = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_IN); 
 
 		IsElevatorMovingDown = false;
-		
+
 		IntakeMotor = new TalonSRX(9);
 		IntakeEncoder = new AnalogPotentiometer(0, 360, -180);
-		
+
 		// TODO add values
 		IntakePIDController = new PIDController(0.015, 0.0, 0.0, 0.0, 
-		new PIDSource() 
+				new PIDSource() 
 		{
 			@Override
 			public void setPIDSourceType(PIDSourceType pidSource) 
 			{
 				//System.out.println("This is the PIDSourceType: " + pidSource.toString());
 			}
-			
+
 			@Override
 			public double pidGet() 
 			{
-				
-				
+
+
 				double value;
-				
-//				if(ElevatorEncoder.getDistance() < 20);
-//				{
-//					
-//				}
+
 				if (IntakeEncoder.get() >= 0)
 				{
 					value = 180 - IntakeEncoder.get();
@@ -139,12 +135,12 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 				{
 					value = -180 - IntakeEncoder.get();
 				}
-				
+
 				//System.out.println("Intake encoder: " + value);
-				
+
 				return value;
 			}
-			
+
 			@Override
 			public PIDSourceType getPIDSourceType() 
 			{
@@ -159,14 +155,14 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 			{
 				//System.out.println("motor output: " + output);
 				IntakeMotor.set(ControlMode.PercentOutput, output);
-				//System.out.println("encoder Value: " + IntakeEncoder.get());
 			}
 		});
-		
+
 		IntakePIDController.setAbsoluteTolerance(5);
 		IntakePIDController.setInputRange(-180, 180);
 		IntakePIDController.setOutputRange(-0.7, 0.7);
-		
+		IntakePIDController.enable();
+
 		// TODO 
 		//setIntake(0);
 		new Thread(this).start();
@@ -182,11 +178,11 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	public void setIntake(double position)
 	{
 		// TODO I think this method will get changed at this point 
-		 
+
 		//System.out.println("Set point: " + position);
-		
-		 // TODO
-		
+
+		// TODO
+
 		IntakePIDController.enable();
 
 	}
@@ -245,7 +241,8 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 			ElevatorEncoder.reset();
 			ElevatorPIDController.enable();
 
-			while (DriverStation.getInstance().isEnabled())
+			//while (DriverStation.getInstance().isEnabled())
+			while(true)
 			{
 				Utill.SleepThread(1);
 			}
@@ -261,10 +258,10 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	public void setDistanceInches(double distance)
 	{
 		ElevatorPIDController.setSetpoint(distance);
-		
+
 		double position;
-		
-		if (distance < 2)
+
+		if (distance < 12)
 		{
 			position = 0.0;
 		}
@@ -272,11 +269,10 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		{
 			position = 0.6;
 		}
-		
+
 		position = (position * 79) - 45;
-		
+
 		IntakePIDController.setSetpoint(position);
-		IntakePIDController.enable();
 	}
 
 	/**
@@ -304,8 +300,9 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		if (isClimbing)
 		{
 			IsElevatorMovingDown = true;
-			
+
 			ElevatorPIDController.disable();
+			IntakePIDController.disable();
 
 			ElevatorMotor1.set(ControlMode.PercentOutput, -0.4);
 			ElevatorMotor2.set(ControlMode.PercentOutput, -0.4);
@@ -315,7 +312,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		else if (!isClimbing && IsElevatorMovingDown)	
 		{
 			IsElevatorMovingDown = false;
-			
+
 			ElevatorMotor1.set(ControlMode.PercentOutput, 0.0);
 			ElevatorMotor2.set(ControlMode.PercentOutput, 0.0);
 			ElevatorMotor3.set(ControlMode.PercentOutput, 0.0);
@@ -326,11 +323,13 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		StopClimb.set(isClimbing);
 	}
 
-//	public void startClimb()
-//	{
-//		setDistancePercent(1);
-//		IntakePIDController.setSetpoint();
-//	}
+	public void setUpClimb()
+	{
+		//System.out.println("Cset up to climb was called");
+		ElevatorPIDController.setSetpoint(70);
+		IntakePIDController.setSetpoint((-1 * 79) - 45);
+	}
+
 	@Override
 	public void run() 
 	{

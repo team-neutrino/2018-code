@@ -8,6 +8,7 @@
 package org.usfirst.frc.team3928.robot;
 
 
+import org.usfirst.frc.team3928.robot.AutonomousModes.AutonomousColor;
 import org.usfirst.frc.team3928.robot.CubeManipulator.IntakeState;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
@@ -70,7 +71,7 @@ public class Robot extends IterativeRobot
 		ThrustMaster = new Joystick(Constants.THRUST_MASTER_CONTROLLER);
 		LeftJoystick = new Joystick(Constants.LEFT_JOYSTICK); 
 		RightJoystick = new Joystick(Constants.RIGHT_JOYSTICK); 
-		
+
 		ElevatorInst = new Elevator();
 		DriveInst = new Drive();
 		CubeManipulatorInst = new CubeManipulator();
@@ -92,7 +93,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		AutonomousModes.PickAutonomousMode(3, CubeManipulatorInst, ElevatorInst, DriveInst);
+		AutonomousModes.PickAutonomousMode(AutonomousColor.ORANGE, CubeManipulatorInst, ElevatorInst, DriveInst);
 	}
 
 
@@ -111,10 +112,16 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic() 
 	{	
-		double elevatorPercent = (-ThrustMaster.getZ() + 1) / 2;
-		ElevatorInst.setDistancePercent(elevatorPercent);
-	
-		
+		if (ThrustMaster.getRawButton(2))
+		{
+			ElevatorInst.setUpClimb();
+		}
+		else
+		{
+			double elevatorPercent = (-ThrustMaster.getZ() + 1) / 2;
+			ElevatorInst.setDistancePercent(elevatorPercent);
+		}
+
 		if (ThrustMaster.getRawButton(1))
 		{
 			ElevatorInst.Climb(true);
@@ -122,15 +129,6 @@ public class Robot extends IterativeRobot
 		else
 		{
 			ElevatorInst.Climb(false);
-		}
-
-		if (ThrustMaster.getRawButton(9))
-		{
-			//ElevatorInst.ReleaseIntake(false); TODO
-		}
-		else if (ThrustMaster.getRawButton(7))
-		{
-			//ElevatorInst.ReleaseIntake(true); TODO
 		}
 
 		// TODO flip this with set left and right update 
