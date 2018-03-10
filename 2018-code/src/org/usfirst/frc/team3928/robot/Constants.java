@@ -5,8 +5,8 @@ public class Constants
 	// CubeManipulator
 	public static final int INTAKE_MOTOR_1 = 8;
 	public static final double CUBE_MANIPULATOR_MOTOR_POWER = 1;
-	public static final int STALLED_MOTOR_CURRENT = 50; //10
-	public static final int CURRENT_OVER_THRESHOLD_TIME_MILLIS = 500;
+	public static final int STALLED_MOTOR_CURRENT = 55; //10
+	public static final int CURRENT_OVER_THRESHOLD_TIME_MILLIS = 100;
 	
 	// Drive
 	public static final int DRIVE_RIGHT_1_CHANNEL = 0;

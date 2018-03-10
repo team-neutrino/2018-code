@@ -78,7 +78,7 @@ public class AutonomousModes
 			}
 			case PURPLE:
 			{
-				Test(cubeManipulatorInst, elevatorInst, driveInst);
+				Purple(cubeManipulatorInst, elevatorInst, driveInst);
 				break;
 			}
 			case TEST:
@@ -132,12 +132,12 @@ public class AutonomousModes
 		elevatorInst.setDistanceInches(10);
 		driveInst.DriveDistance(24);
 		Utill.SleepThread(200);
-		driveInst.TurnDegrees(turnDegreesSign * 45);
+		driveInst.TurnDegrees(turnDegreesSign * 45, 1000);
 		//Utill.SleepThread(100);
 		driveInst.DriveDistance(72);
 		//Utill.SleepThread(100);
 		elevatorInst.setDistanceInches(24);
-		driveInst.TurnDegrees(turnDegreesSign * -45);
+		driveInst.TurnDegrees(turnDegreesSign * -45, 1000);
 		//Utill.SleepThread(100);
 		driveInst.DriveDistance(12);
 		cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
@@ -165,7 +165,7 @@ public class AutonomousModes
 		driveInst.DriveDistance(290); //324
 		Utill.SleepThread(100);
 		elevatorInst.setDistancePercent(1);
-		driveInst.TurnDegrees(turnDegreesSign * -90);
+		driveInst.TurnDegrees(turnDegreesSign * -90, 1000);
 		Utill.SleepThread(100);
 		driveInst.DriveDistance(12);
 		Utill.SleepThread(100);
@@ -173,7 +173,7 @@ public class AutonomousModes
 		Utill.SleepThread(1000);
 		cubeManipulatorInst.MoveCube(IntakeState.OFF);
 		elevatorInst.setDistancePercent(0);
-		driveInst.TurnDegrees(-90);
+		driveInst.TurnDegrees(-90, 1000);
 		driveInst.DriveDistance(48);
 		
 	}
@@ -183,58 +183,58 @@ public class AutonomousModes
 		System.out.println("Orange");
 		elevatorInst.setDistanceInches(12);
 		
-		if(getFieldElementSideColor()[0] == FieldElementSide.RIGHT)
+		FieldElementSide[] colors = getFieldElementSideColor();
+		
+		if(colors[0] == FieldElementSide.RIGHT)
 		{
-			elevatorInst.setDistanceInches(12);
 			driveInst.DriveDistance(210);
-			Utill.SleepThread(100);
-			driveInst.TurnDegrees(-37);
+			driveInst.TurnDegrees(-37, 1000);
 			elevatorInst.setDistancePercent(100);
 			Utill.SleepThread(100);
 			driveInst.DriveDistance(43);
 			cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-			Utill.SleepThread(500);
+			Utill.SleepThread(250);
 			cubeManipulatorInst.MoveCube(IntakeState.OFF);
 			elevatorInst.setDistancePercent(0);
 			
-			if(getFieldElementSideColor()[1] == FieldElementSide.RIGHT)
+			if(colors[1] == FieldElementSide.RIGHT)
 			{	
-				driveInst.TurnDegrees(-120);
+				driveInst.TurnDegrees(-120, 1000);
 				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 				driveInst.DriveDistance(66);
 				Utill.SleepThread(250);
 				cubeManipulatorInst.MoveCube(IntakeState.OFF);
 				elevatorInst.setDistanceInches(30);
-				Utill.SleepThread(1000);
+				Utill.SleepThread(1500);
 				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
 				Utill.SleepThread(1000);
 				cubeManipulatorInst.MoveCube(IntakeState.OFF);
 			}
 			else
 			{	
-				driveInst.DriveDistanceBackwards(-40);
-				driveInst.TurnDegrees(-53);
-				driveInst.DriveDistance(80);
-				driveInst.DriveDistance(90);
+				driveInst.DriveDistanceBackwards(-47);
+				driveInst.TurnDegrees(-53, 1000);
+				driveInst.DriveDistance(110);
+				driveInst.DriveDistance(50);
 				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
-				driveInst.TurnDegrees(-90);
-				driveInst.SetLeft(0.4);
-				driveInst.SetRight(0.4);
-				Utill.SleepThread(1000);
+				driveInst.TurnDegrees(-70, 1000);
+				driveInst.SetLeft(0.7);
+				driveInst.SetRight(0.7);
+				Utill.SleepThread(700);
 				driveInst.SetLeft(0);
 				driveInst.SetRight(0);
+				Utill.SleepThread(500);
 				cubeManipulatorInst.MoveCube(IntakeState.OFF);
 				elevatorInst.setDistanceInches(36);
-				Utill.SleepThread(200);
-				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
 				Utill.SleepThread(1000);
+				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+				Utill.SleepThread(500);
 				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-			}
-				
+			}		
 		}
 		else
-		{
-			if(getFieldElementSideColor()[1] == FieldElementSide.RIGHT)
+		{			
+			if(colors[1] == FieldElementSide.RIGHT)
 			{
 				
 			}
@@ -245,6 +245,81 @@ public class AutonomousModes
 		}
 		
 	}
+	
+	
+	private static void Purple(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	{
+		System.out.println("Purple");
+		elevatorInst.setDistanceInches(12);
+		
+		FieldElementSide[] colors = getFieldElementSideColor();
+		
+		if(colors[0] == FieldElementSide.RIGHT)
+		{	
+			if(colors[1] == FieldElementSide.RIGHT)
+			{	
+				System.out.println("RR");
+				driveInst.DriveDistance(220);
+				driveInst.TurnDegrees(90, 1000);
+				Utill.SleepThread(500);
+				driveInst.DriveDistance(80);
+				driveInst.DriveDistance(155);
+				driveInst.TurnDegrees(-110, 1500);
+				elevatorInst.setDistancePercent(100);
+				Utill.SleepThread(100);
+				driveInst.DriveDistance(42);
+				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+				Utill.SleepThread(250);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				elevatorInst.setDistancePercent(0);
+				driveInst.DriveDistanceBackwards(80);
+				
+			
+				driveInst.TurnDegrees(-130, 3000);
+				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+				driveInst.SetLeft(0.7);
+				driveInst.SetRight(0.7);
+				Utill.SleepThread(1400);
+				driveInst.SetLeft(0);
+				driveInst.SetRight(0);
+				Utill.SleepThread(500);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				elevatorInst.setDistanceInches(30);
+				Utill.SleepThread(1500);
+				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+				Utill.SleepThread(1000);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				
+//				driveInst.TurnDegrees(180);
+//				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+//				driveInst.DriveDistance(66);
+//				Utill.SleepThread(250);
+//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+//				elevatorInst.setDistanceInches(30);
+//				Utill.SleepThread(1500);
+//				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+//				Utill.SleepThread(1000);
+//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+			}
+			else
+			{	
+				System.out.println("RL");
+				driveInst.DriveDistance(100);
+			}		
+		}
+		else
+		{			
+			if(colors[1] == FieldElementSide.RIGHT)
+			{
+				
+			}
+			else
+			{
+				
+			}
+		}
+	}
+	
 	/**
 	 * Will get the side of the field element to go to in auton based on 
 	 * the game message. 
@@ -291,7 +366,7 @@ public class AutonomousModes
 	
 	public static void Test(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		driveInst.DriveDistanceBackwards(-200);
+		driveInst.DriveDistance(200);
 	}
 }
 

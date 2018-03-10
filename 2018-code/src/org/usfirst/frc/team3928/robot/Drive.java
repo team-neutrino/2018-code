@@ -150,7 +150,7 @@ public class Drive implements PIDSource, PIDOutput
 		long firstTimeOnTarget = 0;
 		long timeOnTarget = 0; 
 		
-		while ((timeOnTarget - firstTimeOnTarget < 500) && !DriverStation.getInstance().isDisabled()) 
+		while ((timeOnTarget - firstTimeOnTarget < 100) && !DriverStation.getInstance().isDisabled()) 
 		{
 			System.out.println("Right encoder: " + RightEncoder.getDistance());
 			System.out.println("Left encoder: " + LeftEncoder.getDistance());
@@ -196,7 +196,6 @@ public class Drive implements PIDSource, PIDOutput
 				rightMotorPower = -0.8;
 			}
 			
-			// TODO make go backwards 
 			if (LeftEncoder.getRate() < 9 && leftMotorPower < 0.15)
 			{
 				leftMotorPower = 0.15;
@@ -214,7 +213,7 @@ public class Drive implements PIDSource, PIDOutput
 			{
 				if(Math.abs(Navx.getYaw()) > maxAngle)
 				{
-					leftMotorPower = leftMotorPower + 0.5;
+					leftMotorPower = leftMotorPower + 0.2;
 				}
 				else
 				{
@@ -225,7 +224,7 @@ public class Drive implements PIDSource, PIDOutput
 			{
 				if(Math.abs(Navx.getYaw()) > maxAngle)
 				{
-					rightMotorPower = rightMotorPower + 0.5;
+					rightMotorPower = rightMotorPower + 0.2;
 				}
 				else
 				{
@@ -277,7 +276,7 @@ public class Drive implements PIDSource, PIDOutput
 		long firstTimeOnTarget = 0;
 		long timeOnTarget = 0; 
 		
-		while ((timeOnTarget - firstTimeOnTarget < 500) && !DriverStation.getInstance().isDisabled()) 
+		while ((timeOnTarget - firstTimeOnTarget < 100) && !DriverStation.getInstance().isDisabled()) 
 		{
 			System.out.println("Right encoder: " + RightEncoder.getDistance());
 			System.out.println("Left encoder: " + LeftEncoder.getDistance());
@@ -395,7 +394,7 @@ public class Drive implements PIDSource, PIDOutput
 	 * @param degree
 	 * 		The amount to turn. 
 	 */
-	public void TurnDegrees(double degree)
+	public void TurnDegrees(double degree, int timeOut)
 	{
 		Navx.zeroYaw();
 		TurnDegreesPIDController.reset();
@@ -409,7 +408,7 @@ public class Drive implements PIDSource, PIDOutput
 		while (!DriverStation.getInstance().isDisabled() && !TurnDegreesPIDController.onTarget())
 		{
 			System.out.println(Navx.getYaw());
-			if (System.currentTimeMillis() - TurnDegreesTimeInPID > 10000)
+			if (System.currentTimeMillis() - TurnDegreesTimeInPID > timeOut)
 			{
 				System.out.println("PID loop had to be broken");
 				break;
