@@ -14,6 +14,7 @@ import org.usfirst.frc.team3928.robot.CubeManipulator.IntakeState;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Solenoid;
 
 
 /**
@@ -60,6 +61,9 @@ public class Robot extends IterativeRobot
 	 * The elevator controller 
 	 */
 	private Joystick ThrustMaster;
+	
+	private Solenoid RampDrop;
+	private Solenoid RampUp;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -77,6 +81,10 @@ public class Robot extends IterativeRobot
 		CubeManipulatorInst = new CubeManipulator();
 
 		NumTimesThroughLoop = 0;
+		
+		
+		RampDrop = new Solenoid(7);
+		RampUp = new Solenoid(6);
 	}
 
 	/**
@@ -112,6 +120,17 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic() 
 	{	
+		if(RightJoystick.getRawButton(6))
+		{
+			RampDrop.set(true);
+			RampUp.set(false);
+		}
+		else
+		{
+			RampDrop.set(false);
+			RampUp.set(true);
+		}
+		
 		if (ThrustMaster.getRawButton(2))
 		{
 			ElevatorInst.setUpClimb();
