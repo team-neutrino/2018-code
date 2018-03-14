@@ -74,11 +74,21 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 */
 	private boolean IsElevatorMovingDown;
 
+	/**
+	 * The motor controller for moving the intake up and 
+	 * down. 
+	 */
+	private TalonSRX IntakeMotor;
+	
+	/**
+	 * The absolute encoder attached to the intake.
+	 */
 	private AnalogPotentiometer IntakeEncoder;
 
+	/**
+	 * The PID controler for the intake. 
+	 */
 	private PIDController IntakePIDController;
-
-	private TalonSRX IntakeMotor;
 
 	/**
 	 * Constructor for the elevator object.
@@ -96,7 +106,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 
 		LiftButton = new DigitalInput(Constants.ELEVATOR_BUTTON);
 
-		ElevatorPIDController = new PIDController(Constants.ELEVATOR_P_VALUE, Constants.ELEVATOR_I_VALUE, Constants.ELEVATOR_D_VALUE, 0, 
+		ElevatorPIDController = new PIDController(Constants.ELEVATOR_P_VALUE, Constants.ELEVATOR_I_VALUE, Constants.ELEVATOR_D_VALUE, 0.0, 
 				this, this); 
 		ElevatorPIDController.setAbsoluteTolerance(Constants.ELEVATOR_ABSOLUTE_VALUE_TOLERANCE); 
 		ElevatorPIDController.setInputRange(Constants.ELEVATOR_PID_INPUT_RANGE_MIN, Constants.ELEVATOR_PID_INPUT_RANGE_MAX); 
@@ -107,24 +117,21 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 
 		IsElevatorMovingDown = false;
 
-		IntakeMotor = new TalonSRX(9);
-		IntakeEncoder = new AnalogPotentiometer(0, 360, -180);
-
-		// TODO add values
-		IntakePIDController = new PIDController(0.015, 0.0, 0.0, 0.0, 
-				new PIDSource() 
+		IntakeMotor = new TalonSRX(Constants.INTAKE_ACTUATE_MOTOR);
+		IntakeEncoder = new AnalogPotentiometer(Constants.INTAKE_ENCODER_CHANNEL, Constants.INTAKE_ENCODER_RANGE, 
+		Constants.INTAKE_ENCODER_OFFSET);
+		IntakePIDController = new PIDController(Constants.INTAKE_P_VALUE, Constants.INTAKE_I_VALUE, Constants.INTAKE_D_VALUE, 0.0, 
+		new PIDSource() 
 		{
 			@Override
 			public void setPIDSourceType(PIDSourceType pidSource) 
 			{
-				//System.out.println("This is the PIDSourceType: " + pidSource.toString());
+				System.out.println("This is the PIDSourceType: " + pidSource.toString());
 			}
 
 			@Override
 			public double pidGet() 
 			{
-
-
 				double value;
 
 				if (IntakeEncoder.get() >= 0)
@@ -135,9 +142,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 				{
 					value = -180 - IntakeEncoder.get();
 				}
-
-				//System.out.println("Intake encoder: " + value);
-
+				
 				return value;
 			}
 
@@ -153,38 +158,15 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 			@Override
 			public void pidWrite(double output) 
 			{
-				//System.out.println("motor output: " + output);
 				IntakeMotor.set(ControlMode.PercentOutput, output);
 			}
 		});
-
-		IntakePIDController.setAbsoluteTolerance(5);
-		IntakePIDController.setInputRange(-180, 180);
-		IntakePIDController.setOutputRange(-0.7, 0.7);
+		IntakePIDController.setAbsoluteTolerance(Constants.INTAKE_ABSOLUTE_VALUE_TOLERANCE);
+		IntakePIDController.setInputRange(Constants.INTAKE_PID_INPUT_RANGE_MIN, Constants.INTAKE_PID_INPUT_RANGE_MAX);
+		IntakePIDController.setOutputRange(Constants.INTAKE_PID_OUTPUT_RANGE_MIN, Constants.INTAKE_PID_OUTPUT_RANGE_MAX);
 		IntakePIDController.enable();
 
-		// TODO 
-		//setIntake(0);
 		new Thread(this).start();
-	}
-
-	/**
-	 * Method that will move the intake down from the starting 
-	 * position. 
-	 * 
-	 * @param isMovingOut
-	 * 		True when the intake is out, false when it is in.
-	 */
-	public void setIntake(double position)
-	{
-		// TODO I think this method will get changed at this point 
-
-		//System.out.println("Set point: " + position);
-
-		// TODO
-
-		IntakePIDController.enable();
-
 	}
 
 	/**
@@ -229,19 +211,19 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		{
 			ElevatorPIDController.disable();
 
-			//			System.out.println("zeroing elevator");
 			setMotorSpeed(-0.15);
 			while (!getButtonState())
 			{
 				Utill.SleepThread(1);
 			}
 
-			//			System.out.println("left while loop");
 			setMotorSpeed(0);
 			ElevatorEncoder.reset();
 			ElevatorPIDController.enable();
 
 			//while (DriverStation.getInstance().isEnabled())
+			// This is if we want to go back to zeroing every time the robot is 
+			// enabled.
 			while(true)
 			{
 				Utill.SleepThread(1);
@@ -269,10 +251,8 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		{
 			position = 0.6;
 		}
-
-		position = (position * 79) - 45;
-
-		IntakePIDController.setSetpoint(position);
+		
+		IntakePIDController.setSetpoint(getIntakeSetpoint(position));
 	}
 
 	/**
@@ -323,13 +303,30 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		StopClimb.set(isClimbing);
 	}
 
+	/**
+	 * Method that sets the intake all the way down and the elevator 
+	 * all the way up.
+	 */
 	public void setUpClimb()
 	{
-		//System.out.println("Cset up to climb was called");
 		ElevatorPIDController.setSetpoint(70);
-		IntakePIDController.setSetpoint((-1 * 79) - 45);
+		IntakePIDController.setSetpoint(getIntakeSetpoint(-1));
 	}
 
+	/**
+	 * Will get the value corresponding to the intake position 
+	 * for the range -1 to 1.
+	 * 
+	 * @param position
+	 * 		A value from -1 to 1
+	 * @return
+	 * 		The position the intake should be set to. 
+	 */
+	private double getIntakeSetpoint(double position)
+	{
+		return (position * 79) - 45;
+	}
+	
 	@Override
 	public void run() 
 	{
@@ -345,7 +342,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) 
 	{
-		//System.out.println("This is the PIDSourceType: " + pidSource.toString());
+		System.out.println("This is the PIDSourceType: " + pidSource.toString());
 	}
 
 	@Override

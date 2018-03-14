@@ -10,7 +10,6 @@ public class CubeManipulator
 	 * outtakeing, and off.   
 	 * 
 	 * @author NicoleEssner
-	 *
 	 */
 	public enum IntakeState
 	{
@@ -25,7 +24,7 @@ public class CubeManipulator
 	
 	/**
 	 * The first time the current on the motor is above
-	 * 10 amps. 
+	 * 55 amps. 
 	 */
 	private long FirstTimeOverThreshold;
 	
@@ -73,9 +72,6 @@ public class CubeManipulator
 			stoppedIntaking = false;
 		}
 		
-		// TODO
-		//System.out.println("The current of the motor is: " + IntakeMotor.getOutputCurrent());
-		
 		if (IntakeMotor.getOutputCurrent() > Constants.STALLED_MOTOR_CURRENT && FirstTimeOverThreshold == 0) 
 		{
 			FirstTimeOverThreshold = System.currentTimeMillis();
@@ -91,11 +87,7 @@ public class CubeManipulator
 			motorPower = 0;
 		}
 		
-		if (Robot.NumTimesThroughLoop % Constants.PRINT_SPEED_DIVIDER == 0) 
-		{
-			//System.out.println("Current: " + IntakeMotor1.getOutputCurrent());
-		}
-		
-		IntakeMotor.set(ControlMode.PercentOutput, motorPower);
+		//System.out.println("The current of the motor is: " + IntakeMotor.getOutputCurrent());
+		IntakeMotor.set(ControlMode.PercentOutput, motorPower);	
 	}
 }

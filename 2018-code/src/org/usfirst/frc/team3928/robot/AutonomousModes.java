@@ -13,6 +13,18 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class AutonomousModes 
 {
 	/**
+	 * The color of the autonomous mode that is going to be 
+	 * executed.
+	 * 
+	 * @author NicoleEssner
+	 *
+	 */
+	public enum AutonomousColor
+	{
+		BLUE, YELLOW, GREEN, ORANGE, PURPLE, TEST;
+	}
+	
+	/**
 	 * The side of the field element to drop the cube in. 
 	 * 
 	 * @author NicoleEssner
@@ -24,27 +36,11 @@ public class AutonomousModes
 	}
 
 	/**
-	 * Which field element that the cube is going to be dropped in in auton. 
-	 * 
-	 * @author NicoleEssner
-	 *
-	 */
-	private enum FieldElement
-	{
-		SWITCH, SCALE;
-	}
-	
-	public enum AutonomousColor
-	{
-		BLUE, YELLOW, GREEN, ORANGE, PURPLE, TEST;
-	}
-
-	/**
 	 * Will take in an integer value corresponding to the autonomous mode, also passed in the 
 	 * objects needed to make the autonomous mode possible. 
 	 * 
 	 * @param autonomousMode
-	 * 		The integer value of the autonomous mode that is going to be excuted. 
+	 * 		The integer value of the autonomous mode that is going to be executed. 
 	 * @param cubeManipulatorInst
 	 * 		An instance of the cube manipulator. 
 	 * @param elevatorInst
@@ -103,8 +99,6 @@ public class AutonomousModes
 	 * 		An instance of the elevator. 
 	 * @param driveInst
 	 * 		An instance of the drive. 
-	 * 
-	 * TODO update the doc  
 	 */
 	private static void Blue(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
@@ -114,12 +108,14 @@ public class AutonomousModes
 	}
 
 	/**
+	 * Single cube dropped in the switch 
 	 * 
-	 * @param cubManipulatorInst
+	 * @param cubeManipulatorInst
+	 * 		An instance of the cube manipulator. 
 	 * @param elevatorInst
+	 * 		An instance of the elevator. 
 	 * @param driveInst
-	 * 
-	 * TODO update the doc 
+	 * 		An instance of the drive.
 	 */
 	private static void Yellow(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
@@ -146,12 +142,16 @@ public class AutonomousModes
 	}
 
 	/**
+	 * Method that does something at some point in time.
 	 * 
 	 * @param cubeManipulatorInst
+	 * 		An instance of the cube manipulator. 
 	 * @param elevatorInst
+	 * 		An instance of the elevator. 
 	 * @param driveInst
+	 * 		An instance of the drive.
 	 * 
-	 * TODO update the doc
+	 * TODO someone help me here?
 	 */
 	private static void Green(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
@@ -178,6 +178,17 @@ public class AutonomousModes
 		
 	}
 
+	/**
+	 * Cube dropped in the switch and scale with robot starting 
+	 * at position 3.
+	 * 
+	 * @param cubeManipulatorInst
+	 * 		An instance of the cube manipulator. 
+	 * @param elevatorInst
+	 * 		An instance of the elevator. 
+	 * @param driveInst
+	 * 		An instance of the drive.
+	 */
 	private static void Orange(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 		System.out.println("Orange");
@@ -246,7 +257,17 @@ public class AutonomousModes
 		
 	}
 	
-	
+	/**
+	 * Cube dropped in the switch and scale with robot starting 
+	 * at position 1.
+	 * 
+	 * @param cubeManipulatorInst
+	 * 		An instance of the cube manipulator. 
+	 * @param elevatorInst
+	 * 		An instance of the elevator. 
+	 * @param driveInst
+	 * 		An instance of the drive.
+	 */
 	private static void Purple(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 		System.out.println("Purple");
@@ -258,7 +279,6 @@ public class AutonomousModes
 		{	
 			if(colors[1] == FieldElementSide.RIGHT)
 			{	
-				System.out.println("RR");
 				driveInst.DriveDistance(220);
 				driveInst.TurnDegrees(90, 1000);
 				Utill.SleepThread(500);
@@ -303,7 +323,6 @@ public class AutonomousModes
 			}
 			else
 			{	
-				System.out.println("RL");
 				driveInst.DriveDistance(100);
 			}		
 		}
@@ -321,13 +340,27 @@ public class AutonomousModes
 	}
 	
 	/**
-	 * Will get the side of the field element to go to in auton based on 
+	 * Autonomous mode make for testing.
+	 * 
+	 * @param cubeManipulatorInst
+	 * 		An instance of the cube manipulator. 
+	 * @param elevatorInst
+	 * 		An instance of the elevator. 
+	 * @param driveInst
+	 * 		An instance of the drive.
+	 */
+	public static void Test(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
+	{
+		driveInst.DriveDistance(200);
+	}
+	
+	/**
+	 *  Will get the sides of the field element to go to in autonomous based on 
 	 * the game message. 
 	 * 
-	 * @param fieldElement
-	 * 		The field element that the auton mode will go to. 
 	 * @return
-	 * 		The side of the field element that matches the alliance color. 
+	 * 		An array with two elements corresponding to the sides of the 
+	 * 		switch and scale that match the alliance color.  
 	 */
 	private static FieldElementSide[] getFieldElementSideColor()
 	{
@@ -362,11 +395,6 @@ public class AutonomousModes
 		}
 		
 		return fieldElements;
-	}
-	
-	public static void Test(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
-	{
-		driveInst.DriveDistance(200);
 	}
 }
 

@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -134,7 +133,7 @@ public class Drive implements PIDSource, PIDOutput
 	}
 
 	/**
-	 * Method that will drive a given distance. 
+	 * Method that will drive forward a given distance. 
 	 * 
 	 * @param targetDistance
 	 * 		The distance to drive. 
@@ -152,9 +151,6 @@ public class Drive implements PIDSource, PIDOutput
 		
 		while ((timeOnTarget - firstTimeOnTarget < 100) && !DriverStation.getInstance().isDisabled()) 
 		{
-			System.out.println("Right encoder: " + RightEncoder.getDistance());
-			System.out.println("Left encoder: " + LeftEncoder.getDistance());
-			
 			if ((targetDistance - LeftEncoder.getDistance() < 1) && (targetDistance - RightEncoder.getDistance() < 1))
 			{
 				if (!isFirstTimeOnTarget)
@@ -254,13 +250,10 @@ public class Drive implements PIDSource, PIDOutput
 		}
 		
 		System.out.println("\n\nThe loop exited\n\n");
-		
-		System.out.println("Right encoder: " + RightEncoder.getDistance());
-		System.out.println("Left encoder: " + LeftEncoder.getDistance());
 	}
 	
 	/**
-	 * Method that will drive a given distance. 
+	 * Method that will drive backward a given distance. 
 	 * 
 	 * @param targetDistance
 	 * 		The distance to drive. 
@@ -278,9 +271,6 @@ public class Drive implements PIDSource, PIDOutput
 		
 		while ((timeOnTarget - firstTimeOnTarget < 100) && !DriverStation.getInstance().isDisabled()) 
 		{
-			System.out.println("Right encoder: " + RightEncoder.getDistance());
-			System.out.println("Left encoder: " + LeftEncoder.getDistance());
-			
 			if ((targetDistance - LeftEncoder.getDistance() > -1) && (targetDistance - RightEncoder.getDistance() > -1))
 			{
 				if (!isFirstTimeOnTarget)
@@ -383,9 +373,6 @@ public class Drive implements PIDSource, PIDOutput
 		}
 		
 		System.out.println("\n\nThe loop exited\n\n");
-		
-		System.out.println("Right encoder: " + RightEncoder.getDistance());
-		System.out.println("Left encoder: " + LeftEncoder.getDistance());
 	}
 
 	/**
@@ -399,10 +386,7 @@ public class Drive implements PIDSource, PIDOutput
 		Navx.zeroYaw();
 		TurnDegreesPIDController.reset();
 		TurnDegreesPIDController.setSetpoint(degree);
-
-		System.out.println("About to enable PIDControler");
 		TurnDegreesPIDController.enable();
-
 		TurnDegreesTimeInPID = System.currentTimeMillis();
 	
 		while (!DriverStation.getInstance().isDisabled() && !TurnDegreesPIDController.onTarget())

@@ -5,7 +5,7 @@ public class Constants
 	// CubeManipulator
 	public static final int INTAKE_MOTOR_1 = 8;
 	public static final double CUBE_MANIPULATOR_MOTOR_POWER = 1;
-	public static final int STALLED_MOTOR_CURRENT = 55; //10
+	public static final int STALLED_MOTOR_CURRENT = 55; 
 	public static final int CURRENT_OVER_THRESHOLD_TIME_MILLIS = 100;
 	
 	// Drive
@@ -45,21 +45,20 @@ public class Constants
 	public static final double DRIVE_I_VALUE_LEFT = DRIVE_I;
 	public static final double DRIVE_D_VALUE_LEFT = DRIVE_D;
 	
-	public static final int DRIVE_ABSOLUTE_VALUE_TOLERANCE = 1;
-	public static final int DRIVE_PID_INPUT_RANGE_MIN = -200;
-	public static final int DRIVE_PID_INPUT_RANGE_MAX = 200;
-	public static final double DRIVE_PID_OUTPUT_RANGE_MIN = -0.8;
-	public static final double DRIVE_PID_OUTPUT_RANGE_MAX = 0.6; //0.8
-	
 	// Elevator
 	public static final int ELEVATOR_ENCODER_POWER_CHANNEL = 0; 
 	public static final int ELEVATOR_ENCODER_DATA_CHANNEL = 1; 
 	public static final double ELEVATOR_DISTANCE_TRAVELED_PER_ROTATION = 8.0;
 	
+	public static final int INTAKE_ENCODER_CHANNEL = 0;
+	public static final int INTAKE_ENCODER_RANGE = 360;
+	public static final int INTAKE_ENCODER_OFFSET = -180; 
+	
 	public static final int ELEVATOR_MOTOR_1 = 4;
 	public static final int ELEVATOR_MOTOR_2 = 5;
 	public static final int ELEVATOR_MOTOR_3 = 6;
 	public static final int ELEVATOR_MOTOR_4 = 7;
+	public static final int INTAKE_ACTUATE_MOTOR = 9;
 	
 	public static final int ELEVATOR_BUTTON = 8;
 
@@ -71,6 +70,16 @@ public class Constants
 	public static final int ELEVATOR_PID_INPUT_RANGE_MAX = 70;
 	public static final double ELEVATOR_PID_OUTPUT_RANGE_MIN = -1;
 	public static final double ELEVATOR_PID_OUTPUT_RANGE_MAX = 1;
+	
+	public static final double INTAKE_P_VALUE = 0.015;
+	public static final double INTAKE_I_VALUE = 0.0;
+	public static final double INTAKE_D_VALUE = 0.0;
+	public static final double INTAKE_ABSOLUTE_VALUE_TOLERANCE = 5;
+	public static final int INTAKE_PID_INPUT_RANGE_MIN = -180;
+	public static final int INTAKE_PID_INPUT_RANGE_MAX = 180;
+	public static final double INTAKE_PID_OUTPUT_RANGE_MIN = -0.7;
+	public static final double INTAKE_PID_OUTPUT_RANGE_MAX = 0.7;
+	
 	
 	public static final int ELEVATOR_CLIMBER_SOLENOID_OUT = 0;
 	public static final int ELEVATOR_CLIMBER_SOLENOID_IN = 1;

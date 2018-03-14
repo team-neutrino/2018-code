@@ -11,7 +11,6 @@ package org.usfirst.frc.team3928.robot;
 import org.usfirst.frc.team3928.robot.AutonomousModes.AutonomousColor;
 import org.usfirst.frc.team3928.robot.CubeManipulator.IntakeState;
 
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -150,7 +149,6 @@ public class Robot extends IterativeRobot
 			ElevatorInst.Climb(false);
 		}
 
-		// TODO flip this with set left and right update 
 		double leftY = -LeftJoystick.getY();
 		double rightY = -RightJoystick.getY();
 
