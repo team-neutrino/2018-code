@@ -325,7 +325,6 @@ public class Drive implements PIDSource, PIDOutput
 			double maxAngle = 5;
 			double proportionalDifference = 1 / maxAngle;
 			
-			//TODO
 			if(Navx.getYaw() < 0)
 			{
 				if(Math.abs(Navx.getYaw()) > maxAngle)
