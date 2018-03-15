@@ -3,7 +3,9 @@ package org.usfirst.frc.team3928.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-public class CubeManipulator 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class CubeManipulator implements Printer
 {
 	/**
 	 * Three states for the cube manipulator, intakeing, 
@@ -43,6 +45,8 @@ public class CubeManipulator
 		
 		stoppedIntaking = false;
 		FirstTimeOverThreshold = 0;
+		
+		new ValuePrinter(this);
 	}
 	
 	/**
@@ -87,7 +91,12 @@ public class CubeManipulator
 			motorPower = 0;
 		}
 		
-		//System.out.println("The current of the motor is: " + IntakeMotor.getOutputCurrent());
 		IntakeMotor.set(ControlMode.PercentOutput, motorPower);	
+	}
+
+	@Override
+	public void PrintValues() 
+	{
+		SmartDashboard.putNumber("Intake motor current: ", IntakeMotor.getOutputCurrent());
 	}
 }

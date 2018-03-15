@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Solenoid;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is for the information associated with the 
@@ -19,7 +21,7 @@ import edu.wpi.first.wpilibj.Solenoid;
  * @author NicoleEssner
  *
  */
-public class Elevator implements Runnable, PIDSource, PIDOutput
+public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 {
 	/**
 	 * The encoder that is attached to the elevator mechanism.  
@@ -131,18 +133,18 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 			@Override
 			public double pidGet() 
 			{
-				double value;
-
-				if (IntakeEncoder.get() >= 0)
-				{
-					value = 180 - IntakeEncoder.get();
-				}
-				else
-				{
-					value = -180 - IntakeEncoder.get();
-				}
+//				double value;
+//
+//				if (IntakeEncoder.get() >= 0)
+//				{
+//					value = 180 - IntakeEncoder.get();
+//				}
+//				else
+//				{
+//					value = -180 - IntakeEncoder.get();
+//				}
 				
-				return value;
+				return IntakeEncoder.get();
 			}
 
 			@Override
@@ -157,7 +159,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 			@Override
 			public void pidWrite(double output) 
 			{
-				IntakeMotor.set(ControlMode.PercentOutput, output);
+				IntakeMotor.set(ControlMode.PercentOutput, -output);
 			}
 		});
 		IntakePIDController.setAbsoluteTolerance(Constants.INTAKE_ABSOLUTE_VALUE_TOLERANCE);
@@ -165,6 +167,8 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 		IntakePIDController.setOutputRange(Constants.INTAKE_PID_OUTPUT_RANGE_MIN, Constants.INTAKE_PID_OUTPUT_RANGE_MAX);
 		IntakePIDController.enable();
 
+		new ValuePrinter(this);
+		
 		new Thread(this).start();
 	}
 
@@ -323,7 +327,13 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	 */
 	private double getIntakeSetpoint(double position)
 	{
-		return (position * 79) - 45;
+		double topPoint = -113; 
+		double lowPoint = 35; 
+		
+		double m = (topPoint - lowPoint) / 2;
+		double b = topPoint - (1 * m); 
+		
+		return (position * m) + b;
 	}
 	
 	@Override
@@ -354,5 +364,24 @@ public class Elevator implements Runnable, PIDSource, PIDOutput
 	public double pidGet() 
 	{
 		return ElevatorEncoder.getDistance();
+	}
+
+	@Override
+	public void PrintValues() 
+	{
+		SmartDashboard.putNumber("Elevator encoder: ", ElevatorEncoder.getDistance());
+		
+//		double value;
+//
+//		if (IntakeEncoder.get() >= 0)
+//		{
+//			value = 180 - IntakeEncoder.get();
+//		}
+//		else
+//		{
+//			value = -180 - IntakeEncoder.get();
+//		}
+		
+		SmartDashboard.putNumber("Intake encoder: ", IntakeEncoder.get());
 	}
 }

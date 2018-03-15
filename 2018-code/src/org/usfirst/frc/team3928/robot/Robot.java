@@ -14,6 +14,7 @@ import org.usfirst.frc.team3928.robot.CubeManipulator.IntakeState;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**
@@ -84,6 +85,20 @@ public class Robot extends IterativeRobot
 		
 		RampDrop = new Solenoid(7);
 		RampUp = new Solenoid(6);
+		
+		new ValuePrinter(new Printer() 
+		{
+			@Override
+			public void PrintValues() 
+			{
+				SmartDashboard.putNumber("Right joystick: ", RightJoystick.getY());
+				SmartDashboard.putNumber("Left joystick: ", LeftJoystick.getY());
+				SmartDashboard.putNumber("Thrustmaster value: ", ThrustMaster.getY());
+				SmartDashboard.putBoolean("Set up to climb: ", ThrustMaster.getRawButton(2));
+				SmartDashboard.putBoolean("Climb: ", ThrustMaster.getRawButton(1));
+				SmartDashboard.putNumber("Intake: ", ThrustMaster.getRawAxis(5));
+			}
+		});
 	}
 
 	/**

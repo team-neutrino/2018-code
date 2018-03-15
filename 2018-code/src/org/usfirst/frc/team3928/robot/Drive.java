@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author NicoleEssner
  *
  */
-public class Drive implements PIDSource, PIDOutput 
+public class Drive implements PIDSource, PIDOutput, Printer 
 {
 	/**
 	 * The first speed controller on the right side of drive 
@@ -102,8 +102,8 @@ public class Drive implements PIDSource, PIDOutput
 		TurnDegreesPIDController.setOutputRange(Constants.DRIVE_PID_OUTPUT_RANGE_MIN_DEGREE_TURN, Constants.DRIVE_PID_OUTPUT_RANGE_MAX_DEGREE_TURN);
 
 		TurnDegreesTimeInPID = 0;
-
-		//		CreateButtonsOnDashborad();	
+		
+		new ValuePrinter(this);
 	}
 
 	/**
@@ -403,36 +403,6 @@ public class Drive implements PIDSource, PIDOutput
 		TurnDegreesPIDController.disable();
 	}
 
-	/**
-	 * Method to make the button inputs on the SmartDashboard.
-	 */
-	private void CreateButtonsOnDashborad()
-	{
-		if (!SmartDashboard.getKeys().contains("P: "))
-		{
-			System.out.println("Added the P");
-			SmartDashboard.putNumber("P: ", 0);
-		}
-
-		if (!SmartDashboard.getKeys().contains("I: "))
-		{
-			System.out.println("Added the I");
-			SmartDashboard.putNumber("I: ", 0);
-		}
-
-		if (!SmartDashboard.getKeys().contains("D: "))
-		{
-			System.out.println("Added the D");
-			SmartDashboard.putNumber("D: ", 0);
-		}
-
-		double Pval = SmartDashboard.getNumber("P: ", 0.0);
-		double Ival = SmartDashboard.getNumber("I: ", 0.0);
-		double Dval = SmartDashboard.getNumber("D: ", 0.0);
-
-		System.out.println("P: " + Pval + " I: " + Ival + " D: " + Dval);
-	}
-
 	@Override
 	public void pidWrite(double output)
 	{		
@@ -456,5 +426,13 @@ public class Drive implements PIDSource, PIDOutput
 	public double pidGet() 
 	{
 		return Navx.getYaw();
+	}
+
+	@Override
+	public void PrintValues() 
+	{
+		SmartDashboard.putNumber("Right Drive Encoder: ", RightEncoder.getDistance());
+		SmartDashboard.putNumber("Left Drive Encoder: ", LeftEncoder.getDistance());
+		SmartDashboard.putNumber("Navx yaw: ", Navx.getYaw());
 	}
 }
