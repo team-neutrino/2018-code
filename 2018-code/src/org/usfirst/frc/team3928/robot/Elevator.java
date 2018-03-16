@@ -80,7 +80,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 	 * down. 
 	 */
 	private TalonSRX IntakeMotor;
-	
+
 	/**
 	 * The absolute encoder attached to the intake.
 	 */
@@ -120,9 +120,9 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 
 		IntakeMotor = new TalonSRX(Constants.INTAKE_ACTUATE_MOTOR);
 		IntakeEncoder = new AnalogPotentiometer(Constants.INTAKE_ENCODER_CHANNEL, Constants.INTAKE_ENCODER_RANGE, 
-		Constants.INTAKE_ENCODER_OFFSET);
+				Constants.INTAKE_ENCODER_OFFSET);
 		IntakePIDController = new PIDController(Constants.INTAKE_P_VALUE, Constants.INTAKE_I_VALUE, Constants.INTAKE_D_VALUE, 0.0, 
-		new PIDSource() 
+				new PIDSource() 
 		{
 			@Override
 			public void setPIDSourceType(PIDSourceType pidSource) 
@@ -133,17 +133,17 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 			@Override
 			public double pidGet() 
 			{
-//				double value;
-//
-//				if (IntakeEncoder.get() >= 0)
-//				{
-//					value = 180 - IntakeEncoder.get();
-//				}
-//				else
-//				{
-//					value = -180 - IntakeEncoder.get();
-//				}
-				
+				//				double value;
+				//
+				//				if (IntakeEncoder.get() >= 0)
+				//				{
+				//					value = 180 - IntakeEncoder.get();
+				//				}
+				//				else
+				//				{
+				//					value = -180 - IntakeEncoder.get();
+				//				}
+
 				return IntakeEncoder.get();
 			}
 
@@ -159,6 +159,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 			@Override
 			public void pidWrite(double output) 
 			{
+				// TODO make sure motor output is correct with the encoder
 				IntakeMotor.set(ControlMode.PercentOutput, -output);
 			}
 		});
@@ -168,7 +169,6 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 		IntakePIDController.enable();
 
 		new ValuePrinter(this);
-		
 		new Thread(this).start();
 	}
 
@@ -254,7 +254,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 		{
 			position = 0.6;
 		}
-		
+
 		IntakePIDController.setSetpoint(getIntakeSetpoint(position));
 	}
 
@@ -327,15 +327,15 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 	 */
 	private double getIntakeSetpoint(double position)
 	{
-		double topPoint = -113; 
-		double lowPoint = 35; 
-		
+		double topPoint = -147; 
+		double lowPoint = 10; 
+
 		double m = (topPoint - lowPoint) / 2;
 		double b = topPoint - (1 * m); 
-		
+
 		return (position * m) + b;
 	}
-	
+
 	@Override
 	public void run() 
 	{
@@ -370,18 +370,18 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 	public void PrintValues() 
 	{
 		SmartDashboard.putNumber("Elevator encoder: ", ElevatorEncoder.getDistance());
-		
-//		double value;
-//
-//		if (IntakeEncoder.get() >= 0)
-//		{
-//			value = 180 - IntakeEncoder.get();
-//		}
-//		else
-//		{
-//			value = -180 - IntakeEncoder.get();
-//		}
-		
+
+		//		double value;
+		//
+		//		if (IntakeEncoder.get() >= 0)
+		//		{
+		//			value = 180 - IntakeEncoder.get();
+		//		}
+		//		else
+		//		{
+		//			value = -180 - IntakeEncoder.get();
+		//		}
+
 		SmartDashboard.putNumber("Intake encoder: ", IntakeEncoder.get());
 	}
 }

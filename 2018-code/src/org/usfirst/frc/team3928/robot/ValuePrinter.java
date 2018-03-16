@@ -18,6 +18,8 @@ public class ValuePrinter
 								valuesToPrint.PrintValues();
 								lastTimePrinted = System.currentTimeMillis();
 							}
+							
+							Utill.SleepThread(1);
 						}
 					}
 				}
