@@ -24,7 +24,7 @@ public class Constants
 	
 	public static final double DRIVE_NAVX_ANGLE_ADJUSTMENT = 5.5;
 	
-	public static final double DRIVE_P_VALUE_DEGREE_TURN = 0.03; //0.0275
+	public static final double DRIVE_P_VALUE_DEGREE_TURN = 0.03; 
 	public static final double DRIVE_I_VALUE_DEGREE_TURN = 0.0;
 	public static final double DRIVE_D_VALUE_DEGREE_TURN = 0.045; 
 	public static final int DRIVE_ABSOLUTE_VALUE_TOLERANCE_DEGREE_TURN = 2;
@@ -33,9 +33,9 @@ public class Constants
 	public static final double DRIVE_PID_OUTPUT_RANGE_MIN_DEGREE_TURN = -0.8;
 	public static final double DRIVE_PID_OUTPUT_RANGE_MAX_DEGREE_TURN  = 0.8;
 	
-	public static final double DRIVE_P = 0.5; //0.272, 0.2, 0.19, 0.18, 0.15, 0.1, 0.2, 0.4, 0.5
+	public static final double DRIVE_P = 0.5; 
 	public static final double DRIVE_I = 0.014125;
-	public static final double DRIVE_D = 0.15; //0.471, 0.3, 0.2, 0.1, 0.6, 0, 0.3
+	public static final double DRIVE_D = 0.15; 
 	
 	public static final double DRIVE_P_VALUE_RIGHT = DRIVE_P;
 	public static final double DRIVE_I_VALUE_RIGHT = DRIVE_I;
@@ -80,9 +80,11 @@ public class Constants
 	public static final double INTAKE_PID_OUTPUT_RANGE_MIN = -0.7;
 	public static final double INTAKE_PID_OUTPUT_RANGE_MAX = 0.7;
 	
-	
 	public static final int ELEVATOR_CLIMBER_SOLENOID_OUT = 0;
 	public static final int ELEVATOR_CLIMBER_SOLENOID_IN = 1;
+	
+	public static final double ELEVATOR_ENCODER_MAX = -147;
+	public static final double ELEVATOR_ENCODER_MIN = 10;
 	
 	// Joysticks 
 	public static final int THRUST_MASTER_CONTROLLER = 3;

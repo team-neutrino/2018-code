@@ -327,8 +327,8 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 	 */
 	private double getIntakeSetpoint(double position)
 	{
-		double topPoint = -147; 
-		double lowPoint = 10; 
+		double topPoint = Constants.ELEVATOR_ENCODER_MAX; 
+		double lowPoint = Constants.ELEVATOR_ENCODER_MIN; 
 
 		double m = (topPoint - lowPoint) / 2;
 		double b = topPoint - (1 * m); 

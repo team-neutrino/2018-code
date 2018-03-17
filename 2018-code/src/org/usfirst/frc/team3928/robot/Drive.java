@@ -390,7 +390,6 @@ public class Drive implements PIDSource, PIDOutput, Printer
 	
 		while (!DriverStation.getInstance().isDisabled() && !TurnDegreesPIDController.onTarget())
 		{
-			System.out.println(Navx.getYaw());
 			if (System.currentTimeMillis() - TurnDegreesTimeInPID > timeOut)
 			{
 				System.out.println("PID loop had to be broken");
