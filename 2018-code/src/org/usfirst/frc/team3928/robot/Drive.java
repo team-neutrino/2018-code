@@ -213,7 +213,7 @@ public class Drive implements PIDSource, PIDOutput, Printer
 				}
 				else
 				{
-					leftMotorPower = leftMotorPower + Navx.getYaw() * -proportionalDifference;
+					leftMotorPower = leftMotorPower + (Navx.getYaw() * -proportionalDifference) * 0.2;
 				}
 			}
 			else
@@ -224,7 +224,7 @@ public class Drive implements PIDSource, PIDOutput, Printer
 				}
 				else
 				{
-					rightMotorPower = rightMotorPower + Navx.getYaw() * proportionalDifference;
+					rightMotorPower = rightMotorPower + (Navx.getYaw() * proportionalDifference) * 0.2;
 				}
 			}
 			
@@ -270,7 +270,7 @@ public class Drive implements PIDSource, PIDOutput, Printer
 		long timeOnTarget = 0; 
 		
 		while ((timeOnTarget - firstTimeOnTarget < 100) && !DriverStation.getInstance().isDisabled()) 
-		{
+		{			
 			if ((targetDistance - LeftEncoder.getDistance() > -1) && (targetDistance - RightEncoder.getDistance() > -1))
 			{
 				if (!isFirstTimeOnTarget)
@@ -278,7 +278,6 @@ public class Drive implements PIDSource, PIDOutput, Printer
 					isFirstTimeOnTarget = true;
 					firstTimeOnTarget = System.currentTimeMillis(); 
 				}
-				
 				timeOnTarget = System.currentTimeMillis();
 			}
 			else
@@ -287,7 +286,7 @@ public class Drive implements PIDSource, PIDOutput, Printer
 				firstTimeOnTarget = 0;
 				timeOnTarget = 0;
 			}
-
+			
 			double leftDifference = Math.abs(LeftEncoder.getDistance() - targetDistance);
 			double rightDifference = Math.abs(RightEncoder.getDistance() - targetDistance);
 			
@@ -312,14 +311,14 @@ public class Drive implements PIDSource, PIDOutput, Printer
 				rightMotorPower = -0.8;
 			}
 			
-			if (LeftEncoder.getRate() > -9 && leftMotorPower > -0.15)
+			if (LeftEncoder.getRate() > -9 && leftMotorPower > -0.3)
 			{
-				leftMotorPower = -0.15;
+				leftMotorPower = -0.3;
 			}
 			
-			if (RightEncoder.getRate() < -9 && rightMotorPower > -0.15)
+			if (RightEncoder.getRate() < -9 && rightMotorPower > -0.3)
 			{
-				rightMotorPower = -0.15;
+				rightMotorPower = -0.3;
 			}
 			
 			double maxAngle = 5;
@@ -370,7 +369,6 @@ public class Drive implements PIDSource, PIDOutput, Printer
 			
 			Utill.SleepThread(1);
 		}
-		
 		System.out.println("\n\nThe loop exited\n\n");
 	}
 
