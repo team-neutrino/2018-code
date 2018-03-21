@@ -464,7 +464,7 @@ public class AutonomousModes
 			
 			Utill.SleepThread(1);
 		}
-		
+		        
 		while (gameData.length() == 0)
 		{
 			gameData = driverStationInst.getGameSpecificMessage();
