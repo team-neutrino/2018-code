@@ -424,6 +424,19 @@ public class AutonomousModes
 		DriverStation driverStationInst = DriverStation.getInstance();
 		String gameData = "";
 
+		long timeBeforeLoop = System.currentTimeMillis();
+		
+		while (driverStationInst.getGameSpecificMessage() == null && driverStationInst.isAutonomous())
+		{
+			if (System.currentTimeMillis() - timeBeforeLoop > 5000)
+			{
+				// Idk if this should be a default 
+				//PickAutonomousMode(AutonomousColor.BLUE, ManipulatorInst, elevatorInst, driveInst);
+			}
+			
+			Utill.SleepThread(1);
+		}
+		
 		while (gameData.length() == 0)
 		{
 			gameData = driverStationInst.getGameSpecificMessage();
