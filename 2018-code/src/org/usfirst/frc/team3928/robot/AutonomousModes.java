@@ -268,7 +268,35 @@ public class AutonomousModes
 		else
 		{			
 			if(colors[0] == FieldElementSide.RIGHT)
-			{
+			{			
+				driveInst.DriveDistance(80);
+				driveInst.TurnDegrees(-45, 1000);
+				elevatorInst.setDistanceInches(24);
+				driveInst.DriveDistance(40);
+				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+				Utill.SleepThread(250);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				driveInst.DriveDistanceBackwards(-20);
+				elevatorInst.setDistancePercent(0);
+				driveInst.TurnDegrees(45, 1000);
+				driveInst.DriveDistance(128);
+				driveInst.TurnDegrees(-132, 2000);
+				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+				driveInst.DriveDistance(52);
+				Utill.SleepThread(350);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				driveInst.DriveDistanceBackwards(-16);
+				elevatorInst.setDistanceInches(12);
+				driveInst.TurnDegrees(43, 1000);
+				driveInst.DriveDistance(200);
+				elevatorInst.setDistancePercent(100);
+				driveInst.TurnDegrees(135, 1000);
+				driveInst.DriveDistance(24);
+				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+				Utill.SleepThread(250);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				
+				
 				
 			}
 			else
@@ -276,31 +304,33 @@ public class AutonomousModes
 				driveInst.DriveDistance(200);
 				driveInst.TurnDegrees(-85, 1000);
 				Utill.SleepThread(500);
-				driveInst.DriveDistance(110);
-				driveInst.DriveDistance(130);
+				driveInst.DriveDistance(230);
+//				driveInst.DriveDistance(110);
+//				driveInst.DriveDistance(130);
 				driveInst.TurnDegrees(100, 1500);
 				elevatorInst.setDistancePercent(100);
-				Utill.SleepThread(100);
-				driveInst.DriveDistance(24);
+				Utill.SleepThread(300);
+				driveInst.DriveDistance(30);
 				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
 				Utill.SleepThread(250);
 				cubeManipulatorInst.MoveCube(IntakeState.OFF);
 				elevatorInst.setDistancePercent(0);
-				driveInst.TurnDegrees(130, 3000);
+				driveInst.TurnDegrees(140, 3000);
 				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
-				driveInst.SetLeft(0.8);
-				driveInst.SetRight(0.8);
-				Utill.SleepThread(800);
-				driveInst.SetLeft(0);
-				driveInst.SetRight(0);
-				Utill.SleepThread(100);
-				driveInst.SetLeft(-0.5);
-				driveInst.SetRight(-0.5);
-				Utill.SleepThread(200);
-				driveInst.SetLeft(0);
-				driveInst.SetRight(0);
+				driveInst.DriveDistance(60);
+//				driveInst.SetLeft(0.8);
+//				driveInst.SetRight(0.8);
+//				Utill.SleepThread(1000);
+//				driveInst.SetLeft(0);
+//				driveInst.SetRight(0);
+				Utill.SleepThread(300);
+//				driveInst.SetLeft(-0.5);
+//				driveInst.SetRight(-0.5);
+//				Utill.SleepThread(200);
+//				driveInst.SetLeft(0);
+//				driveInst.SetRight(0);
 				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-				elevatorInst.setDistanceInches(30);
+				elevatorInst.setDistanceInches(24);
 				Utill.SleepThread(800);
 				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
 				Utill.SleepThread(250);
@@ -404,9 +434,7 @@ public class AutonomousModes
 	 */
 	public static void Test(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		driveInst.TurnDegrees(90, 1000);
-		Utill.SleepThread(3000);
-		driveInst.TurnDegrees(-90, 1000);
+		driveInst.DriveDistanceBackwards(-20);
 	}
 	
 	/**
