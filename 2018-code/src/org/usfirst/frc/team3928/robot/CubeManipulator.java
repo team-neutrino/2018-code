@@ -49,6 +49,22 @@ public class CubeManipulator implements Printer
 		new ValuePrinter(this);
 	}
 	
+	public void MoveCube(IntakeState isIntaking)
+	{
+		if(isIntaking == IntakeState.OFF)
+		{
+			MoveCube(0);
+		}
+		else if(isIntaking == IntakeState.INTAKE)
+		{
+			MoveCube(Constants.CUBE_MANIPULATOR_MOTOR_POWER);
+		}
+		else
+		{
+			MoveCube(-Constants.CUBE_MANIPULATOR_MOTOR_POWER);
+		}
+	}
+	
 	/**
 	 * Will make the cube manipulator intake, outtake, or 
 	 * turn off the motor.
@@ -57,19 +73,19 @@ public class CubeManipulator implements Printer
 	 * 		An enum that is either INTAKE, OUTTAKE, or 
 	 * 		OFF.
 	 */
-	public void MoveCube(IntakeState state)
+	public void MoveCube(double motorPower) //IntakeState state
 	{
-		double motorPower = 0;
-		
-		if (state == IntakeState.INTAKE)
-		{
-			motorPower = Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
-		}
-		else if (state == IntakeState.OUTTAKE)
-		{
-			motorPower = -Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
-		}
-		else
+//		double motorPower = 0;
+//		
+//		if (state == IntakeState.INTAKE)
+//		{
+//			motorPower = Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
+//		}
+//		else if (state == IntakeState.OUTTAKE)
+//		{
+//			motorPower = -Constants.CUBE_MANIPULATOR_MOTOR_POWER; 
+//		}
+		if(Math.abs(motorPower) < 0.1)
 		{
 			motorPower = 0;
 			FirstTimeOverThreshold = 0;

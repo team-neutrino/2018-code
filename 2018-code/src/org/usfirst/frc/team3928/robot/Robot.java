@@ -180,13 +180,14 @@ public class Robot extends IterativeRobot
 		DriveInst.SetLeft(leftY);
 		DriveInst.SetRight(rightY);
 
-		if (ThrustMaster.getRawAxis(5) > 0.5)
+		double intakeSpeed = ThrustMaster.getRawAxis(5);
+		if (intakeSpeed > 0.5)
 		{
 			CubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 		}
-		else if (ThrustMaster.getRawAxis(5) < -0.5)
+		else if (intakeSpeed < -0.5)
 		{
-			CubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+			CubeManipulatorInst.MoveCube(intakeSpeed);
 		}
 		else
 		{
@@ -198,7 +199,8 @@ public class Robot extends IterativeRobot
 
 		}
 		
-		ElevatorInst.manualIntakeControl(ThrustMaster.getRawButton(7));
+		ElevatorInst.manualIntakeControl(ThrustMaster.getRawButton(3));
+		//ElevatorInst.manualElevatorControl(ThrustMaster.getRawButton(7), ThrustMaster.getRawButton(9));
 
 		NumTimesThroughLoop++;
 		Utill.SleepThread(1);

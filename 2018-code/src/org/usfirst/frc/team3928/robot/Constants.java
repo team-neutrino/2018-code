@@ -67,7 +67,7 @@ public class Constants
 	public static final double ELEVATOR_D_VALUE = 0.0;
 	public static final double ELEVATOR_ABSOLUTE_VALUE_TOLERANCE = 0.5;
 	public static final int ELEVATOR_PID_INPUT_RANGE_MIN = 1;
-	public static final int ELEVATOR_PID_INPUT_RANGE_MAX = 70; //70
+	public static final int ELEVATOR_PID_INPUT_RANGE_MAX = 71; //70
 	public static final double ELEVATOR_PID_OUTPUT_RANGE_MIN = -1;
 	public static final double ELEVATOR_PID_OUTPUT_RANGE_MAX = 1;
 	

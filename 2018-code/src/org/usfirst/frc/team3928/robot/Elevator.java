@@ -92,6 +92,8 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 	private PIDController IntakePIDController;
 	
 	private boolean pressed;
+	
+	//private boolean ElevatorOverride;
 
 	/**
 	 * Constructor for the elevator object.
@@ -110,6 +112,8 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 		LiftButton = new DigitalInput(Constants.ELEVATOR_BUTTON);
 		
 		pressed = false;
+		
+		//ElevatorOverride = false;
 
 		ElevatorPIDController = new PIDController(Constants.ELEVATOR_P_VALUE, Constants.ELEVATOR_I_VALUE, Constants.ELEVATOR_D_VALUE, 0.0, 
 				this, this); 
@@ -254,7 +258,11 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 			{
 				IntakePIDController.setSetpoint(getIntakeSetpoint(0.0));
 			}
-			else 
+			else if (distance < 65)
+			{
+				IntakePIDController.setSetpoint(getIntakeSetpoint(0.6));
+			}
+			else
 			{
 				IntakePIDController.setSetpoint(getIntakeSetpoint(0.85));
 			}
@@ -293,6 +301,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 			ElevatorMotor2.set(ControlMode.PercentOutput, -0.3);
 			ElevatorMotor3.set(ControlMode.PercentOutput, -0.3);
 			ElevatorMotor4.set(ControlMode.PercentOutput, -0.3);
+			
 		}
 		else if (!isClimbing && IsElevatorMovingDown)	
 		{
@@ -351,6 +360,37 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 			IntakeMotor.set(ControlMode.PercentOutput, 0.0);
 		}
 	}
+	
+//	public void manualElevatorControl(boolean moveUp, boolean moveDown)
+//	{
+//		double power = 0.5;
+//		if (moveUp || moveDown)
+//		{
+//			ElevatorPIDController.disable();
+//			ElevatorOverride = true;
+//		}
+//		if (moveUp && ElevatorOverride)
+//		{
+//			ElevatorMotor1.set(ControlMode.PercentOutput, power);
+//			ElevatorMotor2.set(ControlMode.PercentOutput, power);
+//			ElevatorMotor3.set(ControlMode.PercentOutput, power);
+//			ElevatorMotor4.set(ControlMode.PercentOutput, power);
+//		}
+//		else if (moveDown && ElevatorOverride)
+//		{
+//			ElevatorMotor1.set(ControlMode.PercentOutput, -power);
+//			ElevatorMotor2.set(ControlMode.PercentOutput, -power);
+//			ElevatorMotor3.set(ControlMode.PercentOutput, -power);
+//			ElevatorMotor4.set(ControlMode.PercentOutput, -power);
+//		}
+//		else if (!isClimbing)
+//		{
+//			ElevatorMotor1.set(ControlMode.PercentOutput, 0);
+//			ElevatorMotor2.set(ControlMode.PercentOutput, 0);
+//			ElevatorMotor3.set(ControlMode.PercentOutput, 0);
+//			ElevatorMotor4.set(ControlMode.PercentOutput, 0);
+//		}
+//	}
 
 	@Override
 	public void run() 

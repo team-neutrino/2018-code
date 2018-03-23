@@ -341,12 +341,12 @@ public class AutonomousModes
 				driveInst.TurnDegrees(100, 1500);
 				elevatorInst.setDistancePercent(100);
 				Utill.SleepThread(300);
-				driveInst.DriveDistance(30);
+				driveInst.DriveDistance(40);
 				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
 				Utill.SleepThread(250);
 				cubeManipulatorInst.MoveCube(IntakeState.OFF);
 				elevatorInst.setDistancePercent(0);
-				driveInst.TurnDegrees(140, 3000);
+				driveInst.TurnDegrees(145, 3000);
 				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 				driveInst.DriveDistance(60);
 //				driveInst.SetLeft(0.8);
