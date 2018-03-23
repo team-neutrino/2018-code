@@ -197,22 +197,8 @@ public class Robot extends IterativeRobot
 		{
 
 		}
-//		
-//		if (ThrustMaster.getRawButton(4))
-//		{
-//			ElevatorInst.setIntakeSetpoint(1);
-//		}
-//		else
-//		{
-//			if ((-ThrustMaster.getZ() + 1) / 2 < 0.12)
-//			{
-//				ElevatorInst.setIntakeSetpoint(0.0);
-//			}
-//			else 
-//			{
-//				ElevatorInst.setIntakeSetpoint(0.85);
-//			}
-//		}
+		
+		ElevatorInst.manualIntakeControl(ThrustMaster.getRawButton(7));
 
 		NumTimesThroughLoop++;
 		Utill.SleepThread(1);

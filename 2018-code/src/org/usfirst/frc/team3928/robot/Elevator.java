@@ -90,6 +90,8 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 	 * The PID controler for the intake. 
 	 */
 	private PIDController IntakePIDController;
+	
+	private boolean pressed;
 
 	/**
 	 * Constructor for the elevator object.
@@ -106,6 +108,8 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 		ElevatorMotor4 = new TalonSRX(Constants.ELEVATOR_MOTOR_4); 
 
 		LiftButton = new DigitalInput(Constants.ELEVATOR_BUTTON);
+		
+		pressed = false;
 
 		ElevatorPIDController = new PIDController(Constants.ELEVATOR_P_VALUE, Constants.ELEVATOR_I_VALUE, Constants.ELEVATOR_D_VALUE, 0.0, 
 				this, this); 
@@ -334,9 +338,18 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 		return (position * m) + b;
 	}
 	
-	public void setIntakeSetpoint(double position)
+	public void manualIntakeControl(boolean intakeUp)
 	{
-		IntakePIDController.setSetpoint(getIntakeSetpoint(position));
+		if (intakeUp)
+		{
+			IntakePIDController.disable();
+			IntakeMotor.set(ControlMode.PercentOutput, 0.5);
+			pressed = true;
+		}
+		else if (pressed)
+		{
+			IntakeMotor.set(ControlMode.PercentOutput, 0.0);
+		}
 	}
 
 	@Override
