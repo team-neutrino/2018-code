@@ -133,18 +133,19 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 			@Override
 			public double pidGet() 
 			{
-				//				double value;
-				//
-				//				if (IntakeEncoder.get() >= 0)
-				//				{
-				//					value = 180 - IntakeEncoder.get();
-				//				}
-				//				else
-				//				{
-				//					value = -180 - IntakeEncoder.get();
-				//				}
+//								double value;
+//				
+//								if (IntakeEncoder.get() >= 0)
+//								{
+//									value = 180 - IntakeEncoder.get();
+//								}
+//								else
+//								{
+//									value = -180 - IntakeEncoder.get();
+//								}
 
 				return IntakeEncoder.get();
+								//return value;
 			}
 
 			@Override
@@ -159,7 +160,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 			@Override
 			public void pidWrite(double output) 
 			{
-				// TODO make sure motor output is correct with the encoder
+				// TODO make sure motor output is correct with the encoder, negative if going over 180
 				IntakeMotor.set(ControlMode.PercentOutput, -output);
 			}
 		});
@@ -243,19 +244,16 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 	public void setDistanceInches(double distance)
 	{
 		ElevatorPIDController.setSetpoint(distance);
-
-		double position;
-
-		if (distance < 12)
-		{
-			position = 0.0;
-		}
-		else 
-		{
-			position = 0.6;
-		}
-
-		IntakePIDController.setSetpoint(getIntakeSetpoint(position));
+		
+	
+			if (distance < 12)
+			{
+				IntakePIDController.setSetpoint(getIntakeSetpoint(0.0));
+			}
+			else 
+			{
+				IntakePIDController.setSetpoint(getIntakeSetpoint(0.85));
+			}
 	}
 
 	/**
@@ -287,10 +285,10 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 			ElevatorPIDController.disable();
 			IntakePIDController.disable();
 
-			ElevatorMotor1.set(ControlMode.PercentOutput, -0.4);
-			ElevatorMotor2.set(ControlMode.PercentOutput, -0.4);
-			ElevatorMotor3.set(ControlMode.PercentOutput, -0.4);
-			ElevatorMotor4.set(ControlMode.PercentOutput, -0.4);
+			ElevatorMotor1.set(ControlMode.PercentOutput, -0.3);
+			ElevatorMotor2.set(ControlMode.PercentOutput, -0.3);
+			ElevatorMotor3.set(ControlMode.PercentOutput, -0.3);
+			ElevatorMotor4.set(ControlMode.PercentOutput, -0.3);
 		}
 		else if (!isClimbing && IsElevatorMovingDown)	
 		{
@@ -334,6 +332,11 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 		double b = topPoint - (1 * m); 
 
 		return (position * m) + b;
+	}
+	
+	public void setIntakeSetpoint(double position)
+	{
+		IntakePIDController.setSetpoint(getIntakeSetpoint(position));
 	}
 
 	@Override
