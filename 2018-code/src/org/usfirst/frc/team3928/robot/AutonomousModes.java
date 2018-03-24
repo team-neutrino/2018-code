@@ -49,7 +49,7 @@ public class AutonomousModes
 	 * 		An instance of the drive. 
 	 */
 	public static void PickAutonomousMode(AutonomousColor color, CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
-	{
+	{	
 		switch (color)
 		{
 			case BLUE:
@@ -128,7 +128,7 @@ public class AutonomousModes
 			driveInst.DriveDistance(24);
 			Utill.SleepThread(200);
 			driveInst.TurnDegrees(turnDegreesSign * 60, 1000);
-			driveInst.DriveDistance(85);
+			driveInst.DriveDistance(75); //85
 			elevatorInst.setDistanceInches(24);
 			driveInst.TurnDegrees(turnDegreesSign * -60, 1000);
 		}
@@ -138,11 +138,17 @@ public class AutonomousModes
 			driveInst.DriveDistance(24);
 			Utill.SleepThread(200);
 			driveInst.TurnDegrees(turnDegreesSign * 45, 1000);
-			driveInst.DriveDistance(65);
+			driveInst.DriveDistance(65); //65
 			elevatorInst.setDistanceInches(24);
 			driveInst.TurnDegrees(turnDegreesSign * -45, 1000);
 		}
-		driveInst.DriveDistance(12);
+		driveInst.DriveDistance(20);
+		driveInst.SetLeft(0.6);
+		driveInst.SetRight(0.6);
+		Utill.SleepThread(600);
+		driveInst.SetLeft(0);
+		driveInst.SetRight(0);
+		Utill.SleepThread(250);
 		cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
 		Utill.SleepThread(500);
 		cubeManipulatorInst.MoveCube(IntakeState.OFF);
@@ -290,7 +296,12 @@ public class AutonomousModes
 				cubeManipulatorInst.MoveCube(IntakeState.OFF);
 				Utill.SleepThread(200);
 				elevatorInst.setDistanceInches(30);
-				Utill.SleepThread(1000);
+				Utill.SleepThread(500);
+				driveInst.SetLeft(0.5);
+				driveInst.SetRight(0.5);
+				Utill.SleepThread(200);
+				driveInst.SetLeft(0);
+				driveInst.SetLeft(0);
 				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
 				Utill.SleepThread(500);
 				cubeManipulatorInst.MoveCube(IntakeState.OFF);

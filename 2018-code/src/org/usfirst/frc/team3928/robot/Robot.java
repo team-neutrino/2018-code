@@ -185,7 +185,7 @@ public class Robot extends IterativeRobot
 		{
 			CubeManipulatorInst.MoveCube(IntakeState.INTAKE);
 		}
-		else if (intakeSpeed < -0.5)
+		else if (intakeSpeed < -0.3)
 		{
 			CubeManipulatorInst.MoveCube(intakeSpeed);
 		}
@@ -200,7 +200,7 @@ public class Robot extends IterativeRobot
 		}
 		
 		ElevatorInst.manualIntakeControl(ThrustMaster.getRawButton(3));
-		//ElevatorInst.manualElevatorControl(ThrustMaster.getRawButton(7), ThrustMaster.getRawButton(9));
+		ElevatorInst.manualElevatorControl(ThrustMaster.getRawButton(7), ThrustMaster.getRawButton(9), ThrustMaster.getRawButton(2));
 
 		NumTimesThroughLoop++;
 		Utill.SleepThread(1);

@@ -149,7 +149,7 @@ public class Drive implements PIDSource, PIDOutput, Printer
 		long firstTimeOnTarget = 0;
 		long timeOnTarget = 0; 
 		
-		while ((timeOnTarget - firstTimeOnTarget < 100) && !DriverStation.getInstance().isDisabled()) 
+		while ((timeOnTarget - firstTimeOnTarget < 100) && DriverStation.getInstance().isAutonomous()) 
 		{
 			if ((targetDistance - LeftEncoder.getDistance() < 1) && (targetDistance - RightEncoder.getDistance() < 1))
 			{
@@ -269,7 +269,7 @@ public class Drive implements PIDSource, PIDOutput, Printer
 		long firstTimeOnTarget = 0;
 		long timeOnTarget = 0; 
 		
-		while ((timeOnTarget - firstTimeOnTarget < 100) && !DriverStation.getInstance().isDisabled()) 
+		while ((timeOnTarget - firstTimeOnTarget < 100) && DriverStation.getInstance().isAutonomous()) 
 		{			
 			if ((targetDistance - LeftEncoder.getDistance() > -1) && (targetDistance - RightEncoder.getDistance() > -1))
 			{
@@ -386,7 +386,7 @@ public class Drive implements PIDSource, PIDOutput, Printer
 		TurnDegreesPIDController.enable();
 		TurnDegreesTimeInPID = System.currentTimeMillis();
 	
-		while (!DriverStation.getInstance().isDisabled() && !TurnDegreesPIDController.onTarget())
+		while (DriverStation.getInstance().isAutonomous() && !TurnDegreesPIDController.onTarget())
 		{
 			if (System.currentTimeMillis() - TurnDegreesTimeInPID > timeOut)
 			{
