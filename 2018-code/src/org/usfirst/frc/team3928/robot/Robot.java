@@ -187,6 +187,10 @@ public class Robot extends IterativeRobot
 		}
 		else if (intakeSpeed < -0.3)
 		{
+			if(intakeSpeed < -0.8)
+			{
+				intakeSpeed = -0.8;
+			}
 			CubeManipulatorInst.MoveCube(intakeSpeed);
 		}
 		else
