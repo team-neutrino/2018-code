@@ -3,14 +3,12 @@ package org.usfirst.frc.team3928.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.Solenoid;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -61,41 +59,6 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 	private PIDController ElevatorPIDController;
 
 	/**
-	 * Actuation to trigger the climber. 
-	 */
-	private Solenoid ClimbUp;
-
-	/**
-	 * Actuation to stop triggering the climber.
-	 */
-	private Solenoid StopClimb;
-
-	/**
-	 * Weather the elevator is moving down with the climber. 
-	 */
-	private boolean IsElevatorMovingDown;
-
-	/**
-	 * The motor controller for moving the intake up and 
-	 * down. 
-	 */
-	private TalonSRX IntakeMotor;
-
-	/**
-	 * The absolute encoder attached to the intake.
-	 */
-	private AnalogPotentiometer IntakeEncoder;
-
-	/**
-	 * The PID controler for the intake. 
-	 */
-	private PIDController IntakePIDController;
-	
-	private boolean pressed;
-	
-	private boolean ElevatorOverride;
-
-	/**
 	 * Constructor for the elevator object.
 	 */
 	public Elevator()
@@ -110,10 +73,6 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 		ElevatorMotor4 = new TalonSRX(Constants.ELEVATOR_MOTOR_4); 
 
 		LiftButton = new DigitalInput(Constants.ELEVATOR_BUTTON);
-		
-		pressed = false;
-		
-		ElevatorOverride = false;
 
 		ElevatorPIDController = new PIDController(Constants.ELEVATOR_P_VALUE, Constants.ELEVATOR_I_VALUE, Constants.ELEVATOR_D_VALUE, 0.0, 
 				this, this); 
@@ -121,61 +80,6 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 		ElevatorPIDController.setInputRange(Constants.ELEVATOR_PID_INPUT_RANGE_MIN, Constants.ELEVATOR_PID_INPUT_RANGE_MAX); 
 		ElevatorPIDController.setOutputRange(Constants.ELEVATOR_PID_OUTPUT_RANGE_MIN, Constants.ELEVATOR_PID_OUTPUT_RANGE_MAX); 
 
-		ClimbUp = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_OUT); 
-		StopClimb = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_IN); 
-
-		IsElevatorMovingDown = false;
-
-		IntakeMotor = new TalonSRX(Constants.INTAKE_ACTUATE_MOTOR);
-		IntakeEncoder = new AnalogPotentiometer(Constants.INTAKE_ENCODER_CHANNEL, Constants.INTAKE_ENCODER_RANGE, 
-				Constants.INTAKE_ENCODER_OFFSET);
-		IntakePIDController = new PIDController(Constants.INTAKE_P_VALUE, Constants.INTAKE_I_VALUE, Constants.INTAKE_D_VALUE, 0.0, 
-				new PIDSource() 
-		{
-			@Override
-			public void setPIDSourceType(PIDSourceType pidSource) 
-			{
-				System.out.println("This is the PIDSourceType: " + pidSource.toString());
-			}
-
-			@Override
-			public double pidGet() 
-			{
-//								double value;
-//				
-//								if (IntakeEncoder.get() >= 0)
-//								{
-//									value = 180 - IntakeEncoder.get();
-//								}
-//								else
-//								{
-//									value = -180 - IntakeEncoder.get();
-//								}
-
-				return IntakeEncoder.get();
-								//return value;
-			}
-
-			@Override
-			public PIDSourceType getPIDSourceType() 
-			{
-				return PIDSourceType.kDisplacement;
-			}
-		}
-		, 
-		new PIDOutput() 
-		{
-			@Override
-			public void pidWrite(double output) 
-			{
-				// TODO make sure motor output is correct with the encoder, negative if going over 180
-				IntakeMotor.set(ControlMode.PercentOutput, -output);
-			}
-		});
-		IntakePIDController.setAbsoluteTolerance(Constants.INTAKE_ABSOLUTE_VALUE_TOLERANCE);
-		IntakePIDController.setInputRange(Constants.INTAKE_PID_INPUT_RANGE_MIN, Constants.INTAKE_PID_INPUT_RANGE_MAX);
-		IntakePIDController.setOutputRange(Constants.INTAKE_PID_OUTPUT_RANGE_MIN, Constants.INTAKE_PID_OUTPUT_RANGE_MAX);
-		IntakePIDController.enable();
 
 		new ValuePrinter(this);
 		new Thread(this).start();
@@ -200,7 +104,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 	 * @param speed
 	 * 		The value to set the elevator motors to. 
 	 */
-	private void setMotorSpeed(double speed)
+	public void setMotorSpeed(double speed)
 	{
 		if (getButtonState() && (speed < 0 ))
 		{
@@ -238,7 +142,7 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 			// enabled.
 			while(true)
 			{
-				Utill.SleepThread(1);
+				Utill.SleepThread(1000);
 			}
 		}
 	}
@@ -252,20 +156,6 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 	public void setDistanceInches(double distance)
 	{
 		ElevatorPIDController.setSetpoint(distance);
-		
-	
-			if (distance < 12)
-			{
-				IntakePIDController.setSetpoint(getIntakeSetpoint(0.0));
-			}
-			else if (distance < 65)
-			{
-				IntakePIDController.setSetpoint(getIntakeSetpoint(0.6));
-			}
-			else
-			{
-				IntakePIDController.setSetpoint(getIntakeSetpoint(0.85));
-			}
 	}
 
 	/**
@@ -276,121 +166,23 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 	 */
 	public void setDistancePercent(double percent)
 	{
-		double distance = percent * 70;
+		double distance = percent * Constants.ELEVATOR_PID_INPUT_RANGE_MAX;
 		setDistanceInches(distance);
 	}
-
-	/**
-	 * Triggers the actuation that causes the climber to move,
-	 * this also disables the PID as soon as the input is true.
-	 * 
-	 * @param isClimbing
-	 * 		True when the climber is being triggered, false 
-	 * 		when not. 
-	 */
-	public void Climb(boolean isClimbing)
-	{
-		if (isClimbing)
-		{
-			IsElevatorMovingDown = true;
-
-			ElevatorPIDController.disable();
-			IntakePIDController.disable();
-
-			ElevatorMotor1.set(ControlMode.PercentOutput, -0.3);
-			ElevatorMotor2.set(ControlMode.PercentOutput, -0.3);
-			ElevatorMotor3.set(ControlMode.PercentOutput, -0.3);
-			ElevatorMotor4.set(ControlMode.PercentOutput, -0.3);
-			
-		}
-		else if (!isClimbing && IsElevatorMovingDown)	
-		{
-			IsElevatorMovingDown = false;
-
-			ElevatorMotor1.set(ControlMode.PercentOutput, 0.0);
-			ElevatorMotor2.set(ControlMode.PercentOutput, 0.0);
-			ElevatorMotor3.set(ControlMode.PercentOutput, 0.0);
-			ElevatorMotor4.set(ControlMode.PercentOutput, 0.0);
-		}
-
-		ClimbUp.set(!isClimbing);
-		StopClimb.set(isClimbing);
-	}
-
-	/**
-	 * Method that sets the intake all the way down and the elevator 
-	 * all the way up.
-	 */
-	public void setUpClimb()
-	{
-		ElevatorPIDController.setSetpoint(70);
-		IntakePIDController.setSetpoint(getIntakeSetpoint(-1));
-	}
-
-	/**
-	 * Will get the value corresponding to the intake position 
-	 * for the range -1 to 1.
-	 * 
-	 * @param position
-	 * 		A value from -1 to 1
-	 * @return
-	 * 		The position the intake should be set to. 
-	 */
-	private double getIntakeSetpoint(double position)
-	{
-		double topPoint = Constants.ELEVATOR_ENCODER_MAX; 
-		double lowPoint = Constants.ELEVATOR_ENCODER_MIN; 
-
-		double m = (topPoint - lowPoint) / 2;
-		double b = topPoint - (1 * m); 
-
-		return (position * m) + b;
-	}
 	
-	public void manualIntakeControl(boolean intakeUp)
+	public void EnableElevatorPIDController(boolean isEnabled)
 	{
-		if (intakeUp)
+		if(isEnabled)
 		{
-			IntakePIDController.disable();
-			IntakeMotor.set(ControlMode.PercentOutput, 0.5);
-			pressed = true;
+			ElevatorPIDController.enable();
 		}
-		else if (pressed)
+		else
 		{
-			IntakeMotor.set(ControlMode.PercentOutput, 0.0);
+			ElevatorPIDController.disable();
 		}
 	}
 	
-	public void manualElevatorControl(boolean moveUp, boolean moveDown, boolean isClimbing)
-	{
-		double power = 0.5;
-		if (moveUp || moveDown)
-		{
-			ElevatorPIDController.disable();
-			ElevatorOverride = true;
-		}
-		if (moveUp && ElevatorOverride)
-		{
-			ElevatorMotor1.set(ControlMode.PercentOutput, power);
-			ElevatorMotor2.set(ControlMode.PercentOutput, power);
-			ElevatorMotor3.set(ControlMode.PercentOutput, power);
-			ElevatorMotor4.set(ControlMode.PercentOutput, power);
-		}
-		else if (moveDown && ElevatorOverride)
-		{
-			ElevatorMotor1.set(ControlMode.PercentOutput, -power);
-			ElevatorMotor2.set(ControlMode.PercentOutput, -power);
-			ElevatorMotor3.set(ControlMode.PercentOutput, -power);
-			ElevatorMotor4.set(ControlMode.PercentOutput, -power);
-		}
-		else if (!isClimbing && ElevatorOverride)
-		{
-			ElevatorMotor1.set(ControlMode.PercentOutput, 0);
-			ElevatorMotor2.set(ControlMode.PercentOutput, 0);
-			ElevatorMotor3.set(ControlMode.PercentOutput, 0);
-			ElevatorMotor4.set(ControlMode.PercentOutput, 0);
-		}
-	}
+	
 
 	@Override
 	public void run() 
@@ -426,18 +218,5 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 	public void PrintValues() 
 	{
 		SmartDashboard.putNumber("Elevator encoder: ", ElevatorEncoder.getDistance());
-
-		//		double value;
-		//
-		//		if (IntakeEncoder.get() >= 0)
-		//		{
-		//			value = 180 - IntakeEncoder.get();
-		//		}
-		//		else
-		//		{
-		//			value = -180 - IntakeEncoder.get();
-		//		}
-
-		SmartDashboard.putNumber("Intake encoder: ", IntakeEncoder.get());
 	}
 }

@@ -80,8 +80,8 @@ public class Constants
 	public static final double INTAKE_PID_OUTPUT_RANGE_MIN = -0.7;
 	public static final double INTAKE_PID_OUTPUT_RANGE_MAX = 0.7;
 	
-	public static final int ELEVATOR_CLIMBER_SOLENOID_OUT = 0;
-	public static final int ELEVATOR_CLIMBER_SOLENOID_IN = 1;
+	public static final int ELEVATOR_CLIMBER_SOLENOID_OUT = 1;
+	public static final int ELEVATOR_CLIMBER_SOLENOID_IN = 0;
 	
 	public static final double ELEVATOR_ENCODER_MAX = -103;
 	public static final double ELEVATOR_ENCODER_MIN = 20;
