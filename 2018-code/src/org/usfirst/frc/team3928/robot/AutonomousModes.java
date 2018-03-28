@@ -127,7 +127,7 @@ public class AutonomousModes
 	}
 
 	/**
-	 * Single cube dropped in the switch 
+	 * Single cube dropped in the switch from the center
 	 * 
 	 * @param cubeManipulatorInst
 	 * 		An instance of the cube manipulator. 
@@ -198,7 +198,7 @@ public class AutonomousModes
 	}
 
 	/**
-	 * Method that does something at some point in time.
+	 * Single cube in the scale from the right
 	 * 
 	 * @param cubeManipulatorInst
 	 * 		An instance of the cube manipulator. 
@@ -206,8 +206,6 @@ public class AutonomousModes
 	 * 		An instance of the elevator. 
 	 * @param driveInst
 	 * 		An instance of the drive.
-	 * 
-	 * TODO someone help me here?
 	 */
 	private static void Green(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
@@ -227,24 +225,6 @@ public class AutonomousModes
 			Utill.SleepThread(250);
 			cubeManipulatorInst.MoveCube(IntakeState.OFF);
 			elevatorInst.setDistancePercent(0);
-			
-//			elevatorInst.setDistanceInches(10);
-//			driveInst.DriveDistance(310); //324, 290
-//			Utill.SleepThread(100);
-//			elevatorInst.setDistancePercent(1);
-//			driveInst.TurnDegrees(-85, 1000); //90
-//			Utill.SleepThread(100);
-//			driveInst.DriveDistance(24);
-//			Utill.SleepThread(100);
-//			cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-//			Utill.SleepThread(1000);
-//			cubeManipulatorInst.MoveCube(IntakeState.OFF);
-//			driveInst.SetLeft(-.5);
-//			driveInst.SetRight(-.5);
-//			elevatorInst.setDistancePercent(0);
-//			Utill.SleepThread(600);
-//			driveInst.SetLeft(0);
-//			driveInst.SetRight(0);
 			if (!DriverStation.getInstance().isAutonomous())
 			{
 				return;
@@ -286,8 +266,7 @@ public class AutonomousModes
 	}
 
 	/**
-	 * Cube dropped in the switch and scale with robot starting 
-	 * at position 3.
+	 * Cube dropped in the switch and scale with robot starting on the right.
 	 * 
 	 * @param cubeManipulatorInst
 	 * 		An instance of the cube manipulator. 
@@ -300,10 +279,6 @@ public class AutonomousModes
 	{
 		System.out.println("Orange");
 		elevatorInst.setDistanceInches(12);
-		if (!DriverStation.getInstance().isAutonomous())
-		{
-			return;
-		}
 		
 		FieldElementSide[] colors = getFieldElementSideColor();
 		
@@ -357,74 +332,55 @@ public class AutonomousModes
 			}
 			//switch is left
 			else
-			{
-				driveInst.TurnDegrees(-110, 3000);
-				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
-				driveInst.SetLeft(0.5);
-				driveInst.SetRight(0.5);
-				Utill.SleepThread(1900);
-				driveInst.SetLeft(0);
-				driveInst.SetRight(0);
-				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-				//elevatorInst.setDistanceInches(30);
+			{	
+				driveInst.DriveDistanceBackwards(-47);
+				driveInst.TurnDegrees(-53, 1000);
 				if (!DriverStation.getInstance().isAutonomous())
 				{
 					return;
 				}
-				
-//				driveInst.DriveDistanceBackwards(-47);
-//				driveInst.TurnDegrees(-53, 1000);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.DriveDistance(110);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.DriveDistance(50);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
-//				driveInst.TurnDegrees(-70, 1000);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.SetLeft(0.5);
-//				driveInst.SetRight(0.5);
-//				Utill.SleepThread(1000);
-//				driveInst.SetLeft(0);
-//				driveInst.SetRight(0);
-//				Utill.SleepThread(200);
-//				driveInst.SetLeft(-0.2);
-//				driveInst.SetRight(-0.2);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				Utill.SleepThread(500);
-//				driveInst.SetLeft(0);
-//				driveInst.SetLeft(0);
-//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-//				Utill.SleepThread(200);
-//				elevatorInst.setDistanceInches(30);
-//				Utill.SleepThread(500);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.SetLeft(0.5);
-//				driveInst.SetRight(0.5);
-//				Utill.SleepThread(200);
-//				driveInst.SetLeft(0);
-//				driveInst.SetLeft(0);
-//				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-//				Utill.SleepThread(500);
-//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				driveInst.DriveDistance(160);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+				driveInst.TurnDegrees(-70, 1000);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				driveInst.SetLeft(0.5);
+				driveInst.SetRight(0.5);
+				Utill.SleepThread(1000);
+				driveInst.SetLeft(0);
+				driveInst.SetRight(0);
+				Utill.SleepThread(200);
+				driveInst.SetLeft(-0.2);
+				driveInst.SetRight(-0.2);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				Utill.SleepThread(500);
+				driveInst.SetLeft(0);
+				driveInst.SetLeft(0);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				Utill.SleepThread(200);
+				elevatorInst.setDistanceInches(30);
+				Utill.SleepThread(500);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				driveInst.SetLeft(0.5);
+				driveInst.SetRight(0.5);
+				Utill.SleepThread(200);
+				driveInst.SetLeft(0);
+				driveInst.SetLeft(0);
+				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+				Utill.SleepThread(500);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
 			}		
 		}
 		//scale is left
@@ -456,113 +412,103 @@ public class AutonomousModes
 				}
 				driveInst.TurnDegrees(45, 1000);
 				driveInst.DriveDistance(128);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.TurnDegrees(-132, 2000);
-//				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
-//				driveInst.DriveDistance(52);
-//				Utill.SleepThread(350);
-//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-//				driveInst.DriveDistanceBackwards(-16);
-//				elevatorInst.setDistanceInches(12);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.TurnDegrees(43, 1000);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.DriveDistance(200);
-//				elevatorInst.setDistancePercent(100);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.TurnDegrees(135, 1000);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.DriveDistance(24);
-//				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-//				Utill.SleepThread(250);
-//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-				
-				
-				
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				driveInst.TurnDegrees(-132, 2000);
+				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+				driveInst.DriveDistance(52);
+				Utill.SleepThread(350);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				driveInst.DriveDistanceBackwards(-16);
+				elevatorInst.setDistanceInches(12);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				driveInst.TurnDegrees(43, 1000);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				driveInst.DriveDistance(200);
+				elevatorInst.setDistancePercent(100);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				driveInst.TurnDegrees(135, 1000);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				driveInst.DriveDistance(24);
+				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+				Utill.SleepThread(250);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);	
 			}
 			//switch is left
 			else
-			{
-				driveInst.DriveDistance(150);
-				
-				
-//				driveInst.DriveDistance(200);
-//				driveInst.TurnDegrees(-85, 1000);
-//				Utill.SleepThread(500);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.DriveDistance(230);
-////				driveInst.DriveDistance(110);
-////				driveInst.DriveDistance(130);
-//				driveInst.TurnDegrees(100, 1500);
-//				elevatorInst.setDistancePercent(100);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				Utill.SleepThread(300);
-//				driveInst.DriveDistance(40);
-//				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-//				Utill.SleepThread(250);
-//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-//				elevatorInst.setDistancePercent(0);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.TurnDegrees(145, 3000);
-//				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
-//				driveInst.DriveDistance(60);
-////				driveInst.SetLeft(0.8);
-////				driveInst.SetRight(0.8);
-////				Utill.SleepThread(1000);
-////				driveInst.SetLeft(0);
-////				driveInst.SetRight(0);
-//				Utill.SleepThread(300);
-////				driveInst.SetLeft(-0.5);
-////				driveInst.SetRight(-0.5);
-////				Utill.SleepThread(200);
-////				driveInst.SetLeft(0);
-////				driveInst.SetRight(0);
-//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				elevatorInst.setDistanceInches(24);
-//				Utill.SleepThread(800);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-//				Utill.SleepThread(250);
-//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+			{	
+				driveInst.DriveDistance(200);
+				driveInst.TurnDegrees(-85, 1000);
+				Utill.SleepThread(500);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				driveInst.DriveDistance(230);
+				driveInst.TurnDegrees(100, 1500);
+				elevatorInst.setDistancePercent(100);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				Utill.SleepThread(300);
+				driveInst.DriveDistance(40);
+				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+				Utill.SleepThread(250);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				elevatorInst.setDistancePercent(0);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				driveInst.TurnDegrees(145, 3000);
+				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+				driveInst.SetLeft(0.8);
+				driveInst.SetRight(0.8);
+				Utill.SleepThread(1000);
+				driveInst.SetLeft(0);
+				driveInst.SetRight(0);
+				Utill.SleepThread(300);
+				driveInst.SetLeft(-0.5);
+				driveInst.SetRight(-0.5);
+				Utill.SleepThread(200);
+				driveInst.SetLeft(0);
+				driveInst.SetRight(0);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				elevatorInst.setDistanceInches(24);
+				Utill.SleepThread(800);
+				if (!DriverStation.getInstance().isAutonomous())
+				{
+					return;
+				}
+				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
+				Utill.SleepThread(250);
+				cubeManipulatorInst.MoveCube(IntakeState.OFF);
 			}
 		}
 		
 	}
 	
 	/**
-	 * Cube dropped in the switch and scale with robot starting 
-	 * at position 1.
+	 * Cube dropped in the switch and scale with robot starting on the left.
 	 * 
 	 * @param cubeManipulatorInst
 	 * 		An instance of the cube manipulator. 
@@ -759,116 +705,36 @@ public class AutonomousModes
 				}
 				driveInst.TurnDegrees(45, 1000);
 				driveInst.DriveDistance(128);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.TurnDegrees(-132, 2000);
-//				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
-//				driveInst.DriveDistance(52);
-//				Utill.SleepThread(350);
-//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-//				driveInst.DriveDistanceBackwards(-16);
-//				elevatorInst.setDistanceInches(12);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.TurnDegrees(43, 1000);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.DriveDistance(200);
-//				elevatorInst.setDistancePercent(100);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.TurnDegrees(135, 1000);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.DriveDistance(24);
-//				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-//				Utill.SleepThread(250);
-//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-				
-				
 				
 			}
 			//switch is left
 			else
 			{
 				driveInst.DriveDistance(150);
-				
-				
-//				driveInst.DriveDistance(200);
-//				driveInst.TurnDegrees(-85, 1000);
-//				Utill.SleepThread(500);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.DriveDistance(230);
-////				driveInst.DriveDistance(110);
-////				driveInst.DriveDistance(130);
-//				driveInst.TurnDegrees(100, 1500);
-//				elevatorInst.setDistancePercent(100);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				Utill.SleepThread(300);
-//				driveInst.DriveDistance(40);
-//				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-//				Utill.SleepThread(250);
-//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-//				elevatorInst.setDistancePercent(0);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				driveInst.TurnDegrees(145, 3000);
-//				cubeManipulatorInst.MoveCube(IntakeState.INTAKE);
-//				driveInst.DriveDistance(60);
-////				driveInst.SetLeft(0.8);
-////				driveInst.SetRight(0.8);
-////				Utill.SleepThread(1000);
-////				driveInst.SetLeft(0);
-////				driveInst.SetRight(0);
-//				Utill.SleepThread(300);
-////				driveInst.SetLeft(-0.5);
-////				driveInst.SetRight(-0.5);
-////				Utill.SleepThread(200);
-////				driveInst.SetLeft(0);
-////				driveInst.SetRight(0);
-//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				elevatorInst.setDistanceInches(24);
-//				Utill.SleepThread(800);
-//				if (!DriverStation.getInstance().isAutonomous())
-//				{
-//					return;
-//				}
-//				cubeManipulatorInst.MoveCube(IntakeState.OUTTAKE);
-//				Utill.SleepThread(250);
-//				cubeManipulatorInst.MoveCube(IntakeState.OFF);
 			}
 		}
 	}
 	
+	/**
+	 * Performs operations on the left side of the field.
+	 * 		If _L_: Two cube to scale
+	 * 		If LR_: Cube to switch
+	 * 		If RR_: Drive forward
+	 * 
+	 * @param cubeManipulatorInst
+	 * 		An instance of the cube manipulator.
+	 * @param elevatorInst
+	 * 		An instance of the elevator.
+	 * @param driveInst
+	 * 		An instance of the drive.
+	 */
 	private static void Red(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		
+		//TODO
 	}
 	
 	/**
-	 * Autonomous mode make for testing.
+	 * Autonomous mode made for testing.
 	 * 
 	 * @param cubeManipulatorInst
 	 * 		An instance of the cube manipulator. 
@@ -882,6 +748,7 @@ public class AutonomousModes
 		driveInst.DriveDistanceBackwards(-20);
 	}
 	
+
 	/**
 	 *  Will get the sides of the field element to go to in autonomous based on 
 	 * the game message. 
