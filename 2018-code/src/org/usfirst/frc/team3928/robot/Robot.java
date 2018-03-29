@@ -73,8 +73,8 @@ public class Robot extends IterativeRobot
 	 */
 	private Joystick ThrustMaster;
 	
-	private Solenoid RampDrop;
-	private Solenoid RampUp;
+	private Solenoid IntakeOpen;
+	private Solenoid IntakeClose;
 	
 	private boolean CubeManipulatorOverride;
 	
@@ -102,8 +102,8 @@ public class Robot extends IterativeRobot
 		ClimbUp = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_OUT); 
 		StopClimb = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_IN); 
 		
-		RampDrop = new Solenoid(7);
-		RampUp = new Solenoid(6);
+		IntakeOpen = new Solenoid(7);
+		IntakeClose = new Solenoid(6);
 		
 		CubeManipulatorOverride = false;
 		
@@ -159,15 +159,15 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic() 
 	{	
-		if(RightJoystick.getRawButton(6))
+		if(ThrustMaster.getRawButton(8))
 		{
-			RampDrop.set(true);
-			RampUp.set(false);
+			IntakeOpen.set(true);
+			IntakeClose.set(false);
 		}
 		else
 		{
-			RampDrop.set(false);
-			RampUp.set(true);
+			IntakeOpen.set(false);
+			IntakeClose.set(true);
 		}
 		
 		if (CubeManipulatorOverride)
@@ -322,7 +322,7 @@ public class Robot extends IterativeRobot
 			CubeManipulatorOverride = true;
 			CubeManipulatorInst.EnableCubeManipulatorPIDController(false);
 		}
-		else if (ThrustMaster.getRawButton(8))
+		else if (ThrustMaster.getRawButton(10))
 		{
 			CubeManipulatorOverride = false;
 			if (!ClimbButtonPressed)

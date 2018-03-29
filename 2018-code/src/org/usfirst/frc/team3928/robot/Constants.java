@@ -83,8 +83,8 @@ public class Constants
 	public static final int ELEVATOR_CLIMBER_SOLENOID_OUT = 1;
 	public static final int ELEVATOR_CLIMBER_SOLENOID_IN = 0;
 	
-	public static final double ELEVATOR_ENCODER_MAX = -103;
-	public static final double ELEVATOR_ENCODER_MIN = 20;
+	public static final double ELEVATOR_ENCODER_MAX = -159; //real bot -103
+	public static final double ELEVATOR_ENCODER_MIN = 0; //real bot 20
 	
 	// Joysticks 
 	public static final int THRUST_MASTER_CONTROLLER = 3;
