@@ -691,7 +691,7 @@ public class AutonomousModes
 			//pick up another cube by switch
 			driveInst.SetLeft(-0.5);
 			driveInst.SetRight(-0.5);
-			Utill.SleepThread(600);
+			Utill.SleepThread(400);
 			driveInst.SetLeft(0);
 			driveInst.SetRight(0);
 			elevatorInst.setDistancePercent(0);
