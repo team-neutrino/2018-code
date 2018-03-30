@@ -9,7 +9,6 @@ package org.usfirst.frc.team3928.robot;
 
 
 import org.usfirst.frc.team3928.robot.AutonomousModes.AutonomousColor;
-import org.usfirst.frc.team3928.robot.CubeManipulator.IntakeState;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
@@ -140,7 +139,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		AutonomousModes.PickAutonomousMode(AutonomousColor.ORANGE, CubeManipulatorInst, ElevatorInst, DriveInst);
+		AutonomousModes.PickAutonomousMode(AutonomousColor.PINK, CubeManipulatorInst, ElevatorInst, DriveInst);
 	}
 
 
@@ -252,7 +251,7 @@ public class Robot extends IterativeRobot
 			{
 				if (!ElevatorOverride)
 					{
-						ElevatorInst.setDistanceInches(30);
+						ElevatorInst.setDistanceInches(22);
 					}
 				if (!CubeManipulatorOverride)
 				{
@@ -272,7 +271,7 @@ public class Robot extends IterativeRobot
 				
 				if (!CubeManipulatorOverride)
 				{
-						CubeManipulatorInst.SetActuatorSetPoint(0.85);
+						CubeManipulatorInst.SetActuatorSetPoint(0.8);
 				}
 			}
 			
@@ -297,7 +296,7 @@ public class Robot extends IterativeRobot
 		double intakeSpeed = ThrustMaster.getRawAxis(5);
 		if (intakeSpeed > 0.5)
 		{
-			CubeManipulatorInst.MoveCube(IntakeState.INTAKE);
+			CubeManipulatorInst.MoveCube(1);
 		}
 		else if (intakeSpeed < -0.3)
 		{
@@ -309,7 +308,7 @@ public class Robot extends IterativeRobot
 		}
 		else
 		{
-			CubeManipulatorInst.MoveCube(IntakeState.OFF);
+			CubeManipulatorInst.MoveCube(0);
 		}
 
 		if (NumTimesThroughLoop % Constants.PRINT_SPEED_DIVIDER == 0) 

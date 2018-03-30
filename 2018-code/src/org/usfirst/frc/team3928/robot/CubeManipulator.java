@@ -12,18 +12,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CubeManipulator implements Printer, PIDSource, PIDOutput
 {
-	/**
-	 * Three states for the cube manipulator, intaking, 
-	 * outtaking, and off.   
-	 * 
-	 * @author NicoleEssner
-	 */
-	public enum IntakeState
-	{
-		INTAKE,
-		OUTTAKE,
-		OFF
-	}
+//	/**
+//	 * Three states for the cube manipulator, intaking, 
+//	 * outtaking, and off.   
+//	 * 
+//	 * @author NicoleEssner
+//	 */
+//	public enum IntakeState
+//	{
+//		INTAKE,
+//		OUTTAKE,
+//		OFF
+//	}
 	
 	/**
 	 * The first motor on the cube manipulator.
@@ -105,22 +105,6 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 		else
 		{
 			IntakePIDController.disable();
-		}
-	}
-	
-	public void MoveCube(IntakeState isIntaking)
-	{
-		if(isIntaking == IntakeState.OFF)
-		{
-			MoveCube(0);
-		}
-		else if(isIntaking == IntakeState.INTAKE)
-		{
-			MoveCube(Constants.CUBE_MANIPULATOR_MOTOR_POWER);
-		}
-		else
-		{
-			MoveCube(-Constants.CUBE_MANIPULATOR_MOTOR_POWER);
 		}
 	}
 	
