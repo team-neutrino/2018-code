@@ -613,7 +613,7 @@ public class AutonomousModes
 	/**
 	 * Performs operations on the right side of the field.
 	 * 		If _R_: Two cube to scale //TODO
-	 * 		If RL_: Cube to switch
+	 * 		If RL_: Two cube to switch
 	 * 		If LL_: Drive forward
 	 * 
 	 * @param cubeManipulatorInst
@@ -648,7 +648,7 @@ public class AutonomousModes
 			}
 			Utill.SleepThread(100);
 			cubeManipulatorInst.SetActuatorSetPoint(0.7);
-			driveInst.DriveDistance(43);
+			driveInst.DriveDistance(47);
 			cubeManipulatorInst.MoveCube(-0.8);
 			Utill.SleepThread(250);
 			cubeManipulatorInst.MoveCube(0);
@@ -684,24 +684,27 @@ public class AutonomousModes
 			Utill.SleepThread(850);
 			driveInst.SetLeft(0);
 			driveInst.SetRight(0);
-			cubeManipulatorInst.MoveCube(-0.7);
+			cubeManipulatorInst.MoveCube(-0.6);
 			Utill.SleepThread(250);
 			cubeManipulatorInst.MoveCube(0);
 			
 			//pick up another cube by switch
-			driveInst.SetLeft(-0.5);
-			driveInst.SetRight(-0.5);
-			Utill.SleepThread(400);
+			driveInst.SetLeft(-0.3); //-0.5
+			driveInst.SetRight(-0.3); //-0.5
+			Utill.SleepThread(600); //400
 			driveInst.SetLeft(0);
 			driveInst.SetRight(0);
 			elevatorInst.setDistancePercent(0);
 			Utill.SleepThread(500);
-			driveInst.TurnDegrees(-110, 3000);
+			driveInst.TurnDegrees(-137, 3000);
 			cubeManipulatorInst.MoveCube(1);
 			cubeManipulatorInst.SetActuatorSetPoint(0);
 			driveInst.SetLeft(0.7);
 			driveInst.SetRight(0.7);
 			Utill.SleepThread(1050);
+			driveInst.SetLeft(0);
+			driveInst.SetRight(0);
+			Utill.SleepThread(300);
 			cubeManipulatorInst.MoveCube(0);
 			
 			//prep for teleop
@@ -713,40 +716,85 @@ public class AutonomousModes
 			elevatorInst.setDistancePercent(100);
 			driveInst.TurnDegrees(150, 3000);
 			
-		}
-		//scale is left
-		else
+		}	
+		else //scale is left
 		{	
-			//switch is right
-			if(colors[0] == FieldElementSide.RIGHT)
+			if(colors[0] == FieldElementSide.RIGHT) //switch is right
 			{			
-				driveInst.DriveDistance(80);
-				driveInst.TurnDegrees(-45, 1000);
+				//cube in switch
+				elevatorInst.setDistanceInches(12);
+				cubeManipulatorInst.SetActuatorSetPoint(0.6);
+				driveInst.DriveDistance(140);
+				driveInst.TurnDegrees(-85, 1000);
 				elevatorInst.setDistanceInches(24);
-				if (!DriverStation.getInstance().isAutonomous())
-				{
-					return;
-				}
-				driveInst.SetLeft(0.5);
-				driveInst.SetRight(0.5);
-				Utill.SleepThread(1000);
+				driveInst.SetLeft(0.7);
+				driveInst.SetRight(0.7);
+				Utill.SleepThread(650);
 				driveInst.SetLeft(0);
-				driveInst.SetLeft(0);
-				cubeManipulatorInst.MoveCube(-1);
-				Utill.SleepThread(250);
+				driveInst.SetRight(0);
+				cubeManipulatorInst.MoveCube(-0.7);
+				Utill.SleepThread(400);
 				cubeManipulatorInst.MoveCube(0);
-				driveInst.DriveDistanceBackwards(-20);
+				
+				//pick up cube by switch
+				driveInst.DriveDistanceBackwards(-15);
+				driveInst.TurnDegrees(85, 1000);
 				elevatorInst.setDistancePercent(0);
-				if (!DriverStation.getInstance().isAutonomous())
-				{
-					return;
-				}
-				driveInst.TurnDegrees(45, 1000);
-				driveInst.DriveDistance(128);
+				driveInst.DriveDistance(90);
+				driveInst.TurnDegrees(-132, 1000);
+				cubeManipulatorInst.SetActuatorSetPoint(0);
+				cubeManipulatorInst.MoveCube(1);
+				driveInst.SetLeft(0.7);
+				driveInst.SetRight(0.7);
+				Utill.SleepThread(1050);
+				driveInst.SetLeft(0);
+				driveInst.SetRight(0);
+				Utill.SleepThread(500);
+				cubeManipulatorInst.MoveCube(0);
+				
+				//second cube in switch
+				driveInst.SetLeft(-0.5);
+				driveInst.SetRight(-0.5);
+				Utill.SleepThread(200);
+				driveInst.SetLeft(0);
+				driveInst.SetRight(0);
+				elevatorInst.setDistanceInches(24);
+				cubeManipulatorInst.SetActuatorSetPoint(0.6);
+				Utill.SleepThread(750);
+				driveInst.SetLeft(0.7);
+				driveInst.SetRight(0.7); 
+				Utill.SleepThread(450);
+				driveInst.SetLeft(0);
+				driveInst.SetRight(0);
+				cubeManipulatorInst.MoveCube(-0.7);
+				Utill.SleepThread(500);
+				cubeManipulatorInst.MoveCube(0);
+				
+				//pick up another cube by switch
+				driveInst.SetLeft(-0.5);
+				driveInst.SetRight(-0.5);
+				Utill.SleepThread(700);
+				driveInst.SetLeft(0);
+				driveInst.SetRight(0);
+				elevatorInst.setDistancePercent(0);
+				cubeManipulatorInst.SetActuatorSetPoint(0);
+				driveInst.TurnDegrees(25, 500);
+				cubeManipulatorInst.MoveCube(1);
+				driveInst.SetLeft(0.8);
+				driveInst.SetRight(0.8);
+				Utill.SleepThread(500);
+				driveInst.SetLeft(0);
+				driveInst.SetRight(0);
+				driveInst.TurnDegrees(-45, 1000);
+				driveInst.SetLeft(0.6);
+				driveInst.SetRight(0.6);
+				Utill.SleepThread(550);
+				driveInst.SetLeft(0);
+				driveInst.SetRight(0);
+				cubeManipulatorInst.MoveCube(0);
 				
 			}
-			//switch is left
-			else
+			else //switch is left
 			{
 				driveInst.DriveDistance(150);
 			}
@@ -953,7 +1001,8 @@ public class AutonomousModes
 	 */
 	public static void Test(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
-		driveInst.DriveDistanceBackwards(-20);
+		cubeManipulatorInst.SetActuatorSetPoint(1);
+		driveInst.TurnDegrees(90, 3000);
 	}
 	
 

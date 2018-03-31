@@ -80,6 +80,8 @@ public class Robot extends IterativeRobot
 	private boolean ElevatorOverride;
 	
 	private boolean ClimbButtonPressed;
+	
+	private boolean IntakingOpen;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -109,6 +111,8 @@ public class Robot extends IterativeRobot
 		ElevatorOverride = false;
 		
 		ClimbButtonPressed = false;
+		
+		IntakingOpen = false;
 		
 		new ValuePrinter(new Printer() 
 		{
@@ -158,12 +162,12 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic() 
 	{	
-		if(ThrustMaster.getRawButton(8))
+		if(ThrustMaster.getRawButton(8) && !IntakingOpen)
 		{
 			IntakeOpen.set(true);
 			IntakeClose.set(false);
 		}
-		else
+		else if (!IntakingOpen)
 		{
 			IntakeOpen.set(false);
 			IntakeClose.set(true);
@@ -235,17 +239,17 @@ public class Robot extends IterativeRobot
 				
 				if (!CubeManipulatorOverride)
 				{
-					if (ThrustMaster.getRawButton(9))
-					{
-						CubeManipulatorInst.SetActuatorSetPoint(0);
-					}
-					else
+					if (LeftJoystick.getRawButton(6) || RightJoystick.getRawButton(2) || LeftJoystick.getRawButton(2))
 					{
 						CubeManipulatorInst.SetActuatorSetPoint(1);
 					}
+					else
+					{
+						CubeManipulatorInst.SetActuatorSetPoint(0);
+					}
 				}
 			}
-			else if(elevatorPercent < 0.25)
+			else if(elevatorPercent < 0.225)
 			{
 				if (!ElevatorOverride)
 					{
@@ -258,7 +262,7 @@ public class Robot extends IterativeRobot
 			}
 			else
 			{
-				double minScaleInches = 48;
+				double minScaleInches = 45;
 				double elevatorRange = Constants.ELEVATOR_PID_INPUT_RANGE_MAX - minScaleInches; //71-54 = 17
 				
 				double elevatorHeightScalar = (elevatorPercent - 0.25) * elevatorRange / 0.75;
@@ -295,6 +299,9 @@ public class Robot extends IterativeRobot
 		if (intakeSpeed > 0.5)
 		{
 			CubeManipulatorInst.MoveCube(1);
+			IntakeOpen.set(true);
+			IntakeClose.set(false);
+			IntakingOpen = true;
 		}
 		else if (intakeSpeed < -0.3)
 		{
@@ -307,6 +314,7 @@ public class Robot extends IterativeRobot
 		else
 		{
 			CubeManipulatorInst.MoveCube(0);
+			IntakingOpen = false;
 		}
 
 		if (NumTimesThroughLoop % Constants.PRINT_SPEED_DIVIDER == 0) 
@@ -316,14 +324,22 @@ public class Robot extends IterativeRobot
 		
 		if (ThrustMaster.getRawButton(10))
 		{
-			CubeManipulatorOverride = !CubeManipulatorOverride;
-			CubeManipulatorInst.EnableCubeManipulatorPIDController(!CubeManipulatorOverride);
+			long overridePushed = System.currentTimeMillis();
+			if ((overridePushed + 500) < System.currentTimeMillis())
+			{
+				CubeManipulatorOverride = !CubeManipulatorOverride;
+				CubeManipulatorInst.EnableCubeManipulatorPIDController(!CubeManipulatorOverride);
+			}
 		}
 	
 		if (ThrustMaster.getRawButton(3))
 		{
-			ElevatorOverride = !ElevatorOverride;
-			ElevatorInst.EnableElevatorPIDController(!ElevatorOverride);
+			long overridePushed = System.currentTimeMillis();
+			if ((overridePushed + 500) < System.currentTimeMillis())
+			{
+				ElevatorOverride = !ElevatorOverride;
+				ElevatorInst.EnableElevatorPIDController(!ElevatorOverride);
+			}
 		}
 		
 		NumTimesThroughLoop++;
