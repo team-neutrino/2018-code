@@ -117,7 +117,7 @@ public class Robot extends IterativeRobot
 			{
 				SmartDashboard.putNumber("Right joystick: ", RightJoystick.getY());
 				SmartDashboard.putNumber("Left joystick: ", LeftJoystick.getY());
-				SmartDashboard.putNumber("Thrustmaster value: ", ThrustMaster.getY());
+				SmartDashboard.putNumber("Thrustmaster value: ", (-ThrustMaster.getZ() + 1) / 2);
 				SmartDashboard.putBoolean("Set up to climb: ", ThrustMaster.getRawButton(2));
 				SmartDashboard.putBoolean("Climb: ", ThrustMaster.getRawButton(1));
 				SmartDashboard.putNumber("Intake: ", ThrustMaster.getRawAxis(5));
@@ -201,7 +201,6 @@ public class Robot extends IterativeRobot
 		{
 			ClimbButtonPressed = true;
 			ElevatorInst.EnableElevatorPIDController(false);
-			CubeManipulatorInst.EnableCubeManipulatorPIDController(false);
 			
 			ElevatorInst.setMotorSpeed(-0.3);
 			
@@ -214,10 +213,8 @@ public class Robot extends IterativeRobot
 				{
 					ElevatorInst.setDistanceInches(70);
 				}
-			if (!CubeManipulatorOverride)
-			{
-				CubeManipulatorInst.SetActuatorSetPoint(-1);
-			}
+		
+				CubeManipulatorInst.SetActuatorSetPoint(1);
 		}
 		else
 		{
@@ -235,6 +232,7 @@ public class Robot extends IterativeRobot
 				{
 					ElevatorInst.setDistancePercent(0);
 				}
+				
 				if (!CubeManipulatorOverride)
 				{
 					if (ThrustMaster.getRawButton(9))
@@ -260,7 +258,7 @@ public class Robot extends IterativeRobot
 			}
 			else
 			{
-				double minScaleInches = 54;
+				double minScaleInches = 48;
 				double elevatorRange = Constants.ELEVATOR_PID_INPUT_RANGE_MAX - minScaleInches; //71-54 = 17
 				
 				double elevatorHeightScalar = (elevatorPercent - 0.25) * elevatorRange / 0.75;
@@ -316,32 +314,16 @@ public class Robot extends IterativeRobot
 
 		}
 		
-		if (ThrustMaster.getRawButton(7))
+		if (ThrustMaster.getRawButton(10))
 		{
-			CubeManipulatorOverride = true;
-			CubeManipulatorInst.EnableCubeManipulatorPIDController(false);
+			CubeManipulatorOverride = !CubeManipulatorOverride;
+			CubeManipulatorInst.EnableCubeManipulatorPIDController(!CubeManipulatorOverride);
 		}
-		else if (ThrustMaster.getRawButton(10))
+	
+		if (ThrustMaster.getRawButton(3))
 		{
-			CubeManipulatorOverride = false;
-			if (!ClimbButtonPressed)
-			{
-				CubeManipulatorInst.EnableCubeManipulatorPIDController(true);
-			}
-		}
-		
-		if (ThrustMaster.getRawButton(4) || ThrustMaster.getRawButton(5))
-		{
-			ElevatorOverride = true;
-			ElevatorInst.EnableElevatorPIDController(false);
-		}
-		else if (ThrustMaster.getRawButton(3))
-		{
-			ElevatorOverride = false;
-			if (!ClimbButtonPressed)
-			{
-				ElevatorInst.EnableElevatorPIDController(true);
-			}
+			ElevatorOverride = !ElevatorOverride;
+			ElevatorInst.EnableElevatorPIDController(!ElevatorOverride);
 		}
 		
 		NumTimesThroughLoop++;

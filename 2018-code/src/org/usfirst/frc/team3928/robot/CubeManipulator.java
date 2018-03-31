@@ -146,6 +146,7 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 	public void ActuationMotorSetPower(double power)
 	{
 		IntakeActuationMotor.set(ControlMode.PercentOutput, power);
+
 	}
 
 	@Override
@@ -191,6 +192,5 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 	{
 		// TODO make sure motor output is correct with the encoder, is sometimes negative but wedk exactly when
 		IntakeActuationMotor.set(ControlMode.PercentOutput, -output);
-		
 	}
 }
