@@ -82,6 +82,8 @@ public class Robot extends IterativeRobot
 	private boolean ClimbButtonPressed;
 	
 	private boolean IntakingOpen;
+	
+	private long OverridePressed;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -113,6 +115,8 @@ public class Robot extends IterativeRobot
 		ClimbButtonPressed = false;
 		
 		IntakingOpen = false;
+		
+		OverridePressed = 0;
 		
 		new ValuePrinter(new Printer() 
 		{
@@ -207,6 +211,8 @@ public class Robot extends IterativeRobot
 			ElevatorInst.EnableElevatorPIDController(false);
 			
 			ElevatorInst.setMotorSpeed(-0.3);
+			
+			CubeManipulatorInst.SetActuatorSetPoint(1);
 			
 			ClimbUp.set(true);
 			StopClimb.set(false);
@@ -324,21 +330,31 @@ public class Robot extends IterativeRobot
 		
 		if (ThrustMaster.getRawButton(10))
 		{
-			long overridePushed = System.currentTimeMillis();
-			if ((overridePushed + 500) < System.currentTimeMillis())
+			if (OverridePressed == 0)
+			{
+				OverridePressed = System.currentTimeMillis();
+			}
+			
+			if ((OverridePressed + 500) < System.currentTimeMillis())
 			{
 				CubeManipulatorOverride = !CubeManipulatorOverride;
 				CubeManipulatorInst.EnableCubeManipulatorPIDController(!CubeManipulatorOverride);
+				OverridePressed = 0;
 			}
 		}
 	
 		if (ThrustMaster.getRawButton(3))
 		{
-			long overridePushed = System.currentTimeMillis();
-			if ((overridePushed + 500) < System.currentTimeMillis())
+			if (OverridePressed == 0)
+			{
+				OverridePressed = System.currentTimeMillis();
+			}
+			
+			if ((OverridePressed + 500) < System.currentTimeMillis())
 			{
 				ElevatorOverride = !ElevatorOverride;
 				ElevatorInst.EnableElevatorPIDController(!ElevatorOverride);
+				OverridePressed = 0;
 			}
 		}
 		
