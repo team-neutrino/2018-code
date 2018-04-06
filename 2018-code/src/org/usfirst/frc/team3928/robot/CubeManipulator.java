@@ -76,6 +76,7 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 		
 		stoppedIntaking = false;
 		FirstTimeOverThreshold = 0;
+		SetActuatorSetPoint(0);
 		
 		new ValuePrinter(this);
 	}

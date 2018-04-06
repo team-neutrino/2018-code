@@ -70,7 +70,7 @@ public class Constants
 	public static final int ELEVATOR_PID_INPUT_RANGE_MAX = 71; //70
 	public static final double ELEVATOR_PID_OUTPUT_RANGE_MIN = -1;
 	public static final double ELEVATOR_PID_OUTPUT_RANGE_MAX = 1;
-	
+
 	public static final double INTAKE_P_VALUE = 0.025; //0.015 for practice bot/both
 	public static final double INTAKE_I_VALUE = 0.0;
 	public static final double INTAKE_D_VALUE = 0.0;
@@ -80,11 +80,14 @@ public class Constants
 	public static final double INTAKE_PID_OUTPUT_RANGE_MIN = -0.7;
 	public static final double INTAKE_PID_OUTPUT_RANGE_MAX = 0.7;
 	
+	public static final int INTAKE_ACTUATION_SOLENOID_OPEN = 7;
+	public static final int INTAKE_ACTUATION_SOLENOID_CLOSED = 6;
+	
 	public static final int ELEVATOR_CLIMBER_SOLENOID_OUT = 1;
 	public static final int ELEVATOR_CLIMBER_SOLENOID_IN = 0;
 	
-	public static final double ELEVATOR_ENCODER_MAX = -167; //real bot -103
-	public static final double ELEVATOR_ENCODER_MIN = -7; //real bot 20
+	public static final double ELEVATOR_ENCODER_MAX = -112; //real bot -103, practice bot -167
+	public static final double ELEVATOR_ENCODER_MIN = 29; //real bot 20, practice bot -7
 	
 	// Joysticks 
 	public static final int THRUST_MASTER_CONTROLLER = 3;

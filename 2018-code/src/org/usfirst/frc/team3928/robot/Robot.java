@@ -105,8 +105,8 @@ public class Robot extends IterativeRobot
 		ClimbUp = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_OUT); 
 		StopClimb = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_IN); 
 		
-		IntakeOpen = new Solenoid(7);
-		IntakeClose = new Solenoid(6);
+		IntakeOpen = new Solenoid(Constants.INTAKE_ACTUATION_SOLENOID_OPEN);
+		IntakeClose = new Solenoid(Constants.INTAKE_ACTUATION_SOLENOID_CLOSED);
 		
 		CubeManipulatorOverride = false;
 		
@@ -123,6 +123,7 @@ public class Robot extends IterativeRobot
 			@Override
 			public void PrintValues() 
 			{
+				SmartDashboard.putStringArray("this is a thing", new String[]{"yay", "oops"});
 				SmartDashboard.putNumber("Right joystick: ", RightJoystick.getY());
 				SmartDashboard.putNumber("Left joystick: ", LeftJoystick.getY());
 				SmartDashboard.putNumber("Thrustmaster value: ", (-ThrustMaster.getZ() + 1) / 2);
@@ -255,7 +256,7 @@ public class Robot extends IterativeRobot
 					}
 				}
 			}
-			else if(elevatorPercent < 0.225)
+			else if(elevatorPercent < 0.25)
 			{
 				if (!ElevatorOverride)
 					{
