@@ -137,8 +137,12 @@ public class AutonomousModes
 	private static void Yellow(CubeManipulator cubeManipulatorInst, Elevator elevatorInst, Drive driveInst)
 	{
 		System.out.println("Yellow");
+		cubeManipulatorInst.MoveCube(1);
+		Utill.SleepThread(200);
+		cubeManipulatorInst.MoveCube(0);
+		
 		if (getFieldElementSideColor()[0] == FieldElementSide.LEFT)
-		{
+		{	
 			elevatorInst.setDistanceInches(10);
 			driveInst.DriveDistance(24);
 			Utill.SleepThread(200);
@@ -147,7 +151,7 @@ public class AutonomousModes
 			{
 				return;
 			}
-			driveInst.DriveDistance(75); //85
+			driveInst.DriveDistance(65); //85, 75
 			elevatorInst.setDistanceInches(24);
 			cubeManipulatorInst.SetActuatorSetPoint(0.6);
 			if (!DriverStation.getInstance().isAutonomous())
@@ -159,6 +163,12 @@ public class AutonomousModes
 			{
 				return;
 			}
+			driveInst.SetLeft(0.6);
+			driveInst.SetRight(0.6);
+			Utill.SleepThread(1400);
+			driveInst.SetLeft(0);
+			driveInst.SetRight(0);
+			Utill.SleepThread(250);
 		}
 		else 
 		{
@@ -170,7 +180,7 @@ public class AutonomousModes
 			{
 				return;
 			}
-			driveInst.DriveDistance(65); //65
+			driveInst.DriveDistance(80); //65
 			elevatorInst.setDistanceInches(24);
 			cubeManipulatorInst.SetActuatorSetPoint(0.6);
 			if (!DriverStation.getInstance().isAutonomous())
@@ -182,14 +192,15 @@ public class AutonomousModes
 			{
 				return;
 			}
+			driveInst.SetLeft(0.6);
+			driveInst.SetRight(0.6);
+			Utill.SleepThread(400);
+			driveInst.SetLeft(0);
+			driveInst.SetRight(0);
+			Utill.SleepThread(250);
+			
 		}
-		driveInst.DriveDistance(20);
-		driveInst.SetLeft(0.6);
-		driveInst.SetRight(0.6);
-		Utill.SleepThread(600);
-		driveInst.SetLeft(0);
-		driveInst.SetRight(0);
-		Utill.SleepThread(250);
+		//driveInst.DriveDistance(20);
 		cubeManipulatorInst.MoveCube(-1);
 		Utill.SleepThread(500);
 		cubeManipulatorInst.MoveCube(0);
@@ -649,7 +660,7 @@ public class AutonomousModes
 			//cube in scale
 			driveInst.DriveDistance(210);
 			elevatorInst.setDistancePercent(100);
-			driveInst.TurnDegrees(-30, 1000); //-37
+			driveInst.TurnDegrees(-32, 1000); //home: -37, practice field: -25
 			if (!DriverStation.getInstance().isAutonomous())
 			{
 				return;
@@ -662,43 +673,56 @@ public class AutonomousModes
 			cubeManipulatorInst.SetActuatorSetPoint(0.7);
 			driveInst.DriveDistance(47); //47
 			cubeManipulatorInst.MoveCube(-0.8);
-			Utill.SleepThread(250);
+			Utill.SleepThread(350); //250
 			cubeManipulatorInst.MoveCube(0);
 			
 			//pick up cube by switch
-			elevatorInst.setDistancePercent(0);
-			cubeManipulatorInst.SetActuatorSetPoint(0);
-			driveInst.TurnDegrees(-128, 3000); //-115
-			cubeManipulatorInst.MoveCube(1);
-			driveInst.SetLeft(0.5);
-			driveInst.SetRight(0.5);
-			Utill.SleepThread(1900);
+			driveInst.SetLeft(-0.5);
+			driveInst.SetRight(-0.5);
+			Utill.SleepThread(400);
 			driveInst.SetLeft(0);
 			driveInst.SetRight(0);
+			elevatorInst.setDistancePercent(0);
+			cubeManipulatorInst.SetActuatorSetPoint(0);
+			Utill.SleepThread(250);
+			driveInst.TurnDegrees(-120, 3000); //home: -115, practice field: -126
+			cubeManipulatorInst.MoveCube(1);
+			Robot.IntakeOpen.set(true);
+			Robot.IntakeClose.set(false);
+			driveInst.SetLeft(0.5);
+			driveInst.SetRight(0.5);
+			Utill.SleepThread(1775); //home: 1900, practice field: 1850
+			driveInst.SetLeft(0);
+			driveInst.SetRight(0);
+			Robot.IntakeOpen.set(false);
+			Robot.IntakeClose.set(true);
+			Utill.SleepThread(300);
 			cubeManipulatorInst.MoveCube(0);
+			
 
-//			//second cube in scale
-//			elevatorInst.setDistanceInches(12);
-//			if (!DriverStation.getInstance().isAutonomous())
-//			{
-//				return;
-//			}
-//			driveInst.SetLeft(-0.4);
-//			driveInst.SetRight(-0.4);
-//			Utill.SleepThread(400);
-//			driveInst.SetLeft(0);
-//			driveInst.SetRight(0);
-//			elevatorInst.setDistancePercent(100);
-//			driveInst.TurnDegrees(140, 3000); //130
-//			cubeManipulatorInst.SetActuatorSetPoint(0.7);
-//			driveInst.SetLeft(0.7);
-//			driveInst.SetRight(0.7);
-//			Utill.SleepThread(850);
-//			driveInst.SetLeft(0);
-//			driveInst.SetRight(0);
-//			cubeManipulatorInst.MoveCube(-0.6);
-//			Utill.SleepThread(250);
-//			cubeManipulatorInst.MoveCube(0);
+			//second cube in scale
+			elevatorInst.setDistanceInches(12);
+			if (!DriverStation.getInstance().isAutonomous())
+			{
+				return;
+			}
+			driveInst.SetLeft(-0.4);
+			driveInst.SetRight(-0.4);
+			Utill.SleepThread(600);
+			driveInst.SetLeft(0);
+			driveInst.SetRight(0);
+			elevatorInst.setDistanceInches(60);
+			driveInst.TurnDegrees(140, 3000); //home: 130, practice field: 140
+			cubeManipulatorInst.SetActuatorSetPoint(0.7);
+			driveInst.SetLeft(0.7);
+			driveInst.SetRight(0.7);
+			Utill.SleepThread(950); //850
+			driveInst.SetLeft(0);
+			driveInst.SetRight(0);
+			Utill.SleepThread(250);
+			cubeManipulatorInst.MoveCube(-0.7);
+			Utill.SleepThread(350);
+			cubeManipulatorInst.MoveCube(0);
 //			
 //			//pick up another cube by switch
 //			driveInst.SetLeft(-0.3); //-0.5

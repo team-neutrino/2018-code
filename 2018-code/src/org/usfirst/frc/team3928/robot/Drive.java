@@ -151,6 +151,7 @@ public class Drive implements PIDSource, PIDOutput, Printer
 		
 		while ((timeOnTarget - firstTimeOnTarget < 100) && DriverStation.getInstance().isAutonomous()) 
 		{
+			System.out.println("is autonomous? " + DriverStation.getInstance().isAutonomous());
 			if ((targetDistance - LeftEncoder.getDistance() < 1) && (targetDistance - RightEncoder.getDistance() < 1))
 			{
 				if (!isFirstTimeOnTarget)
@@ -270,7 +271,8 @@ public class Drive implements PIDSource, PIDOutput, Printer
 		long timeOnTarget = 0; 
 		
 		while ((timeOnTarget - firstTimeOnTarget < 100) && DriverStation.getInstance().isAutonomous()) 
-		{			
+		{		
+			System.out.println("Driverstation isAutonomous: " +  DriverStation.getInstance().isAutonomous());
 			if ((targetDistance - LeftEncoder.getDistance() > -1) && (targetDistance - RightEncoder.getDistance() > -1))
 			{
 				if (!isFirstTimeOnTarget)

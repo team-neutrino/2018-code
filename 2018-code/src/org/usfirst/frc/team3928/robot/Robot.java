@@ -72,8 +72,8 @@ public class Robot extends IterativeRobot
 	 */
 	private Joystick ThrustMaster;
 	
-	private Solenoid IntakeOpen;
-	private Solenoid IntakeClose;
+	public static Solenoid IntakeOpen;
+	public static Solenoid IntakeClose;
 	
 	private boolean CubeManipulatorOverride;
 	
@@ -130,6 +130,8 @@ public class Robot extends IterativeRobot
 				SmartDashboard.putBoolean("Set up to climb: ", ThrustMaster.getRawButton(2));
 				SmartDashboard.putBoolean("Climb: ", ThrustMaster.getRawButton(1));
 				SmartDashboard.putNumber("Intake: ", ThrustMaster.getRawAxis(5));
+				SmartDashboard.putBoolean("Elevator Override: ", ElevatorOverride);
+				SmartDashboard.putBoolean("Intake Override: ", CubeManipulatorOverride);
 			}
 		});
 	}
@@ -336,7 +338,7 @@ public class Robot extends IterativeRobot
 				OverridePressed = System.currentTimeMillis();
 			}
 			
-			if ((OverridePressed + 500) < System.currentTimeMillis())
+			if ((OverridePressed + 1000) < System.currentTimeMillis())
 			{
 				CubeManipulatorOverride = !CubeManipulatorOverride;
 				CubeManipulatorInst.EnableCubeManipulatorPIDController(!CubeManipulatorOverride);
@@ -351,7 +353,7 @@ public class Robot extends IterativeRobot
 				OverridePressed = System.currentTimeMillis();
 			}
 			
-			if ((OverridePressed + 500) < System.currentTimeMillis())
+			if ((OverridePressed + 1000) < System.currentTimeMillis())
 			{
 				ElevatorOverride = !ElevatorOverride;
 				ElevatorInst.EnableElevatorPIDController(!ElevatorOverride);
