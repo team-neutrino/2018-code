@@ -660,7 +660,7 @@ public class AutonomousModes
 			//cube in scale
 			driveInst.DriveDistance(210);
 			elevatorInst.setDistancePercent(100);
-			driveInst.TurnDegrees(-32, 1000); //home: -37, practice field: -25
+			driveInst.TurnDegrees(-30, 1000); //home: -37, practice field: -25, -32 CHANGED
 			if (!DriverStation.getInstance().isAutonomous())
 			{
 				return;
@@ -671,7 +671,7 @@ public class AutonomousModes
 			}
 			Utill.SleepThread(100);
 			cubeManipulatorInst.SetActuatorSetPoint(0.7);
-			driveInst.DriveDistance(47); //47
+			driveInst.DriveDistance(50); //47 CHANGED
 			cubeManipulatorInst.MoveCube(-0.8);
 			Utill.SleepThread(350); //250
 			cubeManipulatorInst.MoveCube(0);
@@ -679,19 +679,19 @@ public class AutonomousModes
 			//pick up cube by switch
 			driveInst.SetLeft(-0.5);
 			driveInst.SetRight(-0.5);
-			Utill.SleepThread(400);
+			Utill.SleepThread(450); //400 CHANGED
 			driveInst.SetLeft(0);
 			driveInst.SetRight(0);
 			elevatorInst.setDistancePercent(0);
 			cubeManipulatorInst.SetActuatorSetPoint(0);
-			Utill.SleepThread(250);
+			Utill.SleepThread(400);
 			driveInst.TurnDegrees(-120, 3000); //home: -115, practice field: -126
 			cubeManipulatorInst.MoveCube(1);
 			Robot.IntakeOpen.set(true);
 			Robot.IntakeClose.set(false);
 			driveInst.SetLeft(0.5);
 			driveInst.SetRight(0.5);
-			Utill.SleepThread(1775); //home: 1900, practice field: 1850
+			Utill.SleepThread(1550); //home: 1900, practice field: 1850
 			driveInst.SetLeft(0);
 			driveInst.SetRight(0);
 			Robot.IntakeOpen.set(false);
@@ -711,8 +711,8 @@ public class AutonomousModes
 			Utill.SleepThread(600);
 			driveInst.SetLeft(0);
 			driveInst.SetRight(0);
-			elevatorInst.setDistanceInches(60);
-			driveInst.TurnDegrees(140, 3000); //home: 130, practice field: 140
+			elevatorInst.setDistancePercent(100);
+			driveInst.TurnDegrees(137, 3000); //home: 130, practice field: 140
 			cubeManipulatorInst.SetActuatorSetPoint(0.7);
 			driveInst.SetLeft(0.7);
 			driveInst.SetRight(0.7);
@@ -720,9 +720,16 @@ public class AutonomousModes
 			driveInst.SetLeft(0);
 			driveInst.SetRight(0);
 			Utill.SleepThread(250);
-			cubeManipulatorInst.MoveCube(-0.7);
+			cubeManipulatorInst.MoveCube(-0.65);
 			Utill.SleepThread(350);
 			cubeManipulatorInst.MoveCube(0);
+			
+			driveInst.SetLeft(-0.5);
+			driveInst.SetRight(-0.5);
+			Utill.SleepThread(600);
+			driveInst.SetLeft(0);
+			driveInst.SetRight(0);
+			
 //			
 //			//pick up another cube by switch
 //			driveInst.SetLeft(-0.3); //-0.5
@@ -760,12 +767,12 @@ public class AutonomousModes
 				//cube in switch
 				elevatorInst.setDistanceInches(12);
 				cubeManipulatorInst.SetActuatorSetPoint(0.6);
-				driveInst.DriveDistance(140);
+				driveInst.DriveDistance(140); //145 with 90 worked
 				driveInst.TurnDegrees(-85, 1000);
 				elevatorInst.setDistanceInches(24);
-				driveInst.SetLeft(0.7);
-				driveInst.SetRight(0.7);
-				Utill.SleepThread(650);
+				driveInst.SetLeft(0.5);
+				driveInst.SetRight(0.5);
+				Utill.SleepThread(800);
 				driveInst.SetLeft(0);
 				driveInst.SetRight(0);
 				cubeManipulatorInst.MoveCube(-0.7);
@@ -776,15 +783,19 @@ public class AutonomousModes
 				driveInst.DriveDistanceBackwards(-15);
 				driveInst.TurnDegrees(85, 1000);
 				elevatorInst.setDistancePercent(0);
-				driveInst.DriveDistance(90);
-				driveInst.TurnDegrees(-132, 1000);
+				driveInst.DriveDistance(95); //90
+				driveInst.TurnDegrees(-138, 1000);
 				cubeManipulatorInst.SetActuatorSetPoint(0);
 				cubeManipulatorInst.MoveCube(1);
+				Robot.IntakeOpen.set(true);
+				Robot.IntakeClose.set(false);
 				driveInst.SetLeft(0.7);
 				driveInst.SetRight(0.7);
 				Utill.SleepThread(1050);
 				driveInst.SetLeft(0);
 				driveInst.SetRight(0);
+				Robot.IntakeOpen.set(false);
+				Robot.IntakeClose.set(true);
 				Utill.SleepThread(500);
 				cubeManipulatorInst.MoveCube(0);
 				
@@ -803,7 +814,7 @@ public class AutonomousModes
 				driveInst.SetLeft(0);
 				driveInst.SetRight(0);
 				cubeManipulatorInst.MoveCube(-0.7);
-				Utill.SleepThread(500);
+				Utill.SleepThread(300);
 				cubeManipulatorInst.MoveCube(0);
 				
 				//pick up another cube by switch
@@ -816,17 +827,16 @@ public class AutonomousModes
 				cubeManipulatorInst.SetActuatorSetPoint(0);
 				driveInst.TurnDegrees(25, 500);
 				cubeManipulatorInst.MoveCube(1);
+				Robot.IntakeOpen.set(true);
+				Robot.IntakeClose.set(false);
 				driveInst.SetLeft(0.8);
 				driveInst.SetRight(0.8);
-				Utill.SleepThread(500);
+				Utill.SleepThread(700);
 				driveInst.SetLeft(0);
 				driveInst.SetRight(0);
-				driveInst.TurnDegrees(-45, 1000);
-				driveInst.SetLeft(0.6);
-				driveInst.SetRight(0.6);
-				Utill.SleepThread(550);
-				driveInst.SetLeft(0);
-				driveInst.SetRight(0);
+				Robot.IntakeOpen.set(false);
+				Robot.IntakeClose.set(true);
+				Utill.SleepThread(300);
 				cubeManipulatorInst.MoveCube(0);
 				
 			}
