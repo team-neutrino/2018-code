@@ -180,7 +180,7 @@ public class Robot extends IterativeRobot
 			IntakeClose.set(true);
 		}
 		
-		if (CubeManipulatorOverride)
+		if (CubeManipulatorOverride && !LeftJoystick.getRawButton(7))
 		{
 			if (ThrustMaster.getRawButton(7))
 			{
@@ -192,7 +192,7 @@ public class Robot extends IterativeRobot
 			}
 		}
 			
-		if (ElevatorOverride)
+		if (ElevatorOverride && !LeftJoystick.getRawButton(7))
 		{
 			if (ThrustMaster.getRawButton(4))
 			{
@@ -206,6 +206,29 @@ public class Robot extends IterativeRobot
 			{
 				ElevatorInst.setMotorSpeed(0);
 			}
+		}
+		
+		if (LeftJoystick.getRawButton(7))
+		{
+			ElevatorOverride = true;
+			CubeManipulatorOverride = true;
+			
+			ElevatorInst.setDistanceInches(20);
+			CubeManipulatorInst.SetActuatorSetPoint(0.1);
+			
+			if (RightJoystick.getRawButton(7))
+			{
+				CubeManipulatorInst.MoveCube(1);
+			}
+			else
+			{
+				CubeManipulatorInst.MoveCube(0);
+			}
+		}
+		else
+		{
+			ElevatorOverride = false;
+			CubeManipulatorOverride = false;
 		}
 		
 		if (ThrustMaster.getRawButton(1)) //climb button
@@ -320,7 +343,7 @@ public class Robot extends IterativeRobot
 			}
 			CubeManipulatorInst.MoveCube(intakeSpeed);
 		}
-		else
+		else if (!LeftJoystick.getRawButton(7))
 		{
 			CubeManipulatorInst.MoveCube(0);
 			IntakingOpen = false;
