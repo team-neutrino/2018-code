@@ -83,6 +83,10 @@ public class Robot extends IterativeRobot
 	
 	private boolean IntakingOpen;
 	
+	private boolean SetPortalGrab;
+	
+	private boolean PortalButtonPressed;
+	
 	private long OverridePressed;
 
 	/**
@@ -115,6 +119,10 @@ public class Robot extends IterativeRobot
 		ClimbButtonPressed = false;
 		
 		IntakingOpen = false;
+		
+		SetPortalGrab = false;
+		
+		PortalButtonPressed = false;
 		
 		OverridePressed = 0;
 		
@@ -169,18 +177,18 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic() 
 	{	
-		if(ThrustMaster.getRawButton(8) && !IntakingOpen)
+		if(ThrustMaster.getRawButton(8) && !IntakingOpen && !SetPortalGrab)
 		{
 			IntakeOpen.set(true);
 			IntakeClose.set(false);
 		}
-		else if (!IntakingOpen)
+		else if (!IntakingOpen && !SetPortalGrab)
 		{
 			IntakeOpen.set(false);
 			IntakeClose.set(true);
 		}
 		
-		if (CubeManipulatorOverride && !LeftJoystick.getRawButton(7))
+		if (CubeManipulatorOverride && !SetPortalGrab)
 		{
 			if (ThrustMaster.getRawButton(7))
 			{
@@ -192,7 +200,7 @@ public class Robot extends IterativeRobot
 			}
 		}
 			
-		if (ElevatorOverride && !LeftJoystick.getRawButton(7))
+		if (ElevatorOverride && !SetPortalGrab)
 		{
 			if (ThrustMaster.getRawButton(4))
 			{
@@ -208,15 +216,12 @@ public class Robot extends IterativeRobot
 			}
 		}
 		
-		if (LeftJoystick.getRawButton(7))
+		if (SetPortalGrab)
 		{
-			ElevatorOverride = true;
-			CubeManipulatorOverride = true;
 			
 			ElevatorInst.setDistanceInches(20);
-			CubeManipulatorInst.SetActuatorSetPoint(0.1);
 			
-			if (RightJoystick.getRawButton(7))
+			if (RightJoystick.getRawButton(10))
 			{
 				CubeManipulatorInst.MoveCube(1);
 			}
@@ -224,11 +229,26 @@ public class Robot extends IterativeRobot
 			{
 				CubeManipulatorInst.MoveCube(0);
 			}
-		}
-		else
-		{
-			ElevatorOverride = false;
-			CubeManipulatorOverride = false;
+			
+			if (LeftJoystick.getRawButton(6))
+			{
+				CubeManipulatorInst.SetActuatorSetPoint(0.8);
+			}
+			else
+			{
+				CubeManipulatorInst.SetActuatorSetPoint(0.15);
+			}
+			
+			if (ThrustMaster.getRawButton(8))
+			{
+				IntakeOpen.set(true);
+				IntakeClose.set(false);
+			}
+			else
+			{
+				IntakeOpen.set(false);
+				IntakeClose.set(true);
+			}
 		}
 		
 		if (ThrustMaster.getRawButton(1)) //climb button
@@ -252,7 +272,7 @@ public class Robot extends IterativeRobot
 		
 				CubeManipulatorInst.SetActuatorSetPoint(1);
 		}
-		else
+		else if (!SetPortalGrab)
 		{
 			if (ClimbButtonPressed)
 			{
@@ -328,7 +348,7 @@ public class Robot extends IterativeRobot
 		DriveInst.SetRight(rightY);
 
 		double intakeSpeed = ThrustMaster.getRawAxis(5);
-		if (intakeSpeed > 0.5)
+		if (intakeSpeed > 0.5 && !SetPortalGrab)
 		{
 			CubeManipulatorInst.MoveCube(1);
 			IntakeOpen.set(true);
@@ -343,7 +363,7 @@ public class Robot extends IterativeRobot
 			}
 			CubeManipulatorInst.MoveCube(intakeSpeed);
 		}
-		else if (!LeftJoystick.getRawButton(7))
+		else if (!SetPortalGrab)
 		{
 			CubeManipulatorInst.MoveCube(0);
 			IntakingOpen = false;
@@ -383,6 +403,19 @@ public class Robot extends IterativeRobot
 				OverridePressed = 0;
 			}
 		}
+		
+		if (LeftJoystick.getRawButton(9) && !PortalButtonPressed)
+		{
+			SetPortalGrab = !SetPortalGrab;
+			ElevatorOverride = !ElevatorOverride;
+			CubeManipulatorOverride = !CubeManipulatorOverride;
+			PortalButtonPressed = true;
+		}
+		else if (!LeftJoystick.getRawButton(9))
+		{
+			PortalButtonPressed = false;
+		}
+		
 		
 		NumTimesThroughLoop++;
 		Utill.SleepThread(1);
