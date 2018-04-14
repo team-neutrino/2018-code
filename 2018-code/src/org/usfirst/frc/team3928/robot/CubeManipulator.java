@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CubeManipulator implements Printer, PIDSource, PIDOutput
@@ -57,6 +58,9 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 	 */
 	private boolean stoppedIntaking;
 	
+	public static Solenoid IntakeOpen;
+	public static Solenoid IntakeClose;
+	
 	/**
 	 * The constructor for a cube manipulator. 
 	 */
@@ -73,6 +77,9 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 		IntakePIDController.setInputRange(Constants.INTAKE_PID_INPUT_RANGE_MIN, Constants.INTAKE_PID_INPUT_RANGE_MAX);
 		IntakePIDController.setOutputRange(Constants.INTAKE_PID_OUTPUT_RANGE_MIN, Constants.INTAKE_PID_OUTPUT_RANGE_MAX);
 		IntakePIDController.enable();
+		
+		IntakeOpen = new Solenoid(Constants.INTAKE_ACTUATION_SOLENOID_OPEN);
+		IntakeClose = new Solenoid(Constants.INTAKE_ACTUATION_SOLENOID_CLOSED);
 		
 		stoppedIntaking = false;
 		FirstTimeOverThreshold = 0;
@@ -149,6 +156,20 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 		IntakeActuationMotor.set(ControlMode.PercentOutput, power);
 
 	}
+	
+	public void ArmPosition(boolean open)
+	{
+		if (open)
+		{
+			IntakeOpen.set(true);
+			IntakeClose.set(false);
+		}
+		else
+		{
+			IntakeOpen.set(false);
+			IntakeClose.set(true);
+		}
+	}
 
 	@Override
 	public void PrintValues() 
@@ -183,8 +204,20 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 //			value = -180 - IntakeEncoder.get();
 //		}
 //		return value;
+		double value;
+		
+		if (IntakeEncoder.get() >= 0)
+		{
+			value = -360 + IntakeEncoder.get();
+		}
+		else
+		{
+			value = IntakeEncoder.get();
+		}
 
-		return IntakeEncoder.get();
+		return value;
+		
+		//return IntakeEncoder.get();
 						
 	}
 

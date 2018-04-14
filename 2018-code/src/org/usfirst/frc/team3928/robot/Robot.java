@@ -13,6 +13,8 @@ import org.usfirst.frc.team3928.robot.AutonomousModes.AutonomousColor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -72,9 +74,6 @@ public class Robot extends IterativeRobot
 	 */
 	private Joystick ThrustMaster;
 	
-	public static Solenoid IntakeOpen;
-	public static Solenoid IntakeClose;
-	
 	private boolean CubeManipulatorOverride;
 	
 	private boolean ElevatorOverride;
@@ -88,6 +87,8 @@ public class Robot extends IterativeRobot
 	private boolean PortalButtonPressed;
 	
 	private long OverridePressed;
+	
+	private SendableChooser AutonomousChooser;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -108,9 +109,6 @@ public class Robot extends IterativeRobot
 		
 		ClimbUp = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_OUT); 
 		StopClimb = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_IN); 
-		
-		IntakeOpen = new Solenoid(Constants.INTAKE_ACTUATION_SOLENOID_OPEN);
-		IntakeClose = new Solenoid(Constants.INTAKE_ACTUATION_SOLENOID_CLOSED);
 		
 		CubeManipulatorOverride = false;
 		
@@ -158,7 +156,17 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		AutonomousModes.PickAutonomousMode(AutonomousColor.PINK, CubeManipulatorInst, ElevatorInst, DriveInst);
+//		if (AutonomousMode.getSelected() == "YELLOW")
+//		{
+//			AutonomousModes.PickAutonomousMode(AutonomousColor.YELLOW, CubeManipulatorInst, ElevatorInst, DriveInst);
+//		}
+//		else
+//		{
+//			AutonomousModes.PickAutonomousMode(AutonomousColor.YELLOW, CubeManipulatorInst, ElevatorInst, DriveInst);
+//
+//		}
+		AutonomousModes.PickAutonomousMode(AutonomousColor.RED, CubeManipulatorInst, ElevatorInst, DriveInst);
+		
 	}
 
 
@@ -179,13 +187,11 @@ public class Robot extends IterativeRobot
 	{	
 		if(ThrustMaster.getRawButton(8) && !IntakingOpen && !SetPortalGrab)
 		{
-			IntakeOpen.set(true);
-			IntakeClose.set(false);
+			CubeManipulatorInst.ArmPosition(true);
 		}
 		else if (!IntakingOpen && !SetPortalGrab)
 		{
-			IntakeOpen.set(false);
-			IntakeClose.set(true);
+			CubeManipulatorInst.ArmPosition(false);
 		}
 		
 		if (CubeManipulatorOverride && !SetPortalGrab)
@@ -241,13 +247,11 @@ public class Robot extends IterativeRobot
 			
 			if (ThrustMaster.getRawButton(8))
 			{
-				IntakeOpen.set(true);
-				IntakeClose.set(false);
+				CubeManipulatorInst.ArmPosition(true);
 			}
 			else
 			{
-				IntakeOpen.set(false);
-				IntakeClose.set(true);
+				CubeManipulatorInst.ArmPosition(false);
 			}
 		}
 		
@@ -325,7 +329,7 @@ public class Robot extends IterativeRobot
 				
 				if (!CubeManipulatorOverride)
 				{
-						CubeManipulatorInst.SetActuatorSetPoint(0.8);
+						CubeManipulatorInst.SetActuatorSetPoint(0.75);
 				}
 			}
 			
@@ -351,8 +355,7 @@ public class Robot extends IterativeRobot
 		if (intakeSpeed > 0.5 && !SetPortalGrab)
 		{
 			CubeManipulatorInst.MoveCube(1);
-			IntakeOpen.set(true);
-			IntakeClose.set(false);
+			CubeManipulatorInst.ArmPosition(true);
 			IntakingOpen = true;
 		}
 		else if (intakeSpeed < -0.3)
