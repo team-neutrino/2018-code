@@ -10,10 +10,11 @@ package org.usfirst.frc.team3928.robot;
 
 import org.usfirst.frc.team3928.robot.AutonomousModes.AutonomousColor;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -88,7 +89,7 @@ public class Robot extends IterativeRobot
 	
 	private long OverridePressed;
 	
-	private SendableChooser AutonomousChooser;
+	private SendableChooser<String> AutoChooser;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -123,6 +124,18 @@ public class Robot extends IterativeRobot
 		PortalButtonPressed = false;
 		
 		OverridePressed = 0;
+		AutoChooser = new SendableChooser<String>();
+		AutoChooser.addDefault("Blue", "BLUE");
+		AutoChooser.addObject("Blue", "BLUE");
+		AutoChooser.addObject("Yellow", "YELLOW");
+		AutoChooser.addObject("Green", "GREEN");
+		AutoChooser.addObject("Orange", "ORANGE");
+		AutoChooser.addObject("Purple", "PURPLE");
+		AutoChooser.addObject("Pink", "PINK");
+		AutoChooser.addObject("Red", "RED");
+		AutoChooser.addObject("Test", "TEST");
+		
+		SmartDashboard.putData("Autonomous Mode", AutoChooser);
 		
 		new ValuePrinter(new Printer() 
 		{
@@ -140,6 +153,9 @@ public class Robot extends IterativeRobot
 				SmartDashboard.putBoolean("Intake Override: ", CubeManipulatorOverride);
 			}
 		});
+		
+		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+		
 	}
 
 	/**
@@ -156,17 +172,43 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-//		if (AutonomousMode.getSelected() == "YELLOW")
-//		{
-//			AutonomousModes.PickAutonomousMode(AutonomousColor.YELLOW, CubeManipulatorInst, ElevatorInst, DriveInst);
-//		}
-//		else
-//		{
-//			AutonomousModes.PickAutonomousMode(AutonomousColor.YELLOW, CubeManipulatorInst, ElevatorInst, DriveInst);
-//
-//		}
-		AutonomousModes.PickAutonomousMode(AutonomousColor.RED, CubeManipulatorInst, ElevatorInst, DriveInst);
-		
+		if (AutoChooser.getSelected().equals("BLUE"))
+		{
+			AutonomousModes.PickAutonomousMode(AutonomousColor.BLUE, CubeManipulatorInst, ElevatorInst, DriveInst);
+		}
+		else if (AutoChooser.getSelected().equals("YELLOW"))
+		{
+			AutonomousModes.PickAutonomousMode(AutonomousColor.YELLOW, CubeManipulatorInst, ElevatorInst, DriveInst);
+		}
+		else if (AutoChooser.getSelected().equals("GREEN"))
+		{
+			AutonomousModes.PickAutonomousMode(AutonomousColor.GREEN, CubeManipulatorInst, ElevatorInst, DriveInst);
+		}
+		else if (AutoChooser.getSelected().equals("ORANGE"))
+		{
+			AutonomousModes.PickAutonomousMode(AutonomousColor.ORANGE, CubeManipulatorInst, ElevatorInst, DriveInst);
+		}
+		else if (AutoChooser.getSelected().equals("PURPLE"))
+		{
+			AutonomousModes.PickAutonomousMode(AutonomousColor.PURPLE, CubeManipulatorInst, ElevatorInst, DriveInst);
+		}
+		else if (AutoChooser.getSelected().equals("PINK"))
+		{
+			AutonomousModes.PickAutonomousMode(AutonomousColor.PINK, CubeManipulatorInst, ElevatorInst, DriveInst);
+		}
+		else if (AutoChooser.getSelected().equals("RED"))
+		{
+			AutonomousModes.PickAutonomousMode(AutonomousColor.RED, CubeManipulatorInst, ElevatorInst, DriveInst);
+		}
+		else if (AutoChooser.getSelected().equals("TEST"))
+		{
+			AutonomousModes.PickAutonomousMode(AutonomousColor.TEST, CubeManipulatorInst, ElevatorInst, DriveInst);
+		}
+		else
+		{
+			AutonomousModes.PickAutonomousMode(AutonomousColor.BLUE, CubeManipulatorInst, ElevatorInst, DriveInst);
+
+		}
 	}
 
 
@@ -301,7 +343,7 @@ public class Robot extends IterativeRobot
 					}
 					else
 					{
-						CubeManipulatorInst.SetActuatorSetPoint(0);
+						CubeManipulatorInst.SetActuatorSetPoint(0.1);
 					}
 				}
 			}
@@ -352,7 +394,11 @@ public class Robot extends IterativeRobot
 		DriveInst.SetRight(rightY);
 
 		double intakeSpeed = ThrustMaster.getRawAxis(5);
-		if (intakeSpeed > 0.5 && !SetPortalGrab)
+		if (ThrustMaster.getRawButton(9))
+		{
+			CubeManipulatorInst.MoveCube(1);
+		}
+		else if (intakeSpeed > 0.5 && !SetPortalGrab)
 		{
 			CubeManipulatorInst.MoveCube(1);
 			CubeManipulatorInst.ArmPosition(true);
