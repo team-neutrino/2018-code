@@ -304,7 +304,7 @@ public class Robot extends IterativeRobot
 			
 			ElevatorInst.setMotorSpeed(-0.3);
 			
-			CubeManipulatorInst.SetActuatorSetPoint(1);
+			CubeManipulatorInst.SetActuatorSetPoint(0.8);
 			
 			ClimbUp.set(true);
 			StopClimb.set(false);
@@ -313,10 +313,10 @@ public class Robot extends IterativeRobot
 		{
 			if (!ElevatorOverride)
 				{
-					ElevatorInst.setDistanceInches(70);
+					ElevatorInst.setDistanceInches(63);
 				}
 		
-				CubeManipulatorInst.SetActuatorSetPoint(1);
+				CubeManipulatorInst.SetActuatorSetPoint(0.8);
 		}
 		else if (!SetPortalGrab)
 		{
@@ -397,12 +397,12 @@ public class Robot extends IterativeRobot
 		if (ThrustMaster.getRawButton(9))
 		{
 			CubeManipulatorInst.MoveCube(1);
+			CubeManipulatorInst.ArmPosition(true);
+			IntakingOpen = true;
 		}
 		else if (intakeSpeed > 0.5 && !SetPortalGrab)
 		{
 			CubeManipulatorInst.MoveCube(1);
-			CubeManipulatorInst.ArmPosition(true);
-			IntakingOpen = true;
 		}
 		else if (intakeSpeed < -0.3)
 		{
