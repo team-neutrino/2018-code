@@ -91,6 +91,7 @@ public class Robot extends IterativeRobot
 	
 	private SendableChooser<String> AutoChooser;
 
+	private DriveCurve DriveCurveInst;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -137,6 +138,8 @@ public class Robot extends IterativeRobot
 		
 		SmartDashboard.putData("Autonomous Mode", AutoChooser);
 		
+		DriveCurveInst = new DriveCurve(DriveInst);
+		
 		new ValuePrinter(new Printer() 
 		{
 			@Override
@@ -174,39 +177,39 @@ public class Robot extends IterativeRobot
 	{
 		if (AutoChooser.getSelected().equals("BLUE"))
 		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.BLUE, CubeManipulatorInst, ElevatorInst, DriveInst);
+			AutonomousModes.PickAutonomousMode(AutonomousColor.BLUE, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
 		}
 		else if (AutoChooser.getSelected().equals("YELLOW"))
 		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.YELLOW, CubeManipulatorInst, ElevatorInst, DriveInst);
+			AutonomousModes.PickAutonomousMode(AutonomousColor.YELLOW, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
 		}
 		else if (AutoChooser.getSelected().equals("GREEN"))
 		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.GREEN, CubeManipulatorInst, ElevatorInst, DriveInst);
+			AutonomousModes.PickAutonomousMode(AutonomousColor.GREEN, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
 		}
 		else if (AutoChooser.getSelected().equals("ORANGE"))
 		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.ORANGE, CubeManipulatorInst, ElevatorInst, DriveInst);
+			AutonomousModes.PickAutonomousMode(AutonomousColor.ORANGE, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
 		}
 		else if (AutoChooser.getSelected().equals("PURPLE"))
 		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.PURPLE, CubeManipulatorInst, ElevatorInst, DriveInst);
+			AutonomousModes.PickAutonomousMode(AutonomousColor.PURPLE, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
 		}
 		else if (AutoChooser.getSelected().equals("PINK"))
 		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.PINK, CubeManipulatorInst, ElevatorInst, DriveInst);
+			AutonomousModes.PickAutonomousMode(AutonomousColor.PINK, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
 		}
 		else if (AutoChooser.getSelected().equals("RED"))
 		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.RED, CubeManipulatorInst, ElevatorInst, DriveInst);
+			AutonomousModes.PickAutonomousMode(AutonomousColor.RED, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
 		}
 		else if (AutoChooser.getSelected().equals("TEST"))
 		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.TEST, CubeManipulatorInst, ElevatorInst, DriveInst);
+			AutonomousModes.PickAutonomousMode(AutonomousColor.TEST, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
 		}
 		else
 		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.BLUE, CubeManipulatorInst, ElevatorInst, DriveInst);
+			AutonomousModes.PickAutonomousMode(AutonomousColor.BLUE, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
 
 		}
 	}

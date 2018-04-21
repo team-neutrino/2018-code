@@ -132,6 +132,16 @@ public class Drive implements PIDSource, PIDOutput, Printer
 		LeftMotor2.set(ControlMode.PercentOutput, motorPower);
 	}
 
+	public double GetRightEncoder()
+	{
+		return RightEncoder.getRate();
+	}
+	
+	public double GetLeftEncoder()
+	{
+		return LeftEncoder.getRate();
+	}
+	
 	/**
 	 * Method that will drive forward a given distance. 
 	 * 
@@ -429,6 +439,8 @@ public class Drive implements PIDSource, PIDOutput, Printer
 	@Override
 	public void PrintValues() 
 	{
+		SmartDashboard.putNumber("Right Drive Encoder Rate: ", RightEncoder.getRate());
+		SmartDashboard.putNumber("Left Drive Encoder Rate: ", LeftEncoder.getRate());
 		SmartDashboard.putNumber("Right Drive Encoder: ", RightEncoder.getDistance());
 		SmartDashboard.putNumber("Left Drive Encoder: ", LeftEncoder.getDistance());
 		SmartDashboard.putNumber("Navx yaw: ", Navx.getYaw());
