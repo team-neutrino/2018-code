@@ -126,14 +126,13 @@ public class Robot extends IterativeRobot
 		
 		OverridePressed = 0;
 		AutoChooser = new SendableChooser<String>();
-		AutoChooser.addDefault("Blue", "BLUE");
-		AutoChooser.addObject("Blue", "BLUE");
-		AutoChooser.addObject("Yellow", "YELLOW");
-		AutoChooser.addObject("Green", "GREEN");
-		AutoChooser.addObject("Orange", "ORANGE");
-		AutoChooser.addObject("Purple", "PURPLE");
-		AutoChooser.addObject("Pink", "PINK");
-		AutoChooser.addObject("Red", "RED");
+		AutoChooser.addDefault("Blue: drive forward", "BLUE");
+		AutoChooser.addObject("Yellow: center switch", "YELLOW");
+		AutoChooser.addObject("Green: right to scale", "GREEN");
+		AutoChooser.addObject("Orange: right to switch and scale", "ORANGE");
+		AutoChooser.addObject("Purple: left to switch and scale - do not use", "PURPLE");
+		AutoChooser.addObject("Pink: right only right side", "PINK");
+		AutoChooser.addObject("Red: left only left side", "RED");
 		AutoChooser.addObject("Test", "TEST");
 		
 		SmartDashboard.putData("Autonomous Mode", AutoChooser);
@@ -197,6 +196,8 @@ public class Robot extends IterativeRobot
 		}
 		else if (AutoChooser.getSelected().equals("PINK"))
 		{
+			System.out.println("PINK");
+			
 			AutonomousModes.PickAutonomousMode(AutonomousColor.PINK, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
 		}
 		else if (AutoChooser.getSelected().equals("RED"))

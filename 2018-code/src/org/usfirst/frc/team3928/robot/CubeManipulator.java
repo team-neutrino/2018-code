@@ -204,20 +204,22 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 //			value = -180 - IntakeEncoder.get();
 //		}
 //		return value;
-		double value;
 		
-		if (IntakeEncoder.get() >= 0)
-		{
-			value = -360 + IntakeEncoder.get();
-		}
-		else
-		{
-			value = IntakeEncoder.get();
-		}
-
-		return value;
 		
-		//return IntakeEncoder.get();
+//		double value;
+//		
+//		if (IntakeEncoder.get() >= 0)
+//		{
+//			value = -360 + IntakeEncoder.get();
+//		}
+//		else
+//		{
+//			value = IntakeEncoder.get();
+//		}
+//
+//		return value;
+		
+		return IntakeEncoder.get();
 						
 	}
 
