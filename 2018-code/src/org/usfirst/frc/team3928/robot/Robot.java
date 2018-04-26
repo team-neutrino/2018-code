@@ -88,8 +88,6 @@ public class Robot extends IterativeRobot
 	private boolean PortalButtonPressed;
 	
 	private long OverridePressed;
-	
-	private SendableChooser<String> AutoChooser;
 
 	private DriveCurve DriveCurveInst;
 	/**
@@ -125,17 +123,16 @@ public class Robot extends IterativeRobot
 		PortalButtonPressed = false;
 		
 		OverridePressed = 0;
-		AutoChooser = new SendableChooser<String>();
-		AutoChooser.addDefault("Blue: drive forward", "BLUE");
-		AutoChooser.addObject("Yellow: center switch", "YELLOW");
-		AutoChooser.addObject("Green: right to scale", "GREEN");
-		AutoChooser.addObject("Orange: right to switch and scale", "ORANGE");
-		AutoChooser.addObject("Purple: left to switch and scale - do not use", "PURPLE");
-		AutoChooser.addObject("Pink: right only right side", "PINK");
-		AutoChooser.addObject("Red: left only left side", "RED");
-		AutoChooser.addObject("Test", "TEST");
-		
-		SmartDashboard.putData("Autonomous Mode", AutoChooser);
+//		AutoChooser = new SendableChooser<String>();
+//		AutoChooser.addDefault("Blue: drive forward", "BLUE");
+//		AutoChooser.addObject("Yellow: center switch", "YELLOW");
+//		AutoChooser.addObject("Green: right to scale", "GREEN");
+//		AutoChooser.addObject("Orange: right to switch and scale", "ORANGE");
+//		AutoChooser.addObject("Purple: left to switch and scale - do not use", "PURPLE");
+//		AutoChooser.addObject("Pink: right only right side", "PINK");
+//		AutoChooser.addObject("Red: left only left side", "RED");
+//		AutoChooser.addObject("Test", "TEST");
+//		SmartDashboard.putData("Autonomous Mode", AutoChooser);
 		
 		DriveCurveInst = new DriveCurve(DriveInst);
 		
@@ -174,45 +171,47 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit() 
 	{
-		if (AutoChooser.getSelected().equals("BLUE"))
-		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.BLUE, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
-		}
-		else if (AutoChooser.getSelected().equals("YELLOW"))
-		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.YELLOW, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
-		}
-		else if (AutoChooser.getSelected().equals("GREEN"))
-		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.GREEN, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
-		}
-		else if (AutoChooser.getSelected().equals("ORANGE"))
-		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.ORANGE, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
-		}
-		else if (AutoChooser.getSelected().equals("PURPLE"))
-		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.PURPLE, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
-		}
-		else if (AutoChooser.getSelected().equals("PINK"))
-		{
-			System.out.println("PINK");
-			
-			AutonomousModes.PickAutonomousMode(AutonomousColor.PINK, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
-		}
-		else if (AutoChooser.getSelected().equals("RED"))
-		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.RED, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
-		}
-		else if (AutoChooser.getSelected().equals("TEST"))
-		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.TEST, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
-		}
-		else
-		{
-			AutonomousModes.PickAutonomousMode(AutonomousColor.BLUE, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
-
-		}
+//		if (AutoChooser.getSelected().equals("BLUE"))
+//		{
+//			AutonomousModes.PickAutonomousMode(AutonomousColor.BLUE, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
+//		}
+//		else if (AutoChooser.getSelected().equals("YELLOW"))
+//		{
+//			AutonomousModes.PickAutonomousMode(AutonomousColor.YELLOW, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
+//		}
+//		else if (AutoChooser.getSelected().equals("GREEN"))
+//		{
+//			AutonomousModes.PickAutonomousMode(AutonomousColor.GREEN, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
+//		}
+//		else if (AutoChooser.getSelected().equals("ORANGE"))
+//		{
+//			AutonomousModes.PickAutonomousMode(AutonomousColor.ORANGE, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
+//		}
+//		else if (AutoChooser.getSelected().equals("PURPLE"))
+//		{
+//			AutonomousModes.PickAutonomousMode(AutonomousColor.PURPLE, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
+//		}
+//		else if (AutoChooser.getSelected().equals("PINK"))
+//		{
+//			System.out.println("PINK");
+//			
+//			AutonomousModes.PickAutonomousMode(AutonomousColor.PINK, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
+//		}
+//		else if (AutoChooser.getSelected().equals("RED"))
+//		{
+//			AutonomousModes.PickAutonomousMode(AutonomousColor.RED, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
+//		}
+//		else if (AutoChooser.getSelected().equals("TEST"))
+//		{
+//			AutonomousModes.PickAutonomousMode(AutonomousColor.TEST, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
+//		}
+//		else
+//		{
+//			AutonomousModes.PickAutonomousMode(AutonomousColor.BLUE, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
+//
+//		}
+		
+		AutonomousModes.PickAutonomousMode(AutonomousColor.PINK, CubeManipulatorInst, ElevatorInst, DriveInst, DriveCurveInst);
 	}
 
 
