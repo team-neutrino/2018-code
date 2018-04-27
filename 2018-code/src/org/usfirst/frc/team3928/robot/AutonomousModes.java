@@ -1246,6 +1246,7 @@ public class AutonomousModes
 		
 		FieldElementSide[] colors = getFieldElementSideColor();
 		
+		
 		if(colors[1] == FieldElementSide.LEFT) //scale is left
 		{	
 			//cube in scale
@@ -1264,7 +1265,7 @@ public class AutonomousModes
 			}
 			Utill.SleepThread(100);
 			cubeManipulatorInst.SetActuatorSetPoint(0.7);
-			driveInst.DriveDistance(45);
+			driveInst.DriveDistance(47); //45
 			cubeManipulatorInst.MoveCube(-0.75);
 			Utill.SleepThread(350);
 			cubeManipulatorInst.MoveCube(0);
@@ -1272,16 +1273,16 @@ public class AutonomousModes
 			//pick up cube by switch
 			elevatorInst.setDistancePercent(0);
 			cubeManipulatorInst.SetActuatorSetPoint(0);
-			driveInst.TurnDegrees(115, 3000); //120
+			driveInst.TurnDegrees(108, 3000); //115
 			cubeManipulatorInst.ArmPosition(true);
 			cubeManipulatorInst.MoveCube(1);
 			driveInst.SetLeft(0.5);
 			driveInst.SetRight(0.5);
-			Utill.SleepThread(1625);
+			Utill.SleepThread(1450); //1625
 			driveInst.SetLeft(0);
 			driveInst.SetRight(0);
 			cubeManipulatorInst.ArmPosition(false);
-			Utill.SleepThread(200);
+			Utill.SleepThread(400);
 			cubeManipulatorInst.MoveCube(0);
 			
 			//second cube in scale
@@ -1300,7 +1301,7 @@ public class AutonomousModes
 			cubeManipulatorInst.SetActuatorSetPoint(0.7);
 			driveInst.SetLeft(0.7);
 			driveInst.SetRight(0.7);
-			Utill.SleepThread(800);
+			Utill.SleepThread(700); //800
 			driveInst.SetLeft(0);
 			driveInst.SetRight(0);
 			driveInst.TurnDegrees(5, 500);
@@ -1316,24 +1317,24 @@ public class AutonomousModes
 			driveInst.SetRight(0);
 			elevatorInst.setDistancePercent(0);
 			Utill.SleepThread(500);
-			driveInst.TurnDegrees(120, 3000);
+			driveInst.TurnDegrees(110, 3000); //120
 			cubeManipulatorInst.MoveCube(1);
 			cubeManipulatorInst.ArmPosition(true);
 			cubeManipulatorInst.SetActuatorSetPoint(0);
 			driveInst.SetLeft(0.7);
 			driveInst.SetRight(0.7);
-			Utill.SleepThread(1200);
+			Utill.SleepThread(800); //1200
 			driveInst.SetRight(0);
 			driveInst.SetLeft(0);
 			cubeManipulatorInst.ArmPosition(false);
-			Utill.SleepThread(200);
-			cubeManipulatorInst.MoveCube(0);
-			
-			//cube in switch
-			elevatorInst.setDistancePercent(24);
-			cubeManipulatorInst.MoveCube(-0.65);
 			Utill.SleepThread(400);
 			cubeManipulatorInst.MoveCube(0);
+			
+//			//cube in switch
+//			elevatorInst.setDistancePercent(24);
+//			cubeManipulatorInst.MoveCube(-0.65);
+//			Utill.SleepThread(400);
+//			cubeManipulatorInst.MoveCube(0);
 		}	
 		else //scale is right
 		{	
