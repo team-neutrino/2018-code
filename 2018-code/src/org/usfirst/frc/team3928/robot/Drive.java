@@ -132,19 +132,29 @@ public class Drive implements PIDSource, PIDOutput, Printer
 		LeftMotor2.set(ControlMode.PercentOutput, motorPower);
 	}
 
+	/**
+	 * Returns the right drive encoder value
+	 * @return
+	 * 	The encoder value
+	 */
 	public double GetRightEncoder()
 	{
 		return RightEncoder.getRate();
 	}
 	
+	/**
+	 * Returns the left drive encoder value
+	 * @return
+	 * 	The encoder value
+	 */
 	public double GetLeftEncoder()
 	{
 		return LeftEncoder.getRate();
 	}
 	
 	/**
-	 * Method that will drive forward a given distance. 
-	 * 
+	 * Method that will drive forward a given distance 
+	 * using drive encoders and Navx.
 	 * @param targetDistance
 	 * 		The distance to drive. 
 	 */
@@ -264,7 +274,6 @@ public class Drive implements PIDSource, PIDOutput, Printer
 	
 	/**
 	 * Method that will drive backward a given distance. 
-	 * 
 	 * @param targetDistance
 	 * 		The distance to drive. 
 	 */
@@ -385,7 +394,6 @@ public class Drive implements PIDSource, PIDOutput, Printer
 
 	/**
 	 * Method that will turn a given number of degrees.
-	 * 
 	 * @param degree
 	 * 		The amount to turn. 
 	 */

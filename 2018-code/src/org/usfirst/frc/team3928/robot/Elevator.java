@@ -170,6 +170,11 @@ public class Elevator implements Runnable, PIDSource, PIDOutput, Printer
 		setDistanceInches(distance);
 	}
 	
+	/**
+	 * Enables or disables elevator PID controller.
+	 * @param isEnabled
+	 * 	Enables PID controller if true, disables if false
+	 */
 	public void EnableElevatorPIDController(boolean isEnabled)
 	{
 		if(isEnabled)

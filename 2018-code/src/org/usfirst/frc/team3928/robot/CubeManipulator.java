@@ -58,7 +58,14 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 	 */
 	private boolean stoppedIntaking;
 	
+	/**
+	 * Solenoid to open intake arms.
+	 */
 	public static Solenoid IntakeOpen;
+	
+	/**
+	 * Solenoid to close intake arms.
+	 */
 	public static Solenoid IntakeClose;
 	
 	/**
@@ -89,8 +96,7 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 	}
 	
 	/**
-	 * Sets value from -1 to 1
-	 * 
+	 * Sets cube mapipulator actuator point from value between -1 and 1
 	 * @param position
 	 */
 	public void SetActuatorSetPoint(double position)
@@ -104,6 +110,11 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 		IntakePIDController.setSetpoint(position * m + b);
 	}
 	
+	/**
+	 * Enables cube manipulator PID controller if true, disables if false.
+	 * @param isEnabled
+	 * 	True to enable cube manipulator PID, false to disble
+	 */
 	public void EnableCubeManipulatorPIDController(boolean isEnabled)
 	{
 		if(isEnabled)
@@ -151,12 +162,22 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 		IntakeMotor.set(ControlMode.PercentOutput, motorPower);	
 	}
 	
+	/**
+	 * Sets actuation motor power for cube manipulator.
+	 * @param power
+	 * 	Power to set motor to
+	 */
 	public void ActuationMotorSetPower(double power)
 	{
 		IntakeActuationMotor.set(ControlMode.PercentOutput, power);
 
 	}
 	
+	/**
+	 * Sets pneumatics to open or close cube manipulator arms.
+	 * @param open
+	 * 	True to open arms, false to close
+	 */
 	public void ArmPosition(boolean open)
 	{
 		if (open)

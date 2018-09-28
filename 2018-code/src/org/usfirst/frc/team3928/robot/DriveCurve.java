@@ -8,12 +8,25 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class DriveCurve 
 {
+	/**
+	 * Drive object
+	 */
 	private Drive drive;
-
+	
+	/**
+	 * PID controller for right side.
+	 */
 	private PIDController RightPIDController;
 	
+	/**
+	 * PID controller for left side.
+	 */
 	private PIDController LeftPIDController;
 	
+	/**
+	 * Constructor for curve
+	 * @param drive
+	 */
 	public DriveCurve(Drive drive)
 	{
 		this.drive = drive;
@@ -92,6 +105,15 @@ public class DriveCurve
 		RightPIDController.setInputRange(0, 150);
 	}
 	
+	/**
+	 * Drives robot in a curve using given rates for given amount of time.
+	 * @param leftRate
+	 * 	The rate to turn left wheels
+	 * @param rightRate
+	 * 	The rate to turn right wheels
+	 * @param timeMillis
+	 * 	The time to drive in curve
+	 */
 	public void Curve(double leftRate, double rightRate, double timeMillis)
 	{
 		long time = System.currentTimeMillis();

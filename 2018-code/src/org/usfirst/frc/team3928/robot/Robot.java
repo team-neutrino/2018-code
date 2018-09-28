@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -55,15 +54,9 @@ public class Robot extends IterativeRobot
 	private CubeManipulator CubeManipulatorInst;
 	
 	/**
-	 * Actuation to trigger the climber. 
+	 * The object to drive a curve.
 	 */
-	private Solenoid ClimbUp;
-
-	/**
-	 * Actuation to stop triggering the climber.
-	 */
-	private Solenoid StopClimb;
-
+	private DriveCurve DriveCurveInst;
 
 	/**
 	 * The number of times that the teleopPeriodic loop 
@@ -76,21 +69,36 @@ public class Robot extends IterativeRobot
 	 */
 	private Joystick ThrustMaster;
 	
+	/**
+	 * Whether the cube manipulator override button is being pushed or not.
+	 */
 	private boolean CubeManipulatorOverride;
 	
+	/**
+	 * Whether the elevator override button is being pushed or not.
+	 */
 	private boolean ElevatorOverride;
 	
-	private boolean ClimbButtonPressed;
-	
+	/**
+	 * If the cube manipulator should be open.
+	 */
 	private boolean IntakingOpen;
 	
+	/**
+	 * If robot should be set to get a cube directly from the portal.
+	 */
 	private boolean SetPortalGrab;
 	
+	/**
+	 * If the button to set robot to the get from the portal is being pushed.
+	 */
 	private boolean PortalButtonPressed;
 	
+	/**
+	 * Time for when an override button has been pushed, 0 if it has not been pushed.
+	 */
 	private long OverridePressed;
-
-	private DriveCurve DriveCurveInst;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -108,14 +116,9 @@ public class Robot extends IterativeRobot
 
 		NumTimesThroughLoop = 0;
 		
-		ClimbUp = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_OUT); 
-		StopClimb = new Solenoid(Constants.ELEVATOR_CLIMBER_SOLENOID_IN); 
-		
 		CubeManipulatorOverride = false;
 		
 		ElevatorOverride = false;
-		
-		ClimbButtonPressed = false;
 		
 		IntakingOpen = false;
 		
@@ -231,156 +234,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic() 
 	{	
-		if(ThrustMaster.getRawButton(8) && !IntakingOpen && !SetPortalGrab)
-		{
-			CubeManipulatorInst.ArmPosition(true);
-		}
-		else if (!IntakingOpen && !SetPortalGrab)
-		{
-			CubeManipulatorInst.ArmPosition(false);
-		}
-		
-		if (CubeManipulatorOverride && !SetPortalGrab)
-		{
-			if (ThrustMaster.getRawButton(7))
-			{
-				CubeManipulatorInst.ActuationMotorSetPower(0.4);
-			}
-			else
-			{
-				CubeManipulatorInst.ActuationMotorSetPower(0);
-			}
-		}
-			
-		if (ElevatorOverride && !SetPortalGrab)
-		{
-			if (ThrustMaster.getRawButton(4))
-			{
-				ElevatorInst.setMotorSpeed(0.5);
-			}
-			else if (ThrustMaster.getRawButton(5))
-			{
-				ElevatorInst.setMotorSpeed(-0.5);
-			}
-			else
-			{
-				ElevatorInst.setMotorSpeed(0);
-			}
-		}
-		
-		if (SetPortalGrab)
-		{
-			
-			ElevatorInst.setDistanceInches(20);
-			
-			if (RightJoystick.getRawButton(10))
-			{
-				CubeManipulatorInst.MoveCube(1);
-			}
-			else
-			{
-				CubeManipulatorInst.MoveCube(0);
-			}
-			
-			if (LeftJoystick.getRawButton(6))
-			{
-				CubeManipulatorInst.SetActuatorSetPoint(0.8);
-			}
-			else
-			{
-				CubeManipulatorInst.SetActuatorSetPoint(0.15);
-			}
-			
-			if (ThrustMaster.getRawButton(8))
-			{
-				CubeManipulatorInst.ArmPosition(true);
-			}
-			else
-			{
-				CubeManipulatorInst.ArmPosition(false);
-			}
-		}
-		
-		if (ThrustMaster.getRawButton(1)) //climb button
-		{
-			ClimbButtonPressed = true;
-			ElevatorInst.EnableElevatorPIDController(false);
-			
-			ElevatorInst.setMotorSpeed(-0.3);
-			
-			CubeManipulatorInst.SetActuatorSetPoint(0.8);
-			
-			ClimbUp.set(true);
-			StopClimb.set(false);
-		}
-		else if (ThrustMaster.getRawButton(2)) //ready to climb button set
-		{
-			if (!ElevatorOverride)
-				{
-					ElevatorInst.setDistanceInches(63);
-				}
-		
-				CubeManipulatorInst.SetActuatorSetPoint(0.8);
-		}
-		else if (!SetPortalGrab)
-		{
-			if (ClimbButtonPressed)
-			{
-				ElevatorInst.setMotorSpeed(0);
-			}
-			ClimbUp.set(false);
-			StopClimb.set(true);
-			
-			double elevatorPercent = (-ThrustMaster.getZ() + 1) / 2;
-			if(elevatorPercent < 0.05)
-			{
-				if (!ElevatorOverride)
-				{
-					ElevatorInst.setDistancePercent(0);
-				}
-				
-				if (!CubeManipulatorOverride)
-				{
-					if (LeftJoystick.getRawButton(6) || RightJoystick.getRawButton(2) || LeftJoystick.getRawButton(2))
-					{
-						CubeManipulatorInst.SetActuatorSetPoint(1);
-					}
-					else
-					{
-						CubeManipulatorInst.SetActuatorSetPoint(0.1);
-					}
-				}
-			}
-			else if(elevatorPercent < 0.25)
-			{
-				if (!ElevatorOverride)
-					{
-						ElevatorInst.setDistanceInches(22);
-					}
-				if (!CubeManipulatorOverride)
-				{
-					CubeManipulatorInst.SetActuatorSetPoint(0.6);
-				}
-			}
-			else
-			{
-				double minScaleInches = 45;
-				double elevatorRange = Constants.ELEVATOR_PID_INPUT_RANGE_MAX - minScaleInches; //71-54 = 17
-				
-				double elevatorHeightScalar = (elevatorPercent - 0.25) * elevatorRange / 0.75;
-				if (!ElevatorOverride)
-				{
-					ElevatorInst.setDistanceInches(minScaleInches + elevatorHeightScalar);
-				}
-				
-				if (!CubeManipulatorOverride)
-				{
-						CubeManipulatorInst.SetActuatorSetPoint(0.75);
-				}
-			}
-			
-		}
-
+		//Drive control
 		double leftY = -LeftJoystick.getY();
 		double rightY = -RightJoystick.getY();
 
@@ -396,9 +250,71 @@ public class Robot extends IterativeRobot
 
 		DriveInst.SetLeft(leftY);
 		DriveInst.SetRight(rightY);
-
+		
+		//Elevator control
+		double elevatorPercent = (-ThrustMaster.getZ() + 1) / 2;
+			
+		if(elevatorPercent < 0.05)	
+		{
+			if (!ElevatorOverride)
+			{
+				ElevatorInst.setDistancePercent(0);
+			}
+				
+			if (!CubeManipulatorOverride)
+			{
+				if (LeftJoystick.getRawButton(6) || RightJoystick.getRawButton(2) || LeftJoystick.getRawButton(2))
+				{
+					CubeManipulatorInst.SetActuatorSetPoint(1);
+				}
+				else
+				{
+					CubeManipulatorInst.SetActuatorSetPoint(0.1);
+				}
+			}
+		}
+		else if(elevatorPercent < 0.25)
+		{
+			if (!ElevatorOverride)
+				{
+					ElevatorInst.setDistanceInches(22);
+				}
+			if (!CubeManipulatorOverride)
+			{
+				CubeManipulatorInst.SetActuatorSetPoint(0.6);
+			}
+		}
+		else
+		{
+			double minScaleInches = 45;
+			double elevatorRange = Constants.ELEVATOR_PID_INPUT_RANGE_MAX - minScaleInches; //71-54 = 17
+			double elevatorHeightScalar = (elevatorPercent - 0.25) * elevatorRange / 0.75;
+		
+			if (!ElevatorOverride)
+			{
+				ElevatorInst.setDistanceInches(minScaleInches + elevatorHeightScalar);
+			}
+				
+			if (!CubeManipulatorOverride)
+			{
+					CubeManipulatorInst.SetActuatorSetPoint(0.75);
+			}
+		}
+		
+		//Cube manipulator arm control
+		if(ThrustMaster.getRawButton(8) && !IntakingOpen && !SetPortalGrab)
+		{
+			CubeManipulatorInst.ArmPosition(true);
+		}
+		else if (!IntakingOpen && !SetPortalGrab)
+		{
+			CubeManipulatorInst.ArmPosition(false);
+		}
+		
+		//Cube manipulator wheels control
 		double intakeSpeed = ThrustMaster.getRawAxis(5);
-		if (ThrustMaster.getRawButton(9))
+		
+		if (ThrustMaster.getRawButton(9))	
 		{
 			CubeManipulatorInst.MoveCube(1);
 			CubeManipulatorInst.ArmPosition(true);
@@ -408,7 +324,7 @@ public class Robot extends IterativeRobot
 		{
 			CubeManipulatorInst.MoveCube(1);
 		}
-		else if (intakeSpeed < -0.3)
+		else if (intakeSpeed < -0.3)	
 		{
 			if(intakeSpeed < -0.8)
 			{
@@ -421,12 +337,8 @@ public class Robot extends IterativeRobot
 			CubeManipulatorInst.MoveCube(0);
 			IntakingOpen = false;
 		}
-
-		if (NumTimesThroughLoop % Constants.PRINT_SPEED_DIVIDER == 0) 
-		{
-
-		}
 		
+		//Cube manipulator override enable/disable
 		if (ThrustMaster.getRawButton(10))
 		{
 			if (OverridePressed == 0)
@@ -442,6 +354,7 @@ public class Robot extends IterativeRobot
 			}
 		}
 	
+		//Elevator override enable/disable
 		if (ThrustMaster.getRawButton(3))
 		{
 			if (OverridePressed == 0)
@@ -469,6 +382,40 @@ public class Robot extends IterativeRobot
 			PortalButtonPressed = false;
 		}
 		
+		//Cube manipulator override control
+		if (CubeManipulatorOverride && !SetPortalGrab)
+		{
+			if (ThrustMaster.getRawButton(7))
+			{
+				CubeManipulatorInst.ActuationMotorSetPower(0.4);
+			}
+			else
+			{
+				CubeManipulatorInst.ActuationMotorSetPower(0);
+			}
+		}
+			
+		//Elevator override control
+		if (ElevatorOverride && !SetPortalGrab)
+		{
+			if (ThrustMaster.getRawButton(4))
+			{
+				ElevatorInst.setMotorSpeed(0.5);
+			}
+			else if (ThrustMaster.getRawButton(5))
+			{
+				ElevatorInst.setMotorSpeed(-0.5);
+			}
+			else
+			{
+				ElevatorInst.setMotorSpeed(0);
+			}
+		}
+		
+		if (NumTimesThroughLoop % Constants.PRINT_SPEED_DIVIDER == 0) 
+		{
+			//put outprints here
+		}
 		
 		NumTimesThroughLoop++;
 		Utill.SleepThread(1);
