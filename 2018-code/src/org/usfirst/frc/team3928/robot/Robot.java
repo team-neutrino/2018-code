@@ -59,12 +59,6 @@ public class Robot extends IterativeRobot
 	private DriveCurve DriveCurveInst;
 
 	/**
-	 * The number of times that the teleopPeriodic loop 
-	 * has run. 
-	 */
-	public static int NumTimesThroughLoop;
-
-	/**
 	 * The elevator controller 
 	 */
 	private Joystick ThrustMaster;
@@ -103,8 +97,6 @@ public class Robot extends IterativeRobot
 		ElevatorInst = new Elevator();
 		DriveInst = new Drive();
 		CubeManipulatorInst = new CubeManipulator();
-
-		NumTimesThroughLoop = 0;
 		
 		CubeManipulatorOverride = false;
 		
@@ -131,17 +123,15 @@ public class Robot extends IterativeRobot
 			@Override
 			public void PrintValues() 
 			{
-				SmartDashboard.putStringArray("this is a thing", new String[]{"yay", "oops"});
 				SmartDashboard.putNumber("Right joystick: ", RightJoystick.getY());
 				SmartDashboard.putNumber("Left joystick: ", LeftJoystick.getY());
 				SmartDashboard.putNumber("Thrustmaster value: ", (-ThrustMaster.getZ() + 1) / 2);
-				SmartDashboard.putBoolean("Set up to climb: ", ThrustMaster.getRawButton(2));
-				SmartDashboard.putBoolean("Climb: ", ThrustMaster.getRawButton(1));
 				SmartDashboard.putNumber("Intake: ", ThrustMaster.getRawAxis(5));
 				SmartDashboard.putBoolean("Elevator Override: ", ElevatorOverride);
 				SmartDashboard.putBoolean("Intake Override: ", CubeManipulatorOverride);
 			}
-		});
+		}
+		);
 		
 		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 		
@@ -262,9 +252,9 @@ public class Robot extends IterativeRobot
 		else if(elevatorPercent < 0.25)
 		{
 			if (!ElevatorOverride)
-				{
-					ElevatorInst.setDistanceInches(22);
-				}
+			{
+				ElevatorInst.setDistanceInches(22);
+			}
 			if (!CubeManipulatorOverride)
 			{
 				CubeManipulatorInst.SetActuatorSetPoint(0.6);
@@ -386,12 +376,6 @@ public class Robot extends IterativeRobot
 			}
 		}
 		
-		if (NumTimesThroughLoop % Constants.PRINT_SPEED_DIVIDER == 0) 
-		{
-			//put outprints here
-		}
-		
-		NumTimesThroughLoop++;
 		Utill.SleepThread(1);
 	}
 

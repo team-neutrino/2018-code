@@ -1,7 +1,7 @@
 package org.usfirst.frc.team3928.robot;
 
 /**
- * This is a utillity class for dealing with static methods.
+ * This is a utillity class for easier thread sleep usage.
  * 
  * @author NicoleEssner
  *

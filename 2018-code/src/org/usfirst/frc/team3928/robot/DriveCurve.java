@@ -6,6 +6,11 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
+/**
+ * This class is for driving the robot in a curve.
+ * @author JoelNeppel
+ *
+ */
 public class DriveCurve 
 {
 	/**
@@ -24,8 +29,9 @@ public class DriveCurve
 	private PIDController LeftPIDController;
 	
 	/**
-	 * Constructor for curve
+	 * Constructor for curve.
 	 * @param drive
+	 * 	The drive object
 	 */
 	public DriveCurve(Drive drive)
 	{

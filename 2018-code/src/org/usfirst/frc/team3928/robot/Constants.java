@@ -1,5 +1,10 @@
 package org.usfirst.frc.team3928.robot;
 
+/**
+ * The constant values used.
+ * @author JoelNeppel
+ *
+ */
 public class Constants 
 {	
 	// CubeManipulator

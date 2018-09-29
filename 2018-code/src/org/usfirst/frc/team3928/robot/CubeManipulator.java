@@ -11,21 +11,13 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * Class to control cube manipulator and related information.
+ * @author JoelNeppel
+ *
+ */
 public class CubeManipulator implements Printer, PIDSource, PIDOutput
-{
-//	/**
-//	 * Three states for the cube manipulator, intaking, 
-//	 * outtaking, and off.   
-//	 * 
-//	 * @author NicoleEssner
-//	 */
-//	public enum IntakeState
-//	{
-//		INTAKE,
-//		OUTTAKE,
-//		OFF
-//	}
-	
+{	
 	/**
 	 * The first motor on the cube manipulator.
 	 */
@@ -128,14 +120,11 @@ public class CubeManipulator implements Printer, PIDSource, PIDOutput
 	}
 	
 	/**
-	 * Will make the cube manipulator intake, outtake, or 
-	 * turn off the motor.
-	 * 
-	 * @param state
-	 * 		An enum that is either INTAKE, OUTTAKE, or 
-	 * 		OFF.
+	 * Controls cube manipulator wheels to intake and outtake cube.
+	 * @param motorPower
+	 * 	The power to set the motors to
 	 */
-	public void MoveCube(double motorPower) //IntakeState state
+	public void MoveCube(double motorPower)
 	{
 		if(Math.abs(motorPower) < 0.1)
 		{
