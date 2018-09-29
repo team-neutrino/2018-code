@@ -85,16 +85,6 @@ public class Robot extends IterativeRobot
 	private boolean IntakingOpen;
 	
 	/**
-	 * If robot should be set to get a cube directly from the portal.
-	 */
-	private boolean SetPortalGrab;
-	
-	/**
-	 * If the button to set robot to the get from the portal is being pushed.
-	 */
-	private boolean PortalButtonPressed;
-	
-	/**
 	 * Time for when an override button has been pushed, 0 if it has not been pushed.
 	 */
 	private long OverridePressed;
@@ -121,10 +111,6 @@ public class Robot extends IterativeRobot
 		ElevatorOverride = false;
 		
 		IntakingOpen = false;
-		
-		SetPortalGrab = false;
-		
-		PortalButtonPressed = false;
 		
 		OverridePressed = 0;
 //		AutoChooser = new SendableChooser<String>();
@@ -302,11 +288,11 @@ public class Robot extends IterativeRobot
 		}
 		
 		//Cube manipulator arm control
-		if(ThrustMaster.getRawButton(8) && !IntakingOpen && !SetPortalGrab)
+		if(ThrustMaster.getRawButton(8) && !IntakingOpen)
 		{
 			CubeManipulatorInst.ArmPosition(true);
 		}
-		else if (!IntakingOpen && !SetPortalGrab)
+		else if(!IntakingOpen)
 		{
 			CubeManipulatorInst.ArmPosition(false);
 		}
@@ -320,7 +306,7 @@ public class Robot extends IterativeRobot
 			CubeManipulatorInst.ArmPosition(true);
 			IntakingOpen = true;
 		}
-		else if (intakeSpeed > 0.5 && !SetPortalGrab)
+		else if (intakeSpeed > 0.5)
 		{
 			CubeManipulatorInst.MoveCube(1);
 		}
@@ -332,7 +318,7 @@ public class Robot extends IterativeRobot
 			}
 			CubeManipulatorInst.MoveCube(intakeSpeed);
 		}
-		else if (!SetPortalGrab)
+		else
 		{
 			CubeManipulatorInst.MoveCube(0);
 			IntakingOpen = false;
@@ -370,20 +356,8 @@ public class Robot extends IterativeRobot
 			}
 		}
 		
-		if (LeftJoystick.getRawButton(9) && !PortalButtonPressed)
-		{
-			SetPortalGrab = !SetPortalGrab;
-			ElevatorOverride = !ElevatorOverride;
-			CubeManipulatorOverride = !CubeManipulatorOverride;
-			PortalButtonPressed = true;
-		}
-		else if (!LeftJoystick.getRawButton(9))
-		{
-			PortalButtonPressed = false;
-		}
-		
 		//Cube manipulator override control
-		if (CubeManipulatorOverride && !SetPortalGrab)
+		if (CubeManipulatorOverride)
 		{
 			if (ThrustMaster.getRawButton(7))
 			{
@@ -396,7 +370,7 @@ public class Robot extends IterativeRobot
 		}
 			
 		//Elevator override control
-		if (ElevatorOverride && !SetPortalGrab)
+		if (ElevatorOverride)
 		{
 			if (ThrustMaster.getRawButton(4))
 			{
