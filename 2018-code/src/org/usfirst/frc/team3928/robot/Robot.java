@@ -324,7 +324,7 @@ public class Robot extends IterativeRobot
 			
 			if ((OverridePressed + 1000) < System.currentTimeMillis())
 			{
-				CubeManipulatorOverride = !CubeManipulatorOverride;
+				//CubeManipulatorOverride = !CubeManipulatorOverride;
 				CubeManipulatorInst.EnableCubeManipulatorPIDController(!CubeManipulatorOverride);
 				OverridePressed = 0;
 			}
